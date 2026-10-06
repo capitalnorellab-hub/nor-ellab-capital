@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Transaction Management | Nor Ellab Capital</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="logo">
+        Nor Ellab Capital
+    </div>
+
+    <nav>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="admin-deposits.html">
+            Deposits
+        </a>
+
+        <a href="admin-investments.html">
+            Investments
+        </a>
+
+        <a href="admin-support.html">
+            Support
+        </a>
+
+        <a
+            href="#"
+            id="logout-button"
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="dashboard-hero">
+
+    <h1>
+        Transaction Management
+    </h1>
+
+    <p>
+        Review and manage investor transactions.
+    </p>
+
+</section>
+
+
+<section class="dashboard-section">
+
+    <div class="dashboard-container">
+
+
+        <!-- ADMIN STATUS -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Administrator Access
+            </h2>
+
+            <p id="admin-message">
+                Checking administrator access...
+            </p>
+
+        </div>
+
+
+        <!-- TRANSACTIONS -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                All Transactions
+            </h2>
+
+            <div id="transactions-list">
+
+                <p>
+                    Loading transactions...
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 Nor Ellab Capital.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+    const supabaseUrl =
+        "https://grgmsezyxxceheofmsoj.supabase.co";
+
+    const supabaseKey =
+        "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            supabaseUrl,
+            supabaseKey
+        );
+
+
+    async function loadAdminTransactions() {
+
+        const adminMessage =
+            document.getElementById(
+                "admin-message"
+            );
+
+
+        const transactionsList =
+            document.getElementById(
+                "transactions-list"
+            );
+
+
+        /* CHECK LOGIN */
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        if (error || !data.user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        const user =
+            data.user;
+
+
+        /* CHECK ADMIN */
+
+        const {
+            data: adminUser,
+            error: adminError
+        } =
+            await supabaseClient
+                .from("admin_users")
+                .select("user_id")
+                .eq("user_id", user.id)
+                .maybeSingle();
+
+
+        if (
+            adminError ||
+            !adminUser
+        ) {
+
+            adminMessage.textContent =
+                "Administrator access required.";
+
+            transactionsList.innerHTML =
+                "<p>You do not have permission to view transactions.</p>";
+
+            return;
+
+        }
+
+
+        adminMessage.textContent =
+            "Administrator access confirmed.";
+
+
+        /* LOAD TRANSACTIONS */
+
+        const {
+            data: transactions,
+            error: transactionError
+        } =
+            await supabaseClient
+                .from("transactions")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+        if (transactionError) {
+
+            transactionsList.innerHTML =
+                "<p>Unable to load transactions.</p>";
+
+            console.log(
+                transactionError
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !transactions ||
+            transactions.length === 0
+        ) {
+
+            transactionsList.innerHTML = `
+                <div class="transaction-empty">
+
+                    <h3>
+                        No transactions found
+                    </h3>
+
+                    <p>
+                        There are currently no transactions
+                        in the system.
+                    </p>
+
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        let transactionHTML = "";
+
+
+        transactions.forEach(
+            function(transaction) {
+
+                const transactionDate =
+                    new Date(
+                        transaction.created_at
+                    ).toLocaleDateString(
+                        undefined,
+                        {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                        }
+                    );
+
+
+                const transactionTime =
+                    new Date(
+                        transaction.created_at
+                    ).toLocaleTimeString(
+                        undefined,
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+
+
+                transactionHTML += `
+
+                    <div class="investment-item">
+
+                        <h3>
+                            ${transaction.transaction_type}
+                        </h3>
+
+                        <p>
+                            Transaction ID:
+                            ${transaction.id}
+                        </p>
+
+                        <p>
+                            User ID:
+                            ${transaction.user_id}
+                        </p>
+
+                        <p>
+                            Amount:
+                            $${Number(
+                                transaction.amount
+                            ).toLocaleString(
+                                undefined,
+                                {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }
+                            )}
+                        </p>
+
+                        <p>
+                            Asset:
+                            ${transaction.asset || "USD"}
+                        </p>
+
+                        <p>
+                            Reference:
+                            ${transaction.reference || "Not available"}
+                        </p>
+
+                        <p>
+                            Description:
+                            ${transaction.description || "No description"}
+                        </p>
+
+                        ${
+                            transaction.transaction_hash
+                                ? `
+                                <p>
+                                    Transaction Hash / TXID:
+                                    ${transaction.transaction_hash}
+                                </p>
+                                `
+                                : ""
+                        }
+
+                        <p>
+                            Date:
+                            ${transactionDate}
+                        </p>
+
+                        <p>
+                            Time:
+                            ${transactionTime}
+                        </p>
+
+
+                        <div class="dashboard-actions">
+
+                            <label>
+                                Status:
+                            </label>
+
+                            <select
+                                id="status-${transaction.id}"
+                            >
+
+                                <option
+                                    value="Pending"
+                                    ${
+                                        transaction.status === "Pending"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Pending
+                                </option>
+
+                                <option
+                                    value="Processing"
+                                    ${
+                                        transaction.status === "Processing"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Processing
+                                </option>
+
+                                <option
+                                    value="Completed"
+                                    ${
+                                        transaction.status === "Completed"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Completed
+                                </option>
+
+                                <option
+                                    value="Failed"
+                                    ${
+                                        transaction.status === "Failed"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Failed
+                                </option>
+
+                                <option
+                                    value="Cancelled"
+                                    ${
+                                        transaction.status === "Cancelled"
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+
+                            <button
+                                class="dashboard-button"
+                                onclick="updateTransactionStatus(${transaction.id})"
+                            >
+                                Update Status
+                            </button>
+
+                        </div>
+
+
+                        <p
+                            id="status-message-${transaction.id}"
+                        ></p>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+        transactionsList.innerHTML =
+            transactionHTML;
+
+    }
+
+
+    /* UPDATE TRANSACTION STATUS */
+
+    async function updateTransactionStatus(
+        transactionId
+    ) {
+
+        const statusSelect =
+            document.getElementById(
+                "status-" + transactionId
+            );
+
+
+        const statusMessage =
+            document.getElementById(
+                "status-message-" + transactionId
+            );
+
+
+        const newStatus =
+            statusSelect.value;
+
+
+        statusMessage.textContent =
+            "Updating status...";
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("transactions")
+                .update({
+                    status: newStatus
+                })
+                .eq(
+                    "id",
+                    transactionId
+                );
+
+
+        if (error) {
+
+            console.log(error);
+
+            statusMessage.textContent =
+                "Unable to update transaction status.";
+
+            return;
+
+        }
+
+
+        statusMessage.textContent =
+            "Transaction status updated successfully.";
+
+    }
+
+
+    /* LOGOUT */
+
+    const logoutButton =
+        document.getElementById(
+            "logout-button"
+        );
+
+
+    logoutButton.addEventListener(
+        "click",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            logoutButton.textContent =
+                "Logging out...";
+
+
+            const {
+                error
+            } =
+                await supabaseClient.auth.signOut();
+
+
+            if (error) {
+
+                logoutButton.textContent =
+                    "Logout";
+
+                alert(
+                    "Unable to log out. Please try again."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+    loadAdminTransactions();
+
+</script>
+
+
+</body>
+
+</html>

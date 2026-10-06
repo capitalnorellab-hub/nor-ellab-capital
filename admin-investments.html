@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Investment Management - Nor Ellab Capital</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="container">
+
+        <h1>Nor Ellab Capital</h1>
+
+        <nav>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="admin-deposits.html">
+                Deposits
+            </a>
+
+            <a href="admin-investments.html">
+                Investments
+            </a>
+
+            <a href="admin-support.html">
+                Support
+            </a>
+
+            <a href="#" id="logout-button">
+                Logout
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<section class="page-hero">
+
+    <div class="container">
+
+        <h2>
+            Investment Management
+        </h2>
+
+        <p>
+            View and manage investor investments.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<section>
+
+    <div class="container">
+
+
+        <!-- ADMIN STATUS -->
+
+        <div class="dashboard-card">
+
+            <p id="admin-status">
+                Checking administrator access...
+            </p>
+
+        </div>
+
+
+
+        <!-- ADD INVESTMENT -->
+
+        <div class="dashboard-card">
+
+            <h3>
+                Add New Investment
+            </h3>
+
+
+            <form
+                id="investment-form"
+                style="
+                    margin-top: 20px;
+                "
+            >
+
+
+                <label>
+                    Investor
+                </label>
+
+
+                <select
+                    id="investor"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+                    <option value="">
+                        Select Investor
+                    </option>
+
+                </select>
+
+
+
+                <label>
+                    Investment Name
+                </label>
+
+
+                <input
+                    type="text"
+                    id="investment-name"
+                    placeholder="e.g. Technology Portfolio"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+
+
+                <label>
+                    Investment Type
+                </label>
+
+
+                <input
+                    type="text"
+                    id="investment-type"
+                    placeholder="e.g. Technology Equities"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+
+
+                <label>
+                    Amount
+                </label>
+
+
+                <input
+                    type="number"
+                    id="investment-amount"
+                    placeholder="5000"
+                    min="0"
+                    step="0.01"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+
+
+                <label>
+                    Investment Term
+                </label>
+
+
+                <input
+                    type="text"
+                    id="investment-term"
+                    placeholder="e.g. Long Term"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+
+
+                <label>
+                    Status
+                </label>
+
+
+                <select
+                    id="investment-status"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 10px;
+                        margin-top: 6px;
+                        margin-bottom: 15px;
+                        border: 1px solid #ddd;
+                        border-radius: 6px;
+                    "
+                >
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Pending">
+                        Pending
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+
+
+                <button
+                    type="submit"
+                    class="dashboard-button"
+                >
+                    Add Investment
+                </button>
+
+
+                <p
+                    id="investment-message"
+                    style="
+                        margin-top: 10px;
+                    "
+                ></p>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- INVESTMENT LIST -->
+
+        <div class="dashboard-card">
+
+            <h3>
+                All Investor Investments
+            </h3>
+
+
+            <div
+                id="investment-list"
+                style="
+                    margin-top: 20px;
+                "
+            >
+
+                <p>
+                    Loading investments...
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<script>
+
+
+const supabaseUrl =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+
+
+const supabaseKey =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+const supabaseClient =
+    supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+
+const adminStatus =
+    document.getElementById(
+        "admin-status"
+    );
+
+
+const investmentList =
+    document.getElementById(
+        "investment-list"
+    );
+
+
+const investorSelect =
+    document.getElementById(
+        "investor"
+    );
+
+
+const investmentForm =
+    document.getElementById(
+        "investment-form"
+    );
+
+
+const investmentMessage =
+    document.getElementById(
+        "investment-message"
+    );
+
+
+const logoutButton =
+    document.getElementById(
+        "logout-button"
+    );
+
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+
+async function checkAdmin() {
+
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
+
+
+
+    if (!user) {
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq(
+                "user_id",
+                user.id
+            )
+            .maybeSingle();
+
+
+
+    if (
+        error ||
+        !data
+    ) {
+
+        adminStatus.textContent =
+            "Administrator access required.";
+
+        return null;
+
+    }
+
+
+
+    adminStatus.textContent =
+        "Administrator access confirmed.";
+
+
+    return user;
+
+}
+
+
+
+/* =========================
+   LOAD INVESTORS
+========================= */
+
+
+async function loadInvestors() {
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "user_id, full_name, email"
+            )
+            .order(
+                "full_name",
+                {
+                    ascending: true
+                }
+            );
+
+
+
+    if (error) {
+
+        console.log(error);
+
+        return;
+
+    }
+
+
+
+    investorSelect.innerHTML =
+        `
+        <option value="">
+            Select Investor
+        </option>
+        `;
+
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+
+    data.forEach(
+        function(profile) {
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                profile.user_id;
+
+
+            option.textContent =
+                (
+                    profile.full_name ||
+                    "Unnamed Investor"
+                ) +
+                " - " +
+                (
+                    profile.email ||
+                    "No email"
+                );
+
+
+            investorSelect.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   ADD INVESTMENT
+========================= */
+
+
+investmentForm.addEventListener(
+    "submit",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+
+        const userId =
+            investorSelect.value;
+
+
+        const investmentName =
+            document
+                .getElementById(
+                    "investment-name"
+                )
+                .value
+                .trim();
+
+
+        const investmentType =
+            document
+                .getElementById(
+                    "investment-type"
+                )
+                .value
+                .trim();
+
+
+        const amount =
+            Number(
+                document
+                    .getElementById(
+                        "investment-amount"
+                    )
+                    .value
+            );
+
+
+        const term =
+            document
+                .getElementById(
+                    "investment-term"
+                )
+                .value
+                .trim();
+
+
+        const status =
+            document
+                .getElementById(
+                    "investment-status"
+                )
+                .value;
+
+
+
+        if (!userId) {
+
+            investmentMessage.textContent =
+                "Please select an investor.";
+
+            return;
+
+        }
+
+
+
+        if (
+            !investmentName ||
+            !investmentType ||
+            !term ||
+            amount <= 0
+        ) {
+
+            investmentMessage.textContent =
+                "Please complete all fields correctly.";
+
+            return;
+
+        }
+
+
+
+        investmentMessage.textContent =
+            "Adding investment...";
+
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("investments")
+                .insert({
+
+                    user_id:
+                        userId,
+
+                    investment_name:
+                        investmentName,
+
+                    investment_type:
+                        investmentType,
+
+                    amount:
+                        amount,
+
+                    term:
+                        term,
+
+                    status:
+                        status
+
+                });
+
+
+
+        if (error) {
+
+            console.log(error);
+
+
+            investmentMessage.textContent =
+                error.message;
+
+
+            return;
+
+        }
+
+
+
+        investmentMessage.textContent =
+            "Investment added successfully.";
+
+
+
+        investmentForm.reset();
+
+
+
+        await loadInvestors();
+
+        await loadInvestments();
+
+    }
+);
+
+
+
+/* =========================
+   LOAD INVESTMENTS
+========================= */
+
+
+async function loadInvestments() {
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("investments")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+
+    if (error) {
+
+        investmentList.innerHTML =
+            "<p>Unable to load investments.</p>";
+
+        console.log(error);
+
+        return;
+
+    }
+
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        investmentList.innerHTML =
+            "<p>No investments found.</p>";
+
+        return;
+
+    }
+
+
+
+    investmentList.innerHTML =
+        "";
+
+
+
+    const userIds =
+        [
+            ...new Set(
+                data.map(
+                    function(investment) {
+
+                        return investment.user_id;
+
+                    }
+                )
+            )
+        ];
+
+
+
+    const {
+        data: profiles
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "user_id, full_name, email"
+            )
+            .in(
+                "user_id",
+                userIds
+            );
+
+
+
+    const profileMap = {};
+
+
+
+    if (profiles) {
+
+        profiles.forEach(
+            function(profile) {
+
+                profileMap[
+                    profile.user_id
+                ] = profile;
+
+            }
+        );
+
+    }
+
+
+
+    data.forEach(
+        function(investment) {
+
+
+            const profile =
+                profileMap[
+                    investment.user_id
+                ];
+
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.style.padding =
+                "18px";
+
+
+            card.style.marginBottom =
+                "15px";
+
+
+            card.style.border =
+                "1px solid #ddd";
+
+
+            card.style.borderRadius =
+                "8px";
+
+
+            card.style.background =
+                "#ffffff";
+
+
+
+            const investorTitle =
+                document.createElement(
+                    "h4"
+                );
+
+
+            investorTitle.textContent =
+                "Investor: " +
+                (
+                    profile &&
+                    profile.full_name
+                        ? profile.full_name
+                        : "Unknown Investor"
+                );
+
+
+
+            const investorEmail =
+                document.createElement(
+                    "p"
+                );
+
+
+            investorEmail.textContent =
+                "Email: " +
+                (
+                    profile &&
+                    profile.email
+                        ? profile.email
+                        : "Not available"
+                );
+
+
+
+            const investorId =
+                document.createElement(
+                    "p"
+                );
+
+
+            investorId.textContent =
+                "Investor ID: " +
+                investment.user_id;
+
+
+
+            const name =
+                document.createElement(
+                    "p"
+                );
+
+
+            name.textContent =
+                "Investment: " +
+                investment.investment_name;
+
+
+
+            const type =
+                document.createElement(
+                    "p"
+                );
+
+
+            type.textContent =
+                "Investment Type: " +
+                investment.investment_type;
+
+
+
+            const amount =
+                document.createElement(
+                    "p"
+                );
+
+
+            amount.textContent =
+                "Amount Invested: $" +
+                Number(
+                    investment.amount
+                ).toLocaleString(
+                    undefined,
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                );
+
+
+
+            const term =
+                document.createElement(
+                    "p"
+                );
+
+
+            term.textContent =
+                "Term: " +
+                (
+                    investment.term ||
+                    "Not specified"
+                );
+
+
+
+            const status =
+                document.createElement(
+                    "p"
+                );
+
+
+            status.textContent =
+                "Current Status: " +
+                investment.status;
+
+
+
+            const date =
+                document.createElement(
+                    "p"
+                );
+
+
+            date.textContent =
+                "Created: " +
+                new Date(
+                    investment.created_at
+                ).toLocaleString();
+
+
+
+            const statusLabel =
+                document.createElement(
+                    "label"
+                );
+
+
+            statusLabel.textContent =
+                "Change Status:";
+
+
+            statusLabel.style.display =
+                "block";
+
+
+            statusLabel.style.marginTop =
+                "15px";
+
+
+            statusLabel.style.fontWeight =
+                "600";
+
+
+
+            const statusSelect =
+                document.createElement(
+                    "select"
+                );
+
+
+            statusSelect.style.width =
+                "100%";
+
+
+            statusSelect.style.padding =
+                "10px";
+
+
+            statusSelect.style.marginTop =
+                "6px";
+
+
+            statusSelect.style.border =
+                "1px solid #ddd";
+
+
+            statusSelect.style.borderRadius =
+                "6px";
+
+
+
+            const statuses = [
+
+                "Active",
+
+                "Pending",
+
+                "Completed",
+
+                "Cancelled"
+
+            ];
+
+
+
+            statuses.forEach(
+                function(statusOption) {
+
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        statusOption;
+
+
+                    option.textContent =
+                        statusOption;
+
+
+
+                    if (
+                        statusOption ===
+                        investment.status
+                    ) {
+
+                        option.selected =
+                            true;
+
+                    }
+
+
+
+                    statusSelect.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+
+
+            const updateButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            updateButton.textContent =
+                "Update Status";
+
+
+            updateButton.className =
+                "dashboard-button";
+
+
+            updateButton.style.marginTop =
+                "10px";
+
+
+
+            const updateMessage =
+                document.createElement(
+                    "p"
+                );
+
+
+
+            updateButton.addEventListener(
+                "click",
+                async function() {
+
+
+                    const newStatus =
+                        statusSelect.value;
+
+
+
+                    updateButton.disabled =
+                        true;
+
+
+                    updateMessage.textContent =
+                        "Updating...";
+
+
+
+                    const {
+                        error
+                    } =
+                        await supabaseClient
+                            .from(
+                                "investments"
+                            )
+                            .update({
+                                status:
+                                    newStatus
+                            })
+                            .eq(
+                                "id",
+                                investment.id
+                            );
+
+
+
+                    if (error) {
+
+                        console.log(error);
+
+
+                        updateMessage.textContent =
+                            error.message;
+
+
+                        updateButton.disabled =
+                            false;
+
+
+                        return;
+
+                    }
+
+
+
+                    updateMessage.textContent =
+                        "Investment status updated successfully.";
+
+
+
+                    await loadInvestments();
+
+                }
+            );
+
+
+
+            card.appendChild(
+                investorTitle
+            );
+
+
+            card.appendChild(
+                investorEmail
+            );
+
+
+            card.appendChild(
+                investorId
+            );
+
+
+            card.appendChild(
+                name
+            );
+
+
+            card.appendChild(
+                type
+            );
+
+
+            card.appendChild(
+                amount
+            );
+
+
+            card.appendChild(
+                term
+            );
+
+
+            card.appendChild(
+                status
+            );
+
+
+            card.appendChild(
+                date
+            );
+
+
+            card.appendChild(
+                statusLabel
+            );
+
+
+            card.appendChild(
+                statusSelect
+            );
+
+
+            card.appendChild(
+                updateButton
+            );
+
+
+            card.appendChild(
+                updateMessage
+            );
+
+
+
+            investmentList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+
+logoutButton.addEventListener(
+    "click",
+    async function(event) {
+
+        event.preventDefault();
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+
+/* =========================
+   START
+========================= */
+
+
+async function startAdminPage() {
+
+
+    const user =
+        await checkAdmin();
+
+
+
+    if (!user) {
+
+        return;
+
+    }
+
+
+
+    await loadInvestors();
+
+    await loadInvestments();
+
+}
+
+
+
+startAdminPage();
+
+
+</script>
+
+
+</body>
+
+</html>

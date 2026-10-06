@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Withdraw Funds | Nor Ellab Capital</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <header class="site-header">
+
+        <div class="logo">
+            Nor Ellab Capital
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="investments.html">
+                Investments
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- Withdrawal Hero -->
+
+    <section class="dashboard-hero">
+
+        <h1>
+            Withdraw Funds
+        </h1>
+
+        <p>
+            Request a withdrawal from your Nor Ellab Capital account.
+        </p>
+
+    </section>
+
+
+
+    <!-- Withdrawal Section -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-container">
+
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Withdrawal Request
+                </h2>
+
+                <p>
+                    Enter the amount you would like to withdraw
+                    from your available balance.
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="withdraw-amount">
+                        Withdrawal Amount
+                    </label>
+
+                    <input
+                        type="number"
+                        id="withdraw-amount"
+                        placeholder="Enter amount"
+                        min="1"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="dashboard-button"
+                    id="withdraw-button"
+                >
+                    Submit Request
+                </button>
+
+
+                <p id="withdraw-message"></p>
+
+            </div>
+
+
+
+            <div class="dashboard-card">
+
+                <h2>
+                    Withdrawal Information
+                </h2>
+
+                <p>
+                    Withdrawal requests will be reviewed and
+                    processed through the appropriate payment
+                    system once withdrawal integration is connected.
+                </p>
+
+                <p>
+                    Funds will only be released after the request
+                    has been successfully verified.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            © 2026 Nor Ellab Capital.
+            All rights reserved.
+        </p>
+
+    </footer>
+
+
+
+    <script>
+
+        const withdrawButton =
+            document.getElementById(
+                "withdraw-button"
+            );
+
+
+        const withdrawAmount =
+            document.getElementById(
+                "withdraw-amount"
+            );
+
+
+        const withdrawMessage =
+            document.getElementById(
+                "withdraw-message"
+            );
+
+
+        withdrawButton.addEventListener(
+            "click",
+            function() {
+
+                const amount =
+                    Number(
+                        withdrawAmount.value
+                    );
+
+
+                if (!amount || amount <= 0) {
+
+                    withdrawMessage.textContent =
+                        "Please enter a valid withdrawal amount.";
+
+                    return;
+
+                }
+
+
+                withdrawMessage.textContent =
+                    "Withdrawal request received. Processing will be connected here.";
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

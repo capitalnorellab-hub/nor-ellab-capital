@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Payment Details | Nor Ellab Capital
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+
+<header class="site-header">
+
+    <div class="logo">
+        Nor Ellab Capital
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="investments.html">
+            Investments
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<section class="dashboard-hero">
+
+    <h1>
+        Payment Details
+    </h1>
+
+    <p>
+        Complete your payment using the selected
+        cryptocurrency.
+    </p>
+
+</section>
+
+
+
+<section class="dashboard-section">
+
+    <div class="dashboard-container">
+
+
+        <!-- Investment Summary -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Investment Summary
+            </h2>
+
+
+            <div class="portfolio-summary">
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Asset
+                    </span>
+
+                    <strong id="payment-asset">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Amount
+                    </span>
+
+                    <strong id="payment-amount">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Estimated Total
+                    </span>
+
+                    <strong id="payment-total">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Payment Method
+                    </span>
+
+                    <strong id="payment-method">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Wallet Information -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Payment Instructions
+            </h2>
+
+
+            <p id="network-warning">
+                —
+            </p>
+
+
+            <h3>
+                Wallet Address
+            </h3>
+
+
+            <div
+                style="
+                    background:#f3f4f6;
+                    padding:15px;
+                    border-radius:8px;
+                    word-break:break-all;
+                    font-weight:600;
+                    margin:15px 0;
+                "
+                id="wallet-address"
+            >
+                —
+            </div>
+
+
+            <button
+                type="button"
+                class="dashboard-button"
+                id="copy-wallet"
+            >
+                Copy Wallet Address
+            </button>
+
+
+            <p
+                style="
+                    margin-top:15px;
+                    color:#b45309;
+                "
+            >
+                Send only the selected cryptocurrency
+                using the correct network. Sending funds
+                using the wrong network may result in
+                permanent loss.
+            </p>
+
+        </div>
+
+
+
+        <!-- Transaction Hash -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Submit Transaction Hash
+            </h2>
+
+
+            <p>
+                After making your cryptocurrency payment,
+                enter the transaction hash (TXID) below
+                for verification.
+            </p>
+
+
+            <label for="payment-reference">
+                Transaction Hash / TXID
+            </label>
+
+
+            <input
+                type="text"
+                id="payment-reference"
+                placeholder="Enter transaction hash / TXID"
+            >
+
+
+            <button
+                type="button"
+                class="dashboard-button"
+                id="submit-payment"
+            >
+                Submit Payment
+            </button>
+
+
+            <p id="payment-status"></p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <p>
+        © 2026 Nor Ellab Capital.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+
+/* SUPABASE */
+
+const supabaseUrl =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+
+
+const supabaseKey =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+const supabaseClient =
+    supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+
+/* READ URL */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const method =
+    params.get("method") || "";
+
+
+const asset =
+    params.get("asset") || "";
+
+
+const amount =
+    Number(
+        params.get("amount")
+    ) || 0;
+
+
+const price =
+    Number(
+        params.get("price")
+    ) || 0;
+
+
+const total =
+    Number(
+        params.get("total")
+    ) || 0;
+
+
+
+/* NORMALIZE METHOD */
+
+const normalizedMethod =
+    method
+        .toUpperCase()
+        .replace(/[\s_-]/g, "");
+
+
+
+/* WALLET VARIABLES */
+
+let walletAddress = "";
+
+let paymentMethod = "";
+
+let networkWarning = "";
+
+
+
+/* BITCOIN */
+
+if (
+    normalizedMethod === "BTC" ||
+    normalizedMethod === "BITCOIN"
+) {
+
+    paymentMethod =
+        "Bitcoin (BTC)";
+
+    walletAddress =
+        "bc1qu5vz52cyld9kma0f0y7jrhpcqv686httm822u6";
+
+    networkWarning =
+        "Bitcoin Network — Send BTC only to this address.";
+
+}
+
+
+
+/* USDT TRC-20 */
+
+else if (
+    normalizedMethod === "USDT" ||
+    normalizedMethod === "USDTTRC20" ||
+    normalizedMethod === "USDTTRON"
+) {
+
+    paymentMethod =
+        "USDT (TRC-20)";
+
+    walletAddress =
+        "TFx5QpQQFJuEYJsGcC7v19W8Lafi64iqdf";
+
+    networkWarning =
+        "TRON Network (TRC-20) — Send USDT using TRC-20 only.";
+
+}
+
+
+
+/* DISPLAY SUMMARY */
+
+document.getElementById(
+    "payment-asset"
+).textContent =
+    asset || "—";
+
+
+document.getElementById(
+    "payment-amount"
+).textContent =
+    amount
+        ? amount + " " + asset
+        : "—";
+
+
+document.getElementById(
+    "payment-total"
+).textContent =
+    total
+        ? "$" + total.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        )
+        : "—";
+
+
+document.getElementById(
+    "payment-method"
+).textContent =
+    paymentMethod || "—";
+
+
+document.getElementById(
+    "network-warning"
+).textContent =
+    networkWarning || "Payment method not recognized.";
+
+
+document.getElementById(
+    "wallet-address"
+).textContent =
+    walletAddress ||
+    "No wallet address is available.";
+
+
+
+/* COPY WALLET */
+
+document.getElementById(
+    "copy-wallet"
+).addEventListener(
+    "click",
+    async function () {
+
+        if (!walletAddress) {
+
+            document.getElementById(
+                "payment-status"
+            ).textContent =
+                "No wallet address is available.";
+
+            return;
+
+        }
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                walletAddress
+            );
+
+            this.textContent =
+                "Wallet Address Copied";
+
+            setTimeout(
+                () => {
+
+                    this.textContent =
+                        "Copy Wallet Address";
+
+                },
+                2000
+            );
+
+        } catch (error) {
+
+            document.getElementById(
+                "payment-status"
+            ).textContent =
+                "Unable to copy the wallet address.";
+
+        }
+
+    }
+);
+
+
+
+/* SUBMIT PAYMENT */
+
+document.getElementById(
+    "submit-payment"
+).addEventListener(
+    "click",
+    async function () {
+
+
+        const status =
+            document.getElementById(
+                "payment-status"
+            );
+
+
+        const reference =
+            document.getElementById(
+                "payment-reference"
+            ).value.trim();
+
+
+
+        if (!paymentMethod || !walletAddress) {
+
+            status.textContent =
+                "Payment method is not recognized.";
+
+            return;
+
+        }
+
+
+
+        if (
+            !asset ||
+            !amount ||
+            !price ||
+            !total
+        ) {
+
+            status.textContent =
+                "Investment information is missing. Please start the investment again.";
+
+            return;
+
+        }
+
+
+
+        if (!reference) {
+
+            status.textContent =
+                "Please enter your transaction hash / TXID.";
+
+            return;
+
+        }
+
+
+
+        status.textContent =
+            "Submitting payment for verification...";
+
+
+
+        const {
+            data: {
+                user
+            }
+        } =
+            await supabaseClient.auth.getUser();
+
+
+
+        if (!user) {
+
+            status.textContent =
+                "Please log in before submitting a payment.";
+
+            return;
+
+        }
+
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("crypto_payment_requests")
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    asset:
+                        asset,
+
+                    amount:
+                        amount,
+
+                    price:
+                        price,
+
+                    total:
+                        total,
+
+                    payment_method:
+                        paymentMethod,
+
+                    payment_reference:
+                        reference,
+
+                    status:
+                        "Pending"
+
+                });
+
+
+
+        if (error) {
+
+            console.error(error);
+
+            status.textContent =
+                "Payment submission failed: " +
+                error.message;
+
+            return;
+
+        }
+
+
+
+        status.textContent =
+            "Payment submitted successfully. Status: Pending Verification.";
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

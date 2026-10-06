@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Profile | Nor Ellab Capital</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #111827;
+        }
+
+        header {
+            background-color: #111827;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0 0 15px 0;
+            font-size: 24px;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .profile-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .profile-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-card h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .profile-card p {
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-top: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #111827;
+        }
+
+        .readonly-field {
+            background-color: #f3f4f6;
+        }
+
+        .profile-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .profile-button {
+            display: inline-block;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            background-color: #111827;
+            color: #ffffff;
+        }
+
+        .profile-button:hover {
+            background-color: #1f2937;
+        }
+
+        .back-button {
+            background-color: #6b7280;
+        }
+
+        .back-button:hover {
+            background-color: #4b5563;
+        }
+
+        #profile-message {
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+
+            .profile-container {
+                margin: 25px auto;
+                padding: 15px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin-bottom: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>
+            Nor Ellab Capital
+        </h1>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="investments.html">
+                Investments
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="#" id="logout-link">
+                Logout
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <main class="profile-container">
+
+        <div class="profile-card">
+
+            <h2>
+                My Profile
+            </h2>
+
+            <p>
+                Manage your personal account information.
+            </p>
+
+
+            <form id="profile-form">
+
+
+                <div class="form-group">
+
+                    <label for="full-name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="full-name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        class="readonly-field"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="account-status">
+                        Account Status
+                    </label>
+
+                    <input
+                        type="text"
+                        id="account-status"
+                        class="readonly-field"
+                        readonly
+                    >
+
+                </div>
+
+
+                <div class="profile-actions">
+
+                    <button
+                        type="submit"
+                        class="profile-button"
+                    >
+                        Save Changes
+                    </button>
+
+                    <a
+                        href="dashboard.html"
+                        class="profile-button back-button"
+                    >
+                        Back to Dashboard
+                    </a>
+
+                </div>
+
+
+                <p id="profile-message"></p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <p>
+            © 2026 Nor Ellab Capital. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        const supabaseUrl =
+            "https://grgmsezyxxceheofmsoj.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+        const supabaseClient =
+            supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+
+
+        const profileForm =
+            document.getElementById(
+                "profile-form"
+            );
+
+        const profileMessage =
+            document.getElementById(
+                "profile-message"
+            );
+
+
+        async function loadProfile() {
+
+            const {
+                data: {
+                    user
+                }
+            } =
+                await supabaseClient.auth.getUser();
+
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const {
+                data: profile,
+                error
+            } =
+                await supabaseClient
+                    .from("profiles")
+                    .select(
+                        "full_name, phone, email, account_status"
+                    )
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            if (error) {
+
+                console.log(error);
+
+                profileMessage.textContent =
+                    "Unable to load your profile.";
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "full-name"
+            ).value =
+                profile?.full_name ||
+                user.user_metadata?.full_name ||
+                "";
+
+
+            document.getElementById(
+                "email"
+            ).value =
+                profile?.email ||
+                user.email ||
+                "";
+
+
+            document.getElementById(
+                "phone"
+            ).value =
+                profile?.phone ||
+                user.user_metadata?.phone ||
+                "";
+
+
+            document.getElementById(
+                "account-status"
+            ).value =
+                profile?.account_status ||
+                "Active";
+
+        }
+
+
+        profileForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const {
+                    data: {
+                        user
+                    }
+                } =
+                    await supabaseClient.auth.getUser();
+
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                const fullName =
+                    document
+                        .getElementById("full-name")
+                        .value
+                        .trim();
+
+
+                const phone =
+                    document
+                        .getElementById("phone")
+                        .value
+                        .trim();
+
+
+                if (!fullName) {
+
+                    profileMessage.textContent =
+                        "Please enter your full name.";
+
+                    return;
+
+                }
+
+
+                profileMessage.textContent =
+                    "Saving changes...";
+
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .from("profiles")
+                        .update({
+                            full_name: fullName,
+                            phone: phone
+                        })
+                        .eq(
+                            "user_id",
+                            user.id
+                        );
+
+
+                if (error) {
+
+                    console.log(error);
+
+                    profileMessage.textContent =
+                        "Unable to save your changes.";
+
+                    return;
+
+                }
+
+
+                profileMessage.textContent =
+                    "Profile updated successfully.";
+
+            }
+        );
+
+
+        document
+            .getElementById("logout-link")
+            .addEventListener(
+                "click",
+                async function(event) {
+
+                    event.preventDefault();
+
+                    await supabaseClient.auth.signOut();
+
+                    window.location.href =
+                        "login.html";
+
+                }
+            );
+
+
+        loadProfile();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Choose Crypto Payment</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            color: #111827;
+        }
+
+        header {
+            background-color: #111827;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .summary {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: #111827;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1f2937;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>Nor Ellab Capital</h2>
+</header>
+
+<main>
+
+    <div class="card">
+
+        <h1>Choose Crypto Payment</h1>
+
+        <div class="summary">
+
+            <div class="row">
+                <span>Investment Asset</span>
+                <strong id="asset"></strong>
+            </div>
+
+            <div class="row">
+                <span>Investment Amount</span>
+                <strong id="amount"></strong>
+            </div>
+
+            <div class="row">
+                <span>Estimated Total</span>
+                <strong id="total"></strong>
+            </div>
+
+        </div>
+
+        <button id="btc-payment">
+            Pay with Bitcoin (BTC)
+        </button>
+
+        <button id="usdt-payment">
+            Pay with USDT (TRC-20)
+        </button>
+
+    </div>
+
+</main>
+
+<script>
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const asset =
+    params.get("asset") || "";
+
+const amount =
+    params.get("amount") || "";
+
+const price =
+    params.get("price") || "";
+
+const total =
+    params.get("total") || "";
+
+
+/* DISPLAY */
+
+document.getElementById("asset").textContent =
+    asset || "Not available";
+
+document.getElementById("amount").textContent =
+    amount || "Not available";
+
+document.getElementById("total").textContent =
+    total
+        ? "$" + Number(total).toLocaleString()
+        : "Not available";
+
+
+/* BITCOIN */
+
+document.getElementById(
+    "btc-payment"
+).addEventListener(
+    "click",
+    function () {
+
+        const url =
+            new URL(
+                "crypto-payment-details.html",
+                window.location.href
+            );
+
+        url.searchParams.set(
+            "method",
+            "BTC"
+        );
+
+        url.searchParams.set(
+            "asset",
+            asset
+        );
+
+        url.searchParams.set(
+            "amount",
+            amount
+        );
+
+        url.searchParams.set(
+            "price",
+            price
+        );
+
+        url.searchParams.set(
+            "total",
+            total
+        );
+
+        window.location.href =
+            url.toString();
+    }
+);
+
+
+/* USDT TRC-20 */
+
+document.getElementById(
+    "usdt-payment"
+).addEventListener(
+    "click",
+    function () {
+
+        const url =
+            new URL(
+                "crypto-payment-details.html",
+                window.location.href
+            );
+
+        url.searchParams.set(
+            "method",
+            "USDT"
+        );
+
+        url.searchParams.set(
+            "asset",
+            asset
+        );
+
+        url.searchParams.set(
+            "amount",
+            amount
+        );
+
+        url.searchParams.set(
+            "price",
+            price
+        );
+
+        url.searchParams.set(
+            "total",
+            total
+        );
+
+        window.location.href =
+            url.toString();
+    }
+);
+
+</script>
+
+</body>
+</html>

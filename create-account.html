@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account | Nor Ellab Capital</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+
+        <h2>Nor Ellab Capital</h2>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="investments.html">Investments</a>
+            <a href="#">About</a>
+            <a href="#">How It Works</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contact</a>
+            <a href="login.html">Login</a>
+            <a href="create-account.html">Create Account</a>
+        </nav>
+
+    </header>
+
+
+    <!-- Create Account Hero -->
+    <section class="account-hero">
+
+        <h1>Create Your Investor Account</h1>
+
+        <p>
+            Create an account to access your investor dashboard,
+            manage your profile and view your investment information.
+        </p>
+
+    </section>
+
+
+    <!-- Create Account Form -->
+    <section class="account-section" id="registration">
+
+        <div class="account-card">
+
+            <h2>Create Account</h2>
+
+            <p class="account-intro">
+                Enter your information below to get started.
+            </p>
+
+
+            <form id="create-account-form">
+
+                <div class="form-group">
+
+                    <label for="full-name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="full-name"
+                        name="full-name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="phone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirm-password">
+                        Confirm Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm-password"
+                        placeholder="Confirm your password"
+                        required
+                    >
+
+                </div>
+
+
+                <button type="submit" class="account-button">
+                    Create Account
+                </button>
+
+
+                <p id="account-message"></p>
+
+            </form>
+
+
+            <p class="account-login">
+                Already have an account?
+                <a href="login.html">Login here</a>
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-content">
+
+            <div class="footer-company">
+
+                <h3>Nor Ellab Capital</h3>
+
+                <p>
+                    Professional investment and asset management
+                    solutions designed to help investors make
+                    informed financial decisions.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <h4>Quick Links</h4>
+
+                <a href="index.html">Home</a>
+                <a href="investments.html">Investments</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+
+            </div>
+
+
+            <div class="footer-contact">
+
+                <h4>Contact</h4>
+
+                <p>+1 (267) 981-5103</p>
+                <p>capitalnorellab@gmail.com</p>
+
+            </div>
+
+        </div>
+
+
+        <p class="footer-bottom">
+            © 2026 Nor Ellab Capital. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        const supabaseUrl =
+            "https://grgmsezyxxceheofmsoj.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+        const supabaseClient =
+            supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+
+
+        const accountForm =
+            document.getElementById("create-account-form");
+
+        const accountMessage =
+            document.getElementById("account-message");
+
+
+        accountForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const fullName =
+                    document.getElementById("full-name").value.trim();
+
+                const email =
+                    document.getElementById("email").value.trim();
+
+                const phone =
+                    document.getElementById("phone").value.trim();
+
+                const password =
+                    document.getElementById("password").value;
+
+                const confirmPassword =
+                    document.getElementById("confirm-password").value;
+
+
+                if (password !== confirmPassword) {
+
+                    accountMessage.textContent =
+                        "Passwords do not match.";
+
+                    return;
+                }
+
+
+                accountMessage.textContent =
+                    "Creating your account...";
+
+
+                const { data, error } =
+                    await supabaseClient.auth.signUp({
+
+                        email: email,
+
+                        password: password,
+
+                        options: {
+
+                            data: {
+                                full_name: fullName,
+                                phone: phone
+                            }
+
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    accountMessage.textContent =
+                        error.message;
+
+                    return;
+                }
+
+
+                accountMessage.textContent =
+                    "Account created successfully. You can now log in.";
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

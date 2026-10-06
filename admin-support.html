@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Support Center - Nor Ellab Capital</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="container">
+
+        <h1>Nor Ellab Capital</h1>
+
+        <nav>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="admin-deposits.html">
+                Deposits
+            </a>
+
+            <a href="admin-support.html">
+                Support
+            </a>
+
+            <a href="#" id="logout-button">
+                Logout
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<section class="page-hero">
+
+    <div class="container">
+
+        <h2>Investor Support Center</h2>
+
+        <p>
+            Manage investor support conversations.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section>
+
+    <div class="container">
+
+
+        <!-- SUPPORT CONVERSATIONS -->
+
+        <div class="dashboard-card">
+
+            <h3>
+                Support Conversations
+            </h3>
+
+
+            <p id="admin-status">
+                Checking administrator access...
+            </p>
+
+
+            <div id="conversation-list">
+
+                <p>
+                    Loading conversations...
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- OPEN CONVERSATION -->
+
+        <div
+            class="dashboard-card"
+            id="messages-section"
+            style="display: none;"
+        >
+
+            <h3 id="conversation-title">
+                Conversation
+            </h3>
+
+
+            <p id="conversation-info"></p>
+
+
+            <!-- MESSAGES -->
+
+            <div
+                id="messages-container"
+                style="
+                    margin-top: 20px;
+                    padding: 15px;
+                    background: #f3f4f6;
+                    border-radius: 8px;
+                "
+            ></div>
+
+
+            <!-- ADMIN REPLY -->
+
+            <div
+                id="reply-section"
+                style="
+                    margin-top: 20px;
+                "
+            >
+
+                <textarea
+                    id="admin-reply"
+                    rows="4"
+                    placeholder="Type your reply to the investor..."
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        resize: vertical;
+                    "
+                ></textarea>
+
+
+                <button
+                    id="send-reply-button"
+                    class="dashboard-button"
+                    style="
+                        margin-top: 10px;
+                    "
+                >
+                    Send Reply
+                </button>
+
+
+                <p id="reply-status"></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<script>
+
+
+const supabaseUrl =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+
+
+const supabaseKey =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+const supabaseClient =
+    supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+
+const adminStatus =
+    document.getElementById(
+        "admin-status"
+    );
+
+
+const conversationList =
+    document.getElementById(
+        "conversation-list"
+    );
+
+
+const messagesSection =
+    document.getElementById(
+        "messages-section"
+    );
+
+
+const conversationTitle =
+    document.getElementById(
+        "conversation-title"
+    );
+
+
+const conversationInfo =
+    document.getElementById(
+        "conversation-info"
+    );
+
+
+const messagesContainer =
+    document.getElementById(
+        "messages-container"
+    );
+
+
+const logoutButton =
+    document.getElementById(
+        "logout-button"
+    );
+
+
+const adminReply =
+    document.getElementById(
+        "admin-reply"
+    );
+
+
+const sendReplyButton =
+    document.getElementById(
+        "send-reply-button"
+    );
+
+
+const replyStatus =
+    document.getElementById(
+        "reply-status"
+    );
+
+
+
+let currentConversation = null;
+
+let currentAdminUser = null;
+
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+
+async function checkAdmin() {
+
+
+    const {
+        data: {
+            user
+        }
+    } =
+        await supabaseClient.auth.getUser();
+
+
+
+    if (!user) {
+
+        window.location.href =
+            "login.html";
+
+        return null;
+
+    }
+
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq(
+                "user_id",
+                user.id
+            )
+            .maybeSingle();
+
+
+
+    if (
+        error ||
+        !data
+    ) {
+
+        adminStatus.textContent =
+            "Administrator access required.";
+
+        conversationList.innerHTML =
+            "";
+
+        return null;
+
+    }
+
+
+
+    adminStatus.textContent =
+        "Administrator access confirmed.";
+
+
+    currentAdminUser =
+        user;
+
+
+    return user;
+
+}
+
+
+
+/* =========================
+   LOAD CONVERSATIONS
+========================= */
+
+
+async function loadConversations() {
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from(
+                "support_conversations"
+            )
+            .select("*")
+            .order(
+                "updated_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+
+    if (error) {
+
+        conversationList.innerHTML =
+            "<p>Unable to load conversations.</p>";
+
+        console.log(error);
+
+        return;
+
+    }
+
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        conversationList.innerHTML =
+            "<p>No support conversations yet.</p>";
+
+        return;
+
+    }
+
+
+
+    conversationList.innerHTML =
+        "";
+
+
+
+    data.forEach(
+        function(conversation) {
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.style.padding =
+                "15px";
+
+
+            card.style.marginBottom =
+                "12px";
+
+
+            card.style.border =
+                "1px solid #ddd";
+
+
+            card.style.borderRadius =
+                "8px";
+
+
+            card.style.background =
+                "#ffffff";
+
+
+
+            const title =
+                document.createElement(
+                    "h4"
+                );
+
+
+            title.textContent =
+                conversation.subject ||
+                "General Support";
+
+
+
+            const userId =
+                document.createElement(
+                    "p"
+                );
+
+
+            userId.textContent =
+                "Investor ID: " +
+                conversation.user_id;
+
+
+
+            const status =
+                document.createElement(
+                    "p"
+                );
+
+
+            status.textContent =
+                "Status: " +
+                conversation.status;
+
+
+
+            const updated =
+                document.createElement(
+                    "p"
+                );
+
+
+            updated.textContent =
+                "Updated: " +
+                new Date(
+                    conversation.updated_at
+                ).toLocaleString();
+
+
+
+            const openButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            openButton.textContent =
+                "Open Conversation";
+
+
+            openButton.className =
+                "dashboard-button";
+
+
+
+            openButton.addEventListener(
+                "click",
+                function() {
+
+                    loadMessages(
+                        conversation
+                    );
+
+                }
+            );
+
+
+
+            card.appendChild(
+                title
+            );
+
+
+            card.appendChild(
+                userId
+            );
+
+
+            card.appendChild(
+                status
+            );
+
+
+            card.appendChild(
+                updated
+            );
+
+
+            card.appendChild(
+                openButton
+            );
+
+
+
+            conversationList.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   LOAD MESSAGES
+========================= */
+
+
+async function loadMessages(
+    conversation
+) {
+
+
+    currentConversation =
+        conversation;
+
+
+
+    messagesSection.style.display =
+        "block";
+
+
+
+    conversationTitle.textContent =
+        conversation.subject ||
+        "General Support";
+
+
+
+    conversationInfo.textContent =
+        "Investor ID: " +
+        conversation.user_id;
+
+
+
+    messagesContainer.innerHTML =
+        "<p>Loading messages...</p>";
+
+
+
+    adminReply.value =
+        "";
+
+
+    replyStatus.textContent =
+        "";
+
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from(
+                "support_messages"
+            )
+            .select("*")
+            .eq(
+                "conversation_id",
+                conversation.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+
+    if (error) {
+
+        messagesContainer.innerHTML =
+            "<p>Unable to load messages.</p>";
+
+        console.log(error);
+
+        return;
+
+    }
+
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        messagesContainer.innerHTML =
+            "<p>No messages yet.</p>";
+
+        return;
+
+    }
+
+
+
+    messagesContainer.innerHTML =
+        "";
+
+
+
+    data.forEach(
+        function(message) {
+
+
+            const messageBox =
+                document.createElement(
+                    "div"
+                );
+
+
+            messageBox.style.padding =
+                "12px";
+
+
+            messageBox.style.marginBottom =
+                "10px";
+
+
+            messageBox.style.borderRadius =
+                "8px";
+
+
+
+            const text =
+                document.createElement(
+                    "p"
+                );
+
+
+            text.textContent =
+                message.message;
+
+
+
+            const time =
+                document.createElement(
+                    "small"
+                );
+
+
+            time.textContent =
+                new Date(
+                    message.created_at
+                ).toLocaleString();
+
+
+
+            messageBox.appendChild(
+                text
+            );
+
+
+            messageBox.appendChild(
+                time
+            );
+
+
+
+            if (
+                message.sender_id ===
+                conversation.user_id
+            ) {
+
+                messageBox.style.background =
+                    "#e5e7eb";
+
+            } else {
+
+                messageBox.style.background =
+                    "#ffffff";
+
+            }
+
+
+
+            messagesContainer.appendChild(
+                messageBox
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================
+   SEND ADMIN REPLY
+========================= */
+
+
+sendReplyButton.addEventListener(
+    "click",
+    async function() {
+
+
+        if (
+            !currentConversation
+        ) {
+
+            replyStatus.textContent =
+                "Please open a conversation first.";
+
+            return;
+
+        }
+
+
+
+        const message =
+            adminReply.value.trim();
+
+
+
+        if (!message) {
+
+            replyStatus.textContent =
+                "Please enter a message.";
+
+            return;
+
+        }
+
+
+
+        if (!currentAdminUser) {
+
+            replyStatus.textContent =
+                "Administrator account not found.";
+
+            return;
+
+        }
+
+
+
+        sendReplyButton.disabled =
+            true;
+
+
+        replyStatus.textContent =
+            "Sending reply...";
+
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from(
+                    "support_messages"
+                )
+                .insert({
+
+                    conversation_id:
+                        currentConversation.id,
+
+                    sender_id:
+                        currentAdminUser.id,
+
+                    message:
+                        message
+
+                });
+
+
+
+        if (error) {
+
+            console.log(error);
+
+
+            replyStatus.textContent =
+                error.message;
+
+
+            sendReplyButton.disabled =
+                false;
+
+
+            return;
+
+        }
+
+
+
+        /* =========================
+           CREATE INVESTOR NOTIFICATION
+        ========================= */
+
+
+        const {
+            error: notificationError
+        } =
+            await supabaseClient
+                .from("notifications")
+                .insert({
+
+                    user_id:
+                        currentConversation.user_id,
+
+                    title:
+                        "New Support Message",
+
+                    message:
+                        "You have a new message from Nor Ellab Capital.",
+
+                    type:
+                        "support"
+
+                });
+
+
+
+        if (notificationError) {
+
+            console.log(
+                "Notification creation failed:",
+                notificationError
+            );
+
+        }
+
+
+
+        /* =========================
+           UPDATE CONVERSATION TIME
+        ========================= */
+
+
+        await supabaseClient
+            .from(
+                "support_conversations"
+            )
+            .update({
+
+                updated_at:
+                    new Date().toISOString()
+
+            })
+            .eq(
+                "id",
+                currentConversation.id
+            );
+
+
+
+        adminReply.value =
+            "";
+
+
+        replyStatus.textContent =
+            "Reply sent successfully.";
+
+
+
+        await loadMessages(
+            currentConversation
+        );
+
+
+        await loadConversations();
+
+
+
+        sendReplyButton.disabled =
+            false;
+
+    }
+);
+
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+
+logoutButton.addEventListener(
+    "click",
+    async function(event) {
+
+
+        event.preventDefault();
+
+
+
+        await supabaseClient.auth.signOut();
+
+
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+
+/* =========================
+   START PAGE
+========================= */
+
+
+async function startAdminPage() {
+
+
+    const user =
+        await checkAdmin();
+
+
+
+    if (!user) {
+
+        return;
+
+    }
+
+
+
+    await loadConversations();
+
+}
+
+
+
+startAdminPage();
+
+
+</script>
+
+
+</body>
+
+</html>

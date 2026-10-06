@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Investment Details | Nor Ellab Capital
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<header class="site-header">
+
+    <div class="logo">
+        Nor Ellab Capital
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="investments.html">
+            Investments
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a
+            href="#"
+            id="logout-button"
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<section class="dashboard-hero">
+
+    <h1>
+        Investment Details
+    </h1>
+
+    <p>
+        View information about your investment.
+    </p>
+
+</section>
+
+
+
+<section class="dashboard-section">
+
+    <div class="dashboard-container">
+
+
+        <div class="dashboard-card">
+
+            <h2 id="investment-name">
+                Loading investment...
+            </h2>
+
+
+            <div class="portfolio-summary">
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Investment Type
+                    </span>
+
+                    <strong id="investment-type">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Amount Invested
+                    </span>
+
+                    <strong id="investment-amount">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong id="investment-status">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Investment Date
+                    </span>
+
+                    <strong id="investment-date">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Investment Term
+                    </span>
+
+                    <strong id="investment-term">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-card">
+
+            <h2>
+                Investment Information
+            </h2>
+
+            <p>
+                This page displays information associated
+                with your investment account.
+            </p>
+
+            <p>
+                Investment performance and other account
+                information will be displayed here when the
+                appropriate systems are connected.
+            </p>
+
+            <a
+                href="dashboard.html"
+                class="dashboard-button"
+            >
+                Back to Dashboard
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    <p>
+        © 2026 Nor Ellab Capital.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+const supabaseUrl =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+
+
+const supabaseKey =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+const supabaseClient =
+    supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+
+async function loadInvestment() {
+
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    if (
+        sessionError ||
+        !sessionData.session
+    ) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const investmentId =
+        params.get("id");
+
+
+    if (!investmentId) {
+
+        document.getElementById(
+            "investment-name"
+        ).textContent =
+            "Investment not found.";
+
+        return;
+
+    }
+
+
+
+    const numericInvestmentId =
+        Number(investmentId);
+
+
+    if (
+        !Number.isInteger(
+            numericInvestmentId
+        )
+    ) {
+
+        document.getElementById(
+            "investment-name"
+        ).textContent =
+            "Invalid investment ID.";
+
+        return;
+
+    }
+
+
+
+    const {
+        data: investment,
+        error: investmentError
+    } =
+        await supabaseClient
+            .from("investments")
+            .select(
+                "id, investment_name, investment_type, amount, status, term, created_at"
+            )
+            .eq(
+                "id",
+                numericInvestmentId
+            )
+            .maybeSingle();
+
+
+
+    if (investmentError) {
+
+        console.error(
+            "Investment error:",
+            investmentError
+        );
+
+        document.getElementById(
+            "investment-name"
+        ).textContent =
+            "Unable to load investment.";
+
+        return;
+
+    }
+
+
+
+    if (!investment) {
+
+        document.getElementById(
+            "investment-name"
+        ).textContent =
+            "Investment not found.";
+
+        return;
+
+    }
+
+
+
+    document.getElementById(
+        "investment-name"
+    ).textContent =
+        investment.investment_name;
+
+
+
+    document.getElementById(
+        "investment-type"
+    ).textContent =
+        investment.investment_type;
+
+
+
+    document.getElementById(
+        "investment-amount"
+    ).textContent =
+        "$" +
+        Number(
+            investment.amount
+        ).toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+
+
+
+    document.getElementById(
+        "investment-status"
+    ).textContent =
+        investment.status;
+
+
+
+    if (investment.created_at) {
+
+        document.getElementById(
+            "investment-date"
+        ).textContent =
+            new Date(
+                investment.created_at
+            ).toLocaleDateString(
+                undefined,
+                {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+
+    }
+
+
+
+    document.getElementById(
+        "investment-term"
+    ).textContent =
+        investment.term ||
+        "Not specified";
+
+
+}
+
+
+
+document.getElementById(
+    "logout-button"
+).addEventListener(
+    "click",
+    async function(event) {
+
+        event.preventDefault();
+
+        this.textContent =
+            "Logging out...";
+
+
+        const {
+            error
+        } =
+            await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            this.textContent =
+                "Logout";
+
+            alert(
+                "Unable to log out. Please try again."
+            );
+
+            return;
+
+        }
+
+
+        window.location.href =
+            "login.html";
+
+    }
+);
+
+
+
+loadInvestment();
+
+
+</script>
+
+
+</body>
+
+</html>

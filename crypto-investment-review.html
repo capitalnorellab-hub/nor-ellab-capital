@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Review Crypto Investment | Nor Ellab Capital
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+
+<header class="site-header">
+
+    <div class="logo">
+        Nor Ellab Capital
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="investments.html">
+            Investments
+        </a>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+    </nav>
+
+</header>
+
+
+<section class="dashboard-hero">
+
+    <h1>
+        Review Crypto Investment
+    </h1>
+
+    <p>
+        Review your investment details before continuing.
+    </p>
+
+</section>
+
+
+<section class="dashboard-section">
+
+    <div class="dashboard-container">
+
+
+        <div class="dashboard-card">
+
+            <h2>
+                Investment Summary
+            </h2>
+
+
+            <div class="portfolio-summary">
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Asset
+                    </span>
+
+                    <strong id="review-asset">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Amount
+                    </span>
+
+                    <strong id="review-amount">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Current Price
+                    </span>
+
+                    <strong id="review-price">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Estimated Value
+                    </span>
+
+                    <strong id="review-total">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="portfolio-item">
+
+                    <span>
+                        Investment Status
+                    </span>
+
+                    <strong>
+                        Pending Review
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <div class="dashboard-card">
+
+            <h2>
+                Before You Continue
+            </h2>
+
+
+            <p>
+                The estimated value shown above is based on
+                the current cryptocurrency market price.
+            </p>
+
+
+            <p>
+                Cryptocurrency prices can change rapidly.
+                This review does not represent a completed
+                purchase, transfer, or blockchain transaction.
+            </p>
+
+
+            <button
+                type="button"
+                class="dashboard-button"
+                id="confirm-investment"
+            >
+                Confirm Investment
+            </button>
+
+
+            <a
+                href="crypto-trading.html"
+                class="dashboard-button"
+            >
+                Back to Crypto Trading
+            </a>
+
+
+            <p
+                id="confirmation-message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <p>
+        © 2026 Nor Ellab Capital.
+        All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<script>
+
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const asset =
+    params.get("asset");
+
+
+const amount =
+    Number(
+        params.get("amount")
+    );
+
+
+const price =
+    Number(
+        params.get("price")
+    );
+
+
+const total =
+    Number(
+        params.get("total")
+    );
+
+
+
+document.getElementById(
+    "review-asset"
+).textContent =
+    asset || "—";
+
+
+
+document.getElementById(
+    "review-amount"
+).textContent =
+    amount
+        ? amount + " " + asset
+        : "—";
+
+
+
+document.getElementById(
+    "review-price"
+).textContent =
+    price
+        ? "$" + price.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        )
+        : "—";
+
+
+
+document.getElementById(
+    "review-total"
+).textContent =
+    total
+        ? "$" + total.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        )
+        : "—";
+
+
+
+document.getElementById(
+    "confirm-investment"
+).addEventListener(
+    "click",
+    function () {
+
+        window.location.href =
+            "crypto-payment.html" +
+            "?asset=" +
+            encodeURIComponent(asset) +
+            "&amount=" +
+            encodeURIComponent(amount) +
+            "&price=" +
+            encodeURIComponent(price) +
+            "&total=" +
+            encodeURIComponent(total);
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

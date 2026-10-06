@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Crypto Trading | Nor Ellab Capital
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- Header -->
+
+<header>
+
+    <h2>
+        Nor Ellab Capital
+    </h2>
+
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="investments.html">
+            Investments
+        </a>
+
+        <a href="#">
+            About
+        </a>
+
+        <a href="#">
+            How It Works
+        </a>
+
+        <a href="#">
+            FAQ
+        </a>
+
+        <a href="#">
+            Contact
+        </a>
+
+        <a href="#">
+            Login
+        </a>
+
+        <a href="#">
+            Create Account
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- Crypto Trading Hero -->
+
+<section
+    class="crypto-hero"
+    id="crypto-trading"
+>
+
+    <h1>
+        Crypto Trading
+    </h1>
+
+    <p>
+        Explore cryptocurrency markets through a professional
+        trading environment designed to provide market information,
+        portfolio visibility and account management tools.
+    </p>
+
+</section>
+
+
+
+<!-- Crypto Markets -->
+
+<section class="crypto-markets">
+
+    <h2>
+        Crypto Markets
+    </h2>
+
+    <p>
+        Explore selected cryptocurrency markets and monitor
+        market information before making trading decisions.
+    </p>
+
+
+    <div class="crypto-grid">
+
+
+        <!-- Bitcoin -->
+
+        <div
+            class="crypto-card"
+            id="bitcoin"
+        >
+
+            <h3>
+                Bitcoin
+            </h3>
+
+            <p>
+                BTC
+            </p>
+
+            <div class="crypto-price">
+
+                <span id="btc-price">
+                    Loading...
+                </span>
+
+            </div>
+
+            <a href="#bitcoin">
+                View Market
+            </a>
+
+        </div>
+
+
+
+        <!-- Ethereum -->
+
+        <div
+            class="crypto-card"
+            id="ethereum"
+        >
+
+            <h3>
+                Ethereum
+            </h3>
+
+            <p>
+                ETH
+            </p>
+
+            <div class="crypto-price">
+
+                <span id="eth-price">
+                    Loading...
+                </span>
+
+            </div>
+
+            <a href="#ethereum">
+                View Market
+            </a>
+
+        </div>
+
+
+
+        <!-- Solana -->
+
+        <div
+            class="crypto-card"
+            id="solana"
+        >
+
+            <h3>
+                Solana
+            </h3>
+
+            <p>
+                SOL
+            </p>
+
+            <div class="crypto-price">
+
+                <span id="sol-price">
+                    Loading...
+                </span>
+
+            </div>
+
+            <a href="#solana">
+                View Market
+            </a>
+
+        </div>
+
+
+
+        <!-- USDT -->
+
+        <div
+            class="crypto-card"
+            id="usdt"
+        >
+
+            <h3>
+                USDT
+            </h3>
+
+            <p>
+                Tether
+            </p>
+
+            <div class="crypto-price">
+
+                <span id="usdt-price">
+                    Loading...
+                </span>
+
+            </div>
+
+            <a href="#usdt">
+                View Market
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- Trading Panel -->
+
+<section class="trading-panel">
+
+    <h2>
+        Trade Crypto
+    </h2>
+
+    <p>
+        Select an asset and enter the amount you would like
+        to trade or invest.
+    </p>
+
+
+    <div class="trade-box">
+
+
+        <!-- Trade Form -->
+
+        <div class="trade-form">
+
+            <h3>
+                Place Trade
+            </h3>
+
+
+            <label for="asset">
+                Select Asset
+            </label>
+
+
+            <select id="asset">
+
+                <option value="BTC">
+                    Bitcoin (BTC)
+                </option>
+
+                <option value="ETH">
+                    Ethereum (ETH)
+                </option>
+
+                <option value="SOL">
+                    Solana (SOL)
+                </option>
+
+                <option value="USDT">
+                    Tether (USDT)
+                </option>
+
+            </select>
+
+
+
+            <label for="amount">
+                Amount
+            </label>
+
+
+            <input
+                type="number"
+                id="amount"
+                placeholder="Enter amount"
+                min="0"
+                step="any"
+            >
+
+
+
+            <div class="trade-buttons">
+
+
+                <button
+                    type="button"
+                    class="buy-button"
+                >
+                    Buy
+                </button>
+
+
+                <button
+                    type="button"
+                    class="sell-button"
+                >
+                    Sell
+                </button>
+
+
+                <button
+                    type="button"
+                    class="invest-button"
+                >
+                    Invest
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- Trade Summary -->
+
+        <div class="trade-summary">
+
+            <h3>
+                Order Summary
+            </h3>
+
+
+
+            <div class="summary-row">
+
+                <span>
+                    Action
+                </span>
+
+                <strong id="trade-action">
+                    --
+                </strong>
+
+            </div>
+
+
+
+            <div class="summary-row">
+
+                <span>
+                    Asset
+                </span>
+
+                <strong id="summary-asset">
+                    BTC
+                </strong>
+
+            </div>
+
+
+
+            <div class="summary-row">
+
+                <span>
+                    Amount
+                </span>
+
+                <strong id="summary-amount">
+                    0
+                </strong>
+
+            </div>
+
+
+
+            <div class="summary-row">
+
+                <span>
+                    Current Price
+                </span>
+
+                <strong id="current-price">
+                    --
+                </strong>
+
+            </div>
+
+
+
+            <div class="summary-row">
+
+                <span>
+                    Estimated Total
+                </span>
+
+                <strong id="summary-total">
+                    $0.00
+                </strong>
+
+            </div>
+
+
+
+            <p id="trade-status"></p>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- Trading Information -->
+
+<section class="trading-information">
+
+    <h2>
+        Trading Information
+    </h2>
+
+    <p>
+        Cryptocurrency markets can be highly volatile. Prices
+        may change rapidly, and you may lose some or all of the
+        capital you trade. Past performance does not guarantee
+        future results.
+    </p>
+
+</section>
+
+
+
+<!-- Footer -->
+
+<footer>
+
+    <div class="footer-content">
+
+
+        <div class="footer-company">
+
+            <h3>
+                Nor Ellab Capital
+            </h3>
+
+            <p>
+                Professional investment and asset management
+                solutions designed to help investors make
+                informed financial decisions.
+            </p>
+
+        </div>
+
+
+
+        <div class="footer-links">
+
+            <h4>
+                Quick Links
+            </h4>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="investments.html">
+                Investments
+            </a>
+
+            <a href="#">
+                About
+            </a>
+
+            <a href="#">
+                Contact
+            </a>
+
+        </div>
+
+
+
+        <div class="footer-contact">
+
+            <h4>
+                Contact
+            </h4>
+
+            <p>
+                +1 (267) 981-5103
+            </p>
+
+            <p>
+                capitalnorellab@gmail.com
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <p class="footer-bottom">
+
+        © 2026 Nor Ellab Capital.
+        All rights reserved.
+
+    </p>
+
+</footer>
+
+
+
+<!-- Existing Crypto Script -->
+
+<script src="script.js"></script>
+
+
+
+<!-- Investment Button Script -->
+
+<script>
+
+const investButton =
+    document.querySelector(
+        ".invest-button"
+    );
+
+
+investButton.addEventListener(
+    "click",
+    function () {
+
+
+        const asset =
+            document.getElementById(
+                "asset"
+            ).value;
+
+
+        const amount =
+            Number(
+                document.getElementById(
+                    "amount"
+                ).value
+            ) || 0;
+
+
+        const price =
+            Number(
+                document
+                    .getElementById(
+                        "current-price"
+                    )
+                    .textContent
+                    .replace(
+                        /[$,]/g,
+                        ""
+                    )
+            ) || 0;
+
+
+        const total =
+            amount * price;
+
+
+        const tradeStatus =
+            document.getElementById(
+                "trade-status"
+            );
+
+
+        const tradeAction =
+            document.getElementById(
+                "trade-action"
+            );
+
+
+        if (amount <= 0) {
+
+            tradeStatus.textContent =
+                "Please enter a valid amount greater than 0.";
+
+            return;
+
+        }
+
+
+        if (price <= 0) {
+
+            tradeStatus.textContent =
+                "Current market price is not available yet. Please wait and try again.";
+
+            return;
+
+        }
+
+
+        tradeAction.textContent =
+            "Invest";
+
+
+        tradeStatus.textContent =
+            "Opening investment review...";
+
+
+        window.location.href =
+            "crypto-investment-review.html" +
+            "?asset=" +
+            encodeURIComponent(
+                asset
+            ) +
+            "&amount=" +
+            encodeURIComponent(
+                amount
+            ) +
+            "&price=" +
+            encodeURIComponent(
+                price
+            ) +
+            "&total=" +
+            encodeURIComponent(
+                total
+            );
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

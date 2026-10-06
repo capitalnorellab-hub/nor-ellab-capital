@@ -1,0 +1,2959 @@
+/* =========================
+
+   BASIC RESET
+
+========================= */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+/* =========================
+
+   MAIN PAGE
+
+========================= */
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background-color: #f5f7fa;
+
+    color: #1a1a1a;
+
+    line-height: 1.6;
+
+}
+
+/* =========================
+
+   LINKS
+
+========================= */
+
+a {
+
+    text-decoration: none;
+
+    color: inherit;
+
+}
+
+/* =========================
+
+   HEADER
+
+========================= */
+
+header {
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    padding: 20px 7%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+header h2 {
+
+    font-size: 24px;
+
+    letter-spacing: 1px;
+
+}
+
+nav {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 24px;
+
+}
+
+nav a {
+
+    color: white;
+
+    font-size: 15px;
+
+    transition: 0.3s;
+
+}
+
+nav a:hover {
+
+    color: #b8c7d9;
+
+}
+
+/* =========================
+
+   HERO
+
+========================= */
+
+.hero {
+
+    min-height: 600px;
+
+    padding: 120px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+}
+
+.hero h1 {
+
+    max-width: 750px;
+
+    font-size: 58px;
+
+    line-height: 1.1;
+
+    margin-bottom: 25px;
+
+}
+
+.hero p {
+
+    max-width: 650px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    margin-bottom: 35px;
+
+    color: #d8e2ec;
+
+}
+
+.hero a {
+
+    display: inline-block;
+
+    background-color: white;
+
+    color: #102a43;
+
+    padding: 14px 25px;
+
+    border-radius: 6px;
+
+    margin-right: 12px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.hero a:hover {
+
+    transform: translateY(-2px);
+
+}
+
+/* =========================
+
+   INVESTMENT OPPORTUNITIES
+
+========================= */
+
+.investments {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.investments > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.investments > p {
+
+    max-width: 650px;
+
+    margin: 0 auto 50px;
+
+    color: #5d6875;
+
+}
+
+.investment-cards {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.investment-card {
+
+    background-color: #f5f7fa;
+
+    width: 31%;
+
+    min-width: 260px;
+
+    padding: 35px 25px;
+
+    border-radius: 10px;
+
+    border: 1px solid #e1e6eb;
+
+    text-align: left;
+
+    transition: 0.3s;
+
+}
+
+.investment-card:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.investment-card h3 {
+
+    color: #0b1f33;
+
+    font-size: 22px;
+
+    margin-bottom: 15px;
+
+}
+
+.investment-card p {
+
+    color: #5d6875;
+
+    margin-bottom: 25px;
+
+}
+
+.investment-card a {
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+}
+
+/* =========================
+
+   HOW IT WORKS
+
+========================= */
+
+.how-it-works {
+
+    padding: 90px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.how-it-works > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.how-it-works > p {
+
+    color: #5d6875;
+
+    margin-bottom: 50px;
+
+}
+
+.steps {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.step {
+
+    width: 23%;
+
+    min-width: 220px;
+
+    background-color: white;
+
+    padding: 30px 20px;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+}
+
+.step h3 {
+
+    color: #0b1f33;
+
+    font-size: 28px;
+
+    margin-bottom: 15px;
+
+}
+
+.step h4 {
+
+    color: #0b1f33;
+
+    font-size: 19px;
+
+    margin-bottom: 12px;
+
+}
+
+.step p {
+
+    color: #5d6875;
+
+}
+
+/* =========================
+
+   WHY US
+
+========================= */
+
+.why-us {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.why-us > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.why-us > p {
+
+    max-width: 700px;
+
+    margin: 0 auto 50px;
+
+    color: #5d6875;
+
+}
+
+.why-cards {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.why-card {
+
+    width: 31%;
+
+    min-width: 260px;
+
+    padding: 35px 25px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+}
+
+.why-card h3 {
+
+    color: #0b1f33;
+
+    font-size: 21px;
+
+    margin-bottom: 15px;
+
+}
+
+.why-card p {
+
+    color: #5d6875;
+
+}
+
+/* =========================
+
+   ABOUT
+
+========================= */
+
+.about {
+
+    padding: 90px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.about h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 25px;
+
+}
+
+.about p {
+
+    max-width: 750px;
+
+    margin: 0 auto 20px;
+
+    color: #5d6875;
+
+    font-size: 17px;
+
+}
+
+.about a {
+
+    display: inline-block;
+
+    margin-top: 20px;
+
+    padding: 13px 24px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.about a:hover {
+
+    background-color: #102a43;
+
+    transform: translateY(-2px);
+
+}
+
+/* =========================
+
+   FAQ
+
+========================= */
+
+.faq {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+}
+
+.faq > h2 {
+
+    text-align: center;
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 50px;
+
+}
+
+.faq-item {
+
+    max-width: 850px;
+
+    margin: 0 auto 20px;
+
+    padding: 25px 30px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+}
+
+.faq-item h3 {
+
+    color: #0b1f33;
+
+    font-size: 19px;
+
+    margin-bottom: 10px;
+
+}
+
+.faq-item p {
+
+    color: #5d6875;
+
+    line-height: 1.7;
+
+}
+
+/* =========================
+
+   CONTACT
+
+========================= */
+
+.contact {
+
+    padding: 90px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.contact h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.contact > p {
+
+    color: #5d6875;
+
+    margin-bottom: 45px;
+
+}
+
+.contact-details {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 35px;
+
+}
+
+.contact-item {
+
+    width: 300px;
+
+    padding: 30px 25px;
+
+    background-color: white;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+}
+
+.contact-item h3 {
+
+    color: #0b1f33;
+
+    font-size: 20px;
+
+    margin-bottom: 10px;
+
+}
+
+.contact-item p {
+
+    color: #5d6875;
+
+}
+
+.contact > a {
+
+    display: inline-block;
+
+    padding: 13px 25px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.contact > a:hover {
+
+    background-color: #102a43;
+
+    transform: translateY(-2px);
+
+}
+
+/* =========================
+
+   FOOTER
+
+========================= */
+
+footer {
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    padding: 60px 7% 20px;
+
+}
+
+.footer-content {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 50px;
+
+    flex-wrap: wrap;
+
+    padding-bottom: 40px;
+
+}
+
+.footer-company {
+
+    max-width: 350px;
+
+}
+
+.footer-company h2 {
+
+    font-size: 24px;
+
+    margin-bottom: 15px;
+
+}
+
+.footer-company p {
+
+    color: #b8c7d9;
+
+    line-height: 1.7;
+
+}
+
+.footer-links {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+.footer-links h3 {
+
+    margin-bottom: 8px;
+
+}
+
+.footer-links a {
+
+    color: #b8c7d9;
+
+    transition: 0.3s;
+
+}
+
+.footer-links a:hover {
+
+    color: white;
+
+}
+
+.footer-contact h3 {
+
+    margin-bottom: 15px;
+
+}
+
+.footer-contact p {
+
+    color: #b8c7d9;
+
+    margin-bottom: 8px;
+
+}
+
+.footer-bottom {
+
+    border-top: 1px solid #29435c;
+
+    padding-top: 20px;
+
+    text-align: center;
+
+}
+
+.footer-bottom p {
+
+    color: #8fa4b8;
+
+    font-size: 14px;
+
+}
+
+/* =========================
+
+   INVESTMENTS PAGE
+
+========================= */
+
+.investment-hero {
+
+    min-height: 420px;
+
+    padding: 100px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.investment-hero h1 {
+
+    font-size: 52px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+
+}
+
+.investment-hero p {
+
+    max-width: 700px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    color: #d8e2ec;
+
+}
+
+.investment-list {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.investment-list > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.investment-list > p {
+
+    color: #5d6875;
+
+    margin-bottom: 50px;
+
+}
+
+.investment-grid {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.investment-option {
+
+    width: 31%;
+
+    min-width: 260px;
+
+    padding: 35px 25px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    transition: 0.3s;
+
+}
+
+.investment-option:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.investment-option h3 {
+
+    color: #0b1f33;
+
+    font-size: 22px;
+
+    margin-bottom: 15px;
+
+}
+
+.investment-option > p {
+
+    color: #5d6875;
+
+    margin-bottom: 25px;
+
+}
+
+.investment-info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 12px 0;
+
+    border-top: 1px solid #e1e6eb;
+
+}
+
+.investment-info span {
+
+    color: #5d6875;
+
+}
+
+.investment-info strong {
+
+    color: #0b1f33;
+
+}
+
+.investment-option > a {
+
+    display: inline-block;
+
+    margin-top: 20px;
+
+    padding: 12px 20px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.investment-option > a:hover {
+
+    background-color: #102a43;
+
+    transform: translateY(-2px);
+
+}
+
+.investment-disclaimer {
+
+    padding: 70px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.investment-disclaimer h2 {
+
+    font-size: 32px;
+
+    color: #0b1f33;
+
+    margin-bottom: 20px;
+
+}
+
+.investment-disclaimer p {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    color: #5d6875;
+
+    line-height: 1.8;
+
+}
+
+/* =========================
+
+   CRYPTO TRADING
+
+========================= */
+
+.crypto-hero {
+
+    min-height: 420px;
+
+    padding: 100px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.crypto-hero h1 {
+
+    font-size: 52px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+
+}
+
+.crypto-hero p {
+
+    max-width: 700px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    color: #d8e2ec;
+
+}
+
+.crypto-markets {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.crypto-markets > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.crypto-markets > p {
+
+    max-width: 700px;
+
+    margin: 0 auto 50px;
+
+    color: #5d6875;
+
+}
+
+.crypto-grid {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.crypto-card {
+
+    width: 31%;
+
+    min-width: 260px;
+
+    padding: 35px 25px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    transition: 0.3s;
+
+}
+
+.crypto-card:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.crypto-card h3 {
+
+    color: #0b1f33;
+
+    font-size: 24px;
+
+    margin-bottom: 5px;
+
+}
+
+.crypto-card > p {
+
+    color: #5d6875;
+
+    margin-bottom: 30px;
+
+}
+
+.crypto-price {
+
+    padding: 15px 0;
+
+    border-top: 1px solid #e1e6eb;
+
+    border-bottom: 1px solid #e1e6eb;
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+}
+
+.crypto-card > a {
+
+    display: inline-block;
+
+    margin-top: 20px;
+
+    padding: 12px 20px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    transition: 0.3s;
+
+}
+
+.crypto-card > a:hover {
+
+    background-color: #102a43;
+
+    transform: translateY(-2px);
+
+}
+
+.trading-information {
+
+    padding: 70px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.trading-information h2 {
+
+    font-size: 32px;
+
+    color: #0b1f33;
+
+    margin-bottom: 20px;
+
+}
+
+.trading-information p {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    color: #5d6875;
+
+    line-height: 1.8;
+
+}
+
+.trading-panel {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.trading-panel > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.trading-panel > p {
+
+    color: #5d6875;
+
+    margin-bottom: 50px;
+
+}
+
+.trade-box {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    display: flex;
+
+    gap: 30px;
+
+    align-items: stretch;
+
+}
+
+.trade-form,
+
+.trade-summary {
+
+    flex: 1;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    padding: 30px;
+
+    text-align: left;
+
+}
+
+.trade-form h3,
+
+.trade-summary h3 {
+
+    color: #0b1f33;
+
+    font-size: 22px;
+
+    margin-bottom: 25px;
+
+}
+
+.trade-form label {
+
+    display: block;
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+}
+
+.trade-form select,
+
+.trade-form input {
+
+    width: 100%;
+
+    padding: 13px 15px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #d5dce3;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    background-color: white;
+
+}
+
+.trade-buttons {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+.trade-buttons button {
+
+    flex: 1;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.buy-button {
+
+    background-color: #1f7a4d;
+
+}
+
+.sell-button {
+
+    background-color: #a63d40;
+
+}
+
+.trade-summary {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+.summary-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #e1e6eb;
+
+}
+
+.summary-row span {
+
+    color: #5d6875;
+
+}
+
+.summary-row strong {
+
+    color: #0b1f33;
+
+}
+
+#trade-status {
+
+    margin-top: 20px;
+
+    padding: 12px 15px;
+
+    background-color: white;
+
+    border: 1px solid #d5dce3;
+
+    border-radius: 6px;
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+    text-align: center;
+
+}
+
+/* =========================
+
+   DIGITAL ASSETS
+
+========================= */
+
+.digital-assets-hero,
+
+.real-estate-hero,
+
+.equities-hero {
+
+    min-height: 420px;
+
+    padding: 100px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.digital-assets-hero h1,
+
+.real-estate-hero h1,
+
+.equities-hero h1 {
+
+    font-size: 52px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+
+}
+
+.digital-assets-hero p,
+
+.real-estate-hero p,
+
+.equities-hero p {
+
+    max-width: 700px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    color: #d8e2ec;
+
+}
+
+.digital-assets-section,
+
+.real-estate-section,
+
+.equities-section {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
+}
+
+.digital-assets-section > h2,
+
+.real-estate-section > h2,
+
+.equities-section > h2 {
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.digital-assets-section > p,
+
+.real-estate-section > p,
+
+.equities-section > p {
+
+    max-width: 700px;
+
+    margin: 0 auto 50px;
+
+    color: #5d6875;
+
+}
+
+.digital-assets-grid,
+
+.real-estate-grid,
+
+.equities-grid {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+.digital-asset-card,
+
+.real-estate-card,
+
+.equity-card {
+
+    width: 31%;
+
+    min-width: 260px;
+
+    padding: 35px 25px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    transition: 0.3s;
+
+}
+
+.digital-asset-card:hover,
+
+.real-estate-card:hover,
+
+.equity-card:hover {
+
+    transform: translateY(-5px);
+
+}
+
+.digital-asset-card h3,
+
+.real-estate-card h3,
+
+.equity-card h3 {
+
+    color: #0b1f33;
+
+    font-size: 22px;
+
+    margin-bottom: 15px;
+
+}
+
+.digital-asset-card > p,
+
+.real-estate-card > p,
+
+.equity-card > p {
+
+    color: #5d6875;
+
+    margin-bottom: 25px;
+
+}
+
+.digital-asset-info,
+
+.real-estate-info,
+
+.equity-info {
+
+    display: grid;
+
+    grid-template-columns: 1fr auto;
+
+    gap: 10px 20px;
+
+    margin: 20px 0;
+
+    padding: 15px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 8px;
+
+}
+
+.digital-asset-info span,
+
+.real-estate-info span,
+
+.equity-info span {
+
+    color: #667085;
+
+    font-size: 14px;
+
+}
+
+.digital-asset-info strong,
+
+.real-estate-info strong,
+
+.equity-info strong {
+
+    color: #0b1f33;
+
+    font-size: 14px;
+
+    text-align: right;
+
+}
+
+.digital-asset-card > a,
+
+.real-estate-card > a,
+
+.equity-card > a {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 12px 18px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    transition: 0.2s ease;
+
+}
+
+.digital-asset-card > a:hover,
+
+.real-estate-card > a:hover,
+
+.equity-card > a:hover {
+
+    background-color: #163b5c;
+
+}
+
+.digital-assets-information,
+
+.real-estate-information,
+
+.equities-information {
+
+    padding: 70px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.digital-assets-information h2,
+
+.real-estate-information h2,
+
+.equities-information h2 {
+
+    font-size: 32px;
+
+    color: #0b1f33;
+
+    margin-bottom: 20px;
+
+}
+
+.digital-assets-information p,
+
+.real-estate-information p,
+
+.equities-information p {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    color: #5d6875;
+
+    line-height: 1.8;
+
+}
+
+/* =========================
+
+   OPPORTUNITY DETAILS
+
+========================= */
+
+.opportunity-hero {
+
+    min-height: 420px;
+
+    padding: 100px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.opportunity-hero h1 {
+
+    font-size: 52px;
+
+    line-height: 1.1;
+
+    margin-bottom: 20px;
+
+}
+
+.opportunity-hero p {
+
+    max-width: 700px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    color: #d8e2ec;
+
+}
+
+.opportunity-section {
+
+    padding: 90px 7%;
+
+    background-color: #ffffff;
+
+}
+
+.opportunity-section > h2 {
+
+    text-align: center;
+
+    font-size: 38px;
+
+    color: #0b1f33;
+
+    margin-bottom: 45px;
+
+}
+
+.opportunity-details {
+
+    max-width: 850px;
+
+    margin: 0 auto 60px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+
+}
+
+.opportunity-details div {
+
+    padding: 22px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 8px;
+
+}
+
+.opportunity-details span {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #667085;
+
+    font-size: 14px;
+
+}
+
+.opportunity-details strong {
+
+    color: #0b1f33;
+
+    font-size: 17px;
+
+}
+
+.opportunity-description {
+
+    max-width: 850px;
+
+    margin: 0 auto 60px;
+
+}
+
+.opportunity-description h2 {
+
+    color: #0b1f33;
+
+    margin-bottom: 20px;
+
+}
+
+.opportunity-description p {
+
+    color: #5d6875;
+
+    line-height: 1.8;
+
+    margin-bottom: 15px;
+
+}
+
+.opportunity-action {
+
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    padding: 40px;
+
+    background-color: #f5f7fa;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+}
+
+.opportunity-action h2 {
+
+    color: #0b1f33;
+
+    margin-bottom: 15px;
+
+}
+
+.opportunity-action p {
+
+    color: #5d6875;
+
+    margin-bottom: 25px;
+
+}
+
+.opportunity-button {
+
+    display: inline-block;
+
+    padding: 13px 25px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border-radius: 6px;
+
+    font-weight: bold;
+
+    transition: 0.2s ease;
+
+}
+
+.opportunity-button:hover {
+
+    background-color: #163b5c;
+
+}
+
+.opportunity-information {
+
+    padding: 70px 7%;
+
+    background-color: #f5f7fa;
+
+    text-align: center;
+
+}
+
+.opportunity-information h2 {
+
+    font-size: 32px;
+
+    color: #0b1f33;
+
+    margin-bottom: 20px;
+
+}
+
+.opportunity-information p {
+
+    max-width: 800px;
+
+    margin: 0 auto;
+
+    color: #5d6875;
+
+    line-height: 1.8;
+
+}
+
+/* =========================
+
+   CREATE ACCOUNT
+
+========================= */
+
+.account-hero,
+
+.login-hero {
+
+    min-height: 380px;
+
+    padding: 90px 7%;
+
+    background-color: #102a43;
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.account-hero h1,
+
+.login-hero h1 {
+
+    font-size: 48px;
+
+    margin-bottom: 20px;
+
+}
+
+.account-hero p,
+
+.login-hero p {
+
+    max-width: 700px;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
+    color: #d8e2ec;
+
+}
+
+.account-section,
+
+.login-section {
+
+    padding: 90px 7%;
+
+    background-color: #f5f7fa;
+
+}
+
+.account-card,
+
+.login-card {
+
+    max-width: 600px;
+
+    margin: 0 auto;
+
+    padding: 45px;
+
+    background-color: white;
+
+    border: 1px solid #e1e6eb;
+
+    border-radius: 10px;
+
+    box-shadow: 0 8px 25px rgba(11, 31, 51, 0.08);
+
+}
+
+.account-card h2,
+
+.login-card h2 {
+
+    text-align: center;
+
+    color: #0b1f33;
+
+    font-size: 32px;
+
+    margin-bottom: 10px;
+
+}
+
+.account-intro,
+
+.login-intro {
+
+    text-align: center;
+
+    color: #667085;
+
+    margin-bottom: 35px;
+
+}
+
+.form-group {
+
+    margin-top: 25px;
+
+    margin-bottom: 20px;
+
+}
+
+.form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+}
+
+.form-group input {
+
+    width: 100%;
+
+    padding: 14px 15px;
+
+    border: 1px solid #d5dce3;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    outline: none;
+
+}
+
+.form-group input:focus {
+
+    border-color: #163b5c;
+
+}
+
+.account-button,
+
+.login-button {
+
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 10px;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+    border: none;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+}
+
+.account-button:hover,
+
+.login-button:hover {
+
+    background-color: #163b5c;
+
+}
+
+#account-message,
+
+#login-message {
+
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+}
+
+.account-login,
+
+.login-create {
+
+    margin-top: 25px;
+
+    text-align: center;
+
+    color: #667085;
+
+}
+
+.account-login a,
+
+.login-create a {
+
+    color: #0b1f33;
+
+    font-weight: bold;
+
+}
+
+.account-login a:hover,
+
+.login-create a:hover {
+
+    text-decoration: underline;
+
+}
+
+/* =========================
+
+   FORGOT / UPDATE PASSWORD
+
+========================= */
+
+.forgot-hero,
+
+.update-password-hero {
+
+    text-align: center;
+
+    padding: 80px 20px 50px;
+
+}
+
+.forgot-hero h1,
+
+.update-password-hero h1 {
+
+    font-size: 42px;
+
+    margin-bottom: 15px;
+
+}
+
+.forgot-hero p,
+
+.update-password-hero p {
+
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    line-height: 1.7;
+
+}
+
+.forgot-section,
+
+.update-password-section {
+
+    padding: 40px 20px 80px;
+
+}
+
+.forgot-card,
+
+.update-password-card {
+
+    max-width: 500px;
+
+    margin: 0 auto;
+
+    padding: 35px;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+}
+
+.forgot-card h2,
+
+.update-password-card h2 {
+
+    text-align: center;
+
+    margin-bottom: 10px;
+
+}
+
+.forgot-intro,
+
+.update-password-intro {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    line-height: 1.6;
+
+}
+
+.forgot-card input,
+
+.update-password-card input {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 6px;
+
+    font-size: 16px;
+
+}
+
+.forgot-button,
+
+.update-password-button {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    background-color: #0b1f33;
+
+    color: white;
+
+}
+
+#forgot-message,
+
+#update-password-message {
+
+    margin-top: 20px;
+
+    text-align: center;
+
+    line-height: 1.5;
+
+}
+
+/* =========================
+
+   INVESTOR DASHBOARD
+
+========================= */
+
+.dashboard-hero {
+
+    text-align: center;
+
+    padding: 70px 20px 45px;
+
+}
+
+.dashboard-hero h1 {
+
+    font-size: 42px;
+
+    margin-bottom: 12px;
+
+}
+
+.dashboard-hero p {
+
+    line-height: 1.6;
+
+}
+
+.dashboard-section {
+
+    padding: 30px 20px 80px;
+
+}
+
+.dashboard-container {
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 25px;
+
+}
+
+.dashboard-card {
+
+    background: #ffffff;
+
+    padding: 30px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+
+}
+
+.dashboard-card h2 {
+
+    margin-bottom: 12px;
+
+}
+
+.dashboard-card p {
+
+    line-height: 1.6;
+
+}
+
+/* =========================
+
+   PORTFOLIO
+
+========================= */
+
+.portfolio-summary {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-top: 25px;
+
+}
+
+.portfolio-item {
+
+    padding: 20px;
+
+    background: #f7f7f7;
+
+    border-radius: 10px;
+
+}
+
+.portfolio-item span {
+
+    display: block;
+
+    font-size: 14px;
+
+    margin-bottom: 8px;
+
+}
+
+.portfolio-item strong {
+
+    display: block;
+
+    font-size: 24px;
+
+}
+
+/* =========================
+
+   TRANSACTIONS
+
+========================= */
+
+.transaction-empty {
+
+    margin-top: 20px;
+
+    padding: 25px;
+
+    background: #f7f7f7;
+
+    border-radius: 10px;
+
+}
+
+.transaction-empty h3 {
+
+    margin-bottom: 10px;
+
+}
+
+.transaction-empty p {
+
+    line-height: 1.6;
+
+    margin: 0;
+
+}
+
+/* =========================
+
+   DASHBOARD ACTIONS
+
+========================= */
+
+.dashboard-actions {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 25px;
+
+    flex-wrap: wrap;
+
+}
+
+/* FIXED DASHBOARD BUTTON */
+
+.dashboard-button {
+
+    display: inline-block;
+
+    padding: 12px 22px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    background-color: #111827;
+
+    color: #ffffff;
+
+    transition: 0.2s ease;
+
+}
+
+.dashboard-button:hover {
+
+    background-color: #1f2937;
+
+}
+
+/* =========================
+
+   INVESTOR SUPPORT
+
+========================= */
+
+.dashboard-card a.dashboard-button {
+
+    margin-top: 15px;
+
+}
+
+/* =========================
+
+   DEPOSIT & WITHDRAW
+
+========================= */
+
+#deposit-message,
+
+#withdraw-message {
+
+    margin-top: 20px;
+
+    line-height: 1.6;
+
+}
+
+.dashboard-card .dashboard-button {
+
+    margin-top: 10px;
+
+}
+
+/* =========================
+
+   SMOOTH SCROLLING
+
+========================= */
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+/* =========================
+
+   MOBILE RESPONSIVE
+
+========================= */
+
+@media (max-width: 768px) {
+
+    /* Header */
+
+    header {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+        text-align: center;
+
+    }
+
+    nav {
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        gap: 15px;
+
+    }
+
+    /* Hero */
+
+    .hero {
+
+        min-height: 500px;
+
+        padding: 80px 7%;
+
+    }
+
+    .hero h1 {
+
+        font-size: 40px;
+
+    }
+
+    .hero p {
+
+        font-size: 16px;
+
+    }
+
+    .hero a {
+
+        margin-bottom: 10px;
+
+    }
+
+    /* Main Sections */
+
+    .investments > h2,
+
+    .how-it-works > h2,
+
+    .why-us > h2,
+
+    .about h2,
+
+    .faq > h2,
+
+    .contact h2,
+
+    .investment-list > h2,
+
+    .crypto-markets > h2,
+
+    .trading-panel > h2,
+
+    .digital-assets-section > h2,
+
+    .real-estate-section > h2,
+
+    .equities-section > h2,
+
+    .opportunity-section > h2 {
+
+        font-size: 30px;
+
+    }
+
+    /* Investment Cards */
+
+    .investment-card,
+
+    .investment-option,
+
+    .crypto-card,
+
+    .digital-asset-card,
+
+    .real-estate-card,
+
+    .equity-card,
+
+    .why-card {
+
+        width: 100%;
+
+    }
+
+    /* Steps */
+
+    .step {
+
+        width: 100%;
+
+    }
+
+    /* About */
+
+    .about p {
+
+        font-size: 16px;
+
+    }
+
+    /* Contact */
+
+    .contact-item {
+
+        width: 100%;
+
+    }
+
+    /* Footer */
+
+    .footer-content {
+
+        flex-direction: column;
+
+        gap: 35px;
+
+    }
+
+    .footer-company {
+
+        max-width: 100%;
+
+    }
+
+    /* Investment Hero */
+
+    .investment-hero,
+
+    .crypto-hero,
+
+    .digital-assets-hero,
+
+    .real-estate-hero,
+
+    .equities-hero {
+
+        min-height: 350px;
+
+        padding: 70px 7%;
+
+    }
+
+    .investment-hero h1,
+
+    .crypto-hero h1,
+
+    .digital-assets-hero h1,
+
+    .real-estate-hero h1,
+
+    .equities-hero h1 {
+
+        font-size: 38px;
+
+    }
+
+    .investment-hero p,
+
+    .crypto-hero p,
+
+    .digital-assets-hero p,
+
+    .real-estate-hero p,
+
+    .equities-hero p {
+
+        font-size: 16px;
+
+    }
+
+    /* Trading */
+
+    .trade-box {
+
+        flex-direction: column;
+
+    }
+
+    .trade-form,
+
+    .trade-summary {
+
+        width: 100%;
+
+    }
+
+    .trading-information h2 {
+
+        font-size: 28px;
+
+    }
+
+    /* Opportunity */
+
+    .opportunity-hero {
+
+        min-height: 360px;
+
+        padding: 80px 6%;
+
+    }
+
+    .opportunity-hero h1 {
+
+        font-size: 38px;
+
+    }
+
+    .opportunity-hero p {
+
+        font-size: 16px;
+
+    }
+
+    .opportunity-section {
+
+        padding: 60px 6%;
+
+    }
+
+    .opportunity-details {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .opportunity-action {
+
+        padding: 30px 20px;
+
+    }
+
+    .opportunity-information {
+
+        padding: 55px 6%;
+
+    }
+
+    /* Create Account */
+
+    .account-hero,
+
+    .login-hero {
+
+        min-height: 340px;
+
+        padding: 70px 6%;
+
+    }
+
+    .account-hero h1,
+
+    .login-hero h1 {
+
+        font-size: 36px;
+
+    }
+
+    .account-hero p,
+
+    .login-hero p {
+
+        font-size: 16px;
+
+    }
+
+    .account-section,
+
+    .login-section {
+
+        padding: 60px 6%;
+
+    }
+
+    .account-card,
+
+    .login-card {
+
+        padding: 30px 20px;
+
+    }
+
+    .account-card h2,
+
+    .login-card h2 {
+
+        font-size: 28px;
+
+    }
+
+    /* Forgot / Update Password */
+
+    .forgot-hero h1,
+
+    .update-password-hero h1 {
+
+        font-size: 34px;
+
+    }
+
+    .forgot-card,
+
+    .update-password-card {
+
+        padding: 25px 20px;
+
+    }
+
+    /* Dashboard */
+
+    .dashboard-hero h1 {
+
+        font-size: 32px;
+
+    }
+
+    .dashboard-container {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    /* Portfolio */
+
+    .portfolio-summary {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    /* Dashboard Buttons */
+
+    .dashboard-actions {
+
+        flex-direction: column;
+
+    }
+
+    .dashboard-button {
+
+        width: 100%;
+
+        text-align: center;
+
+    }
+
+}

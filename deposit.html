@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deposit Funds | Nor Ellab Capital</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .deposit-container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .deposit-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .deposit-card h2 {
+            margin-bottom: 20px;
+        }
+
+        .deposit-card label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .deposit-card select,
+        .deposit-card input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        .wallet-box {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f3f4f6;
+            border-radius: 8px;
+        }
+
+        .wallet-box p {
+            margin: 8px 0;
+        }
+
+        .wallet-address {
+            word-break: break-all;
+            font-weight: 600;
+        }
+
+        .qr-code {
+            display: block;
+            width: 220px;
+            height: 220px;
+            margin: 20px auto;
+        }
+
+        .copy-button {
+            display: block;
+            margin: 15px auto 0;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #111827;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .deposit-button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background: #111827;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .deposit-button:hover,
+        .copy-button:hover {
+            background: #1f2937;
+        }
+
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff7ed;
+            border-radius: 6px;
+            color: #9a3412;
+            font-size: 14px;
+        }
+
+        #deposit-message {
+            margin-top: 18px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container">
+        <h1>Nor Ellab Capital</h1>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="investments.html">Investments</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="#" id="logout-button">Logout</a>
+        </nav>
+    </div>
+</header>
+
+<section class="page-hero">
+    <div class="container">
+        <h1>Deposit Funds</h1>
+
+        <p>
+            Send your selected cryptocurrency to the wallet address provided below.
+        </p>
+    </div>
+</section>
+
+<main class="deposit-container">
+
+    <div class="deposit-card">
+
+        <h2>Make a Deposit</h2>
+
+        <label for="asset">
+            Select Asset
+        </label>
+
+        <select id="asset">
+            <option value="BTC">
+                Bitcoin (BTC)
+            </option>
+
+            <option value="USDT">
+                USDT (TRC-20)
+            </option>
+        </select>
+
+        <div class="wallet-box">
+
+            <p>
+                <strong>Network:</strong>
+                <span id="network"></span>
+            </p>
+
+            <p>
+                <strong>Wallet Address:</strong>
+            </p>
+
+            <p
+                id="wallet-address"
+                class="wallet-address">
+            </p>
+
+            <img
+                id="qr-code"
+                class="qr-code"
+                alt="Deposit QR Code">
+
+            <button
+                type="button"
+                class="copy-button"
+                id="copy-button">
+                Copy Address
+            </button>
+
+        </div>
+
+        <label for="amount">
+            Deposit Amount (USD)
+        </label>
+
+        <input
+            type="number"
+            id="amount"
+            placeholder="Enter amount"
+            min="1"
+            step="0.01">
+
+        <label for="transaction-hash">
+            Transaction Hash / TXID
+        </label>
+
+        <input
+            type="text"
+            id="transaction-hash"
+            placeholder="Enter your blockchain transaction hash">
+
+        <div class="warning">
+            <strong>Important:</strong>
+
+            Make sure you send the correct cryptocurrency
+            using the correct network.
+
+            Sending funds to the wrong address or using the
+            wrong network may result in permanent loss of funds.
+
+            After sending cryptocurrency, enter the transaction
+            hash (TXID) above so the deposit can be reviewed.
+        </div>
+
+        <button
+            type="button"
+            class="deposit-button"
+            id="submit-deposit">
+            Submit Deposit Request
+        </button>
+
+        <p id="deposit-message"></p>
+
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabaseUrl =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+
+const supabaseKey =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+const supabaseClient =
+    supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+const wallets = {
+
+    BTC: {
+        network: "Bitcoin Network",
+
+        address:
+            "bc1qu5vz52cyld9kma0f0y7jrhpcqv686httm822u6"
+    },
+
+    USDT: {
+        network: "TRON (TRC-20)",
+
+        address:
+            "TFx5QpQQFJuEYJsGcC7v19W8Lafi64iqdf"
+    }
+
+};
+
+
+const assetSelect =
+    document.getElementById("asset");
+
+const networkDisplay =
+    document.getElementById("network");
+
+const walletAddress =
+    document.getElementById("wallet-address");
+
+const qrCode =
+    document.getElementById("qr-code");
+
+const copyButton =
+    document.getElementById("copy-button");
+
+const amountInput =
+    document.getElementById("amount");
+
+const transactionHashInput =
+    document.getElementById("transaction-hash");
+
+const submitButton =
+    document.getElementById("submit-deposit");
+
+const depositMessage =
+    document.getElementById("deposit-message");
+
+
+function updateWallet() {
+
+    const asset =
+        assetSelect.value;
+
+    const wallet =
+        wallets[asset];
+
+    networkDisplay.textContent =
+        wallet.network;
+
+    walletAddress.textContent =
+        wallet.address;
+
+    qrCode.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
+        encodeURIComponent(wallet.address);
+
+}
+
+
+assetSelect.addEventListener(
+    "change",
+    updateWallet
+);
+
+
+copyButton.addEventListener(
+    "click",
+    async function() {
+
+        const address =
+            walletAddress.textContent;
+
+        try {
+
+            await navigator.clipboard.writeText(
+                address
+            );
+
+            copyButton.textContent =
+                "Address Copied";
+
+            setTimeout(
+                function() {
+
+                    copyButton.textContent =
+                        "Copy Address";
+
+                },
+                2000
+            );
+
+        } catch (error) {
+
+            depositMessage.textContent =
+                "Unable to copy address.";
+
+        }
+
+    }
+);
+
+
+submitButton.addEventListener(
+    "click",
+    async function() {
+
+        const asset =
+            assetSelect.value;
+
+        const wallet =
+            wallets[asset];
+
+        const amount =
+            Number(amountInput.value);
+
+        const transactionHash =
+            transactionHashInput.value.trim();
+
+
+        if (!amount || amount <= 0) {
+
+            depositMessage.textContent =
+                "Please enter a valid deposit amount.";
+
+            return;
+        }
+
+
+        if (!transactionHash) {
+
+            depositMessage.textContent =
+                "Please enter your transaction hash / TXID.";
+
+            return;
+        }
+
+
+        depositMessage.textContent =
+            "Submitting deposit request...";
+
+
+        const {
+            data: {
+                user
+            }
+        } =
+            await supabaseClient.auth.getUser();
+
+
+        if (!user) {
+
+            depositMessage.textContent =
+                "Please log in before making a deposit.";
+
+            return;
+        }
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("deposits")
+                .insert({
+
+                    user_id:
+                        user.id,
+
+                    amount:
+                        amount,
+
+                    asset:
+                        asset,
+
+                    network:
+                        asset === "BTC"
+                            ? "Bitcoin"
+                            : "TRC20",
+
+                    transaction_hash:
+                        transactionHash,
+
+                    status:
+                        "Pending"
+
+                });
+
+
+        if (error) {
+
+            console.log(error);
+
+            depositMessage.textContent =
+                "Unable to submit deposit request. Please try again.";
+
+            return;
+        }
+
+
+        depositMessage.textContent =
+            "Deposit request submitted successfully. Your transaction is pending verification.";
+
+
+        amountInput.value = "";
+
+        transactionHashInput.value = "";
+
+    }
+);
+
+
+document
+    .getElementById("logout-button")
+    .addEventListener(
+        "click",
+        async function(event) {
+
+            event.preventDefault();
+
+            await supabaseClient.auth.signOut();
+
+            window.location.href =
+                "login.html";
+
+        }
+    );
+
+
+updateWallet();
+
+</script>
+
+</body>
+</html>
