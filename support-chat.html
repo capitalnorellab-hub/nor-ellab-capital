@@ -413,6 +413,9 @@
         let conversationId = null;
 
 
+        let supportRealtimeChannel = null;
+
+
         /* =========================
            START SUPPORT CHAT
         ========================= */
@@ -570,9 +573,14 @@
                 await loadMessages();
 
 
-                /*
-                    IMPORTANT:
+                /* =========================
+                   REALTIME SUPPORT CHAT
+                ========================= */
 
+                setupRealtimeSupportChat();
+
+
+                /*
                     Firebase setup happens AFTER
                     the support chat has loaded.
 
@@ -604,6 +612,13 @@
         ========================= */
 
         async function loadMessages() {
+
+            if (!conversationId) {
+
+                return;
+
+            }
+
 
             const {
                 data: messages,
@@ -719,6 +734,95 @@
 
             messagesContainer.scrollTop =
                 messagesContainer.scrollHeight;
+
+        }
+
+
+        /* =========================
+           REALTIME CHAT
+        ========================= */
+
+        function setupRealtimeSupportChat() {
+
+            if (!conversationId) {
+
+                return;
+
+            }
+
+
+            /*
+                Prevent duplicate realtime
+                subscriptions if this function
+                is ever called again.
+            */
+
+            if (supportRealtimeChannel) {
+
+                supabaseClient.removeChannel(
+                    supportRealtimeChannel
+                );
+
+                supportRealtimeChannel = null;
+
+            }
+
+
+            supportRealtimeChannel =
+                supabaseClient
+                    .channel(
+                        "investor-support-chat-" +
+                        conversationId
+                    )
+                    .on(
+                        "postgres_changes",
+                        {
+                            event:
+                                "INSERT",
+
+                            schema:
+                                "public",
+
+                            table:
+                                "support_messages",
+
+                            filter:
+                                "conversation_id=eq." +
+                                conversationId
+                        },
+                        async function(payload) {
+
+                            console.log(
+                                "New support message received:",
+                                payload
+                            );
+
+
+                            /*
+                                Reload the conversation
+                                immediately when a new
+                                message is inserted.
+
+                                This is what allows an
+                                investor already inside
+                                the chat to see an admin
+                                reply without refreshing.
+                            */
+
+                            await loadMessages();
+
+                        }
+                    )
+                    .subscribe(
+                        function(status) {
+
+                            console.log(
+                                "Support realtime status:",
+                                status
+                            );
+
+                        }
+                    );
 
         }
 
@@ -883,8 +987,6 @@
             } catch (error) {
 
                 /*
-                    IMPORTANT:
-
                     Firebase errors are only logged.
                     They do NOT break the support chat.
                 */
@@ -996,7 +1098,34 @@
                     "Send";
 
 
+                /*
+                    Keep the existing behavior
+                    for the investor's own message.
+                */
+
                 await loadMessages();
+
+            }
+        );
+
+
+        /* =========================
+           CLEAN UP REALTIME
+        ========================= */
+
+        window.addEventListener(
+            "beforeunload",
+            function() {
+
+                if (
+                    supportRealtimeChannel
+                ) {
+
+                    supabaseClient.removeChannel(
+                        supportRealtimeChannel
+                    );
+
+                }
 
             }
         );
