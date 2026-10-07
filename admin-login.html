@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | Nor Ellab Capital</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b1220;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .admin-header p {
+            color: #aeb8c8;
+            font-size: 15px;
+        }
+
+        .login-card {
+            background: #111b2e;
+            border: 1px solid #26344d;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .admin-badge {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #1c2a42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #d9e0eb;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #34445f;
+            border-radius: 8px;
+            background: #0b1220;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #5b8def;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .login-button:hover {
+            background: #1d4ed8;
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .error {
+            background: #3a1720;
+            border: 1px solid #7f1d1d;
+            color: #fecaca;
+        }
+
+        .success {
+            background: #123321;
+            border: 1px solid #166534;
+            color: #bbf7d0;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #9fb5d8;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .security-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 25px 20px;
+            }
+
+            .admin-header h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="admin-container">
+
+        <div class="admin-header">
+            <h1>Nor Ellab Capital</h1>
+            <p>Administration Portal</p>
+        </div>
+
+
+        <div class="login-card">
+
+            <div class="admin-badge">
+                🔐
+            </div>
+
+            <h2>Admin Login</h2>
+
+
+            <form id="adminLoginForm">
+
+                <div class="form-group">
+
+                    <label for="adminEmail">
+                        Administrator Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="adminEmail"
+                        placeholder="Enter admin email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="adminPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="adminPassword"
+                        placeholder="Enter password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton"
+                >
+                    Sign In
+                </button>
+
+            </form>
+
+
+            <div
+                id="errorMessage"
+                class="message error"
+            ></div>
+
+
+            <div
+                id="successMessage"
+                class="message success"
+            ></div>
+
+
+            <a
+                href="index.html"
+                class="back-link"
+            >
+                ← Return to Main Website
+            </a>
+
+        </div>
+
+
+        <div class="security-note">
+            Authorized administrators only.
+            Unauthorized access is prohibited.
+        </div>
+
+
+        <footer>
+            © 2026 Nor Ellab Capital. All rights reserved.
+        </footer>
+
+    </div>
+
+
+    <script>
+
+        const adminLoginForm =
+            document.getElementById("adminLoginForm");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const successMessage =
+            document.getElementById("successMessage");
+
+
+        adminLoginForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            errorMessage.style.display = "none";
+            successMessage.style.display = "none";
+
+            const email =
+                document.getElementById("adminEmail").value.trim();
+
+            const password =
+                document.getElementById("adminPassword").value;
+
+
+            if (!email || !password) {
+
+                errorMessage.textContent =
+                    "Please enter your administrator email and password.";
+
+                errorMessage.style.display = "block";
+
+                return;
+            }
+
+
+            /*
+                Authentication will be connected securely
+                through Supabase in the next step.
+            */
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Signing In...";
+
+
+            setTimeout(function() {
+
+                loginButton.disabled = false;
+                loginButton.textContent = "Sign In";
+
+                errorMessage.textContent =
+                    "Admin authentication has not been connected yet.";
+
+                errorMessage.style.display = "block";
+
+            }, 800);
+
+        });
+
+    </script>
+
+</body>
+
+</html>
