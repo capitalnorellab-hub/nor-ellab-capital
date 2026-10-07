@@ -302,8 +302,51 @@
                 }
 
 
+                if (data.session) {
+
+                    accountMessage.textContent =
+                        "Account created successfully. Redirecting...";
+
+                    window.location.href =
+                        "dashboard.html";
+
+                    return;
+                }
+
+
+                const { data: loginData, error: loginError } =
+                    await supabaseClient.auth.signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (loginError) {
+
+                    accountMessage.textContent =
+                        "Account created, but email confirmation may be required before you can continue.";
+
+                    return;
+                }
+
+
+                if (loginData.session) {
+
+                    accountMessage.textContent =
+                        "Account created successfully. Redirecting...";
+
+                    window.location.href =
+                        "dashboard.html";
+
+                    return;
+                }
+
+
                 accountMessage.textContent =
-                    "Account created successfully. You can now log in.";
+                    "Account created successfully. Please log in.";
 
             }
         );
