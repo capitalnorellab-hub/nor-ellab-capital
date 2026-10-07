@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Investor Support Center</title>
 
     <style>
@@ -248,6 +247,11 @@
             background: #17345f;
         }
 
+        .primary-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .secondary-btn {
             background: #eef2f7;
             color: #172033;
@@ -306,7 +310,6 @@
         }
 
         @media (max-width: 700px) {
-
             header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -362,9 +365,7 @@
 
 <section class="hero">
 
-    <h1>
-        Investor Support Center
-    </h1>
+    <h1>Investor Support Center</h1>
 
     <p>
         Review investor conversations and respond directly from the administration center.
@@ -376,13 +377,11 @@
 
     <div id="alertBox"></div>
 
-    <!-- CONVERSATIONS -->
+    <!-- SUPPORT CONVERSATIONS -->
 
     <div class="card">
 
-        <h2>
-            Support Conversations
-        </h2>
+        <h2>Support Conversations</h2>
 
         <div id="conversationsList">
 
@@ -399,14 +398,10 @@
 
     <div class="card">
 
-        <h2>
-            Open Conversation
-        </h2>
+        <h2>Open Conversation</h2>
 
         <div id="conversationInfo" class="empty">
-
             Select a conversation above to view messages.
-
         </div>
 
         <div id="messagesContainer" class="messages"></div>
@@ -445,13 +440,11 @@
     </div>
 
 
-    <!-- NEW CONVERSATION -->
+    <!-- START NEW CONVERSATION -->
 
     <div class="card">
 
-        <h2>
-            Start New Conversation
-        </h2>
+        <h2>Start New Conversation</h2>
 
         <div class="new-conversation-box">
 
@@ -548,9 +541,7 @@ const supabaseClient =
 
 
 let currentAdminUser = null;
-
 let currentConversation = null;
-
 let supportChannel = null;
 
 
@@ -602,9 +593,7 @@ function showAlert(
     `;
 
     setTimeout(() => {
-
         alertBox.innerHTML = "";
-
     }, 5000);
 }
 
@@ -661,6 +650,10 @@ async function checkAdmin() {
 }
 
 
+/* ================================
+   LOAD INVESTORS
+================================ */
+
 async function loadInvestors() {
 
     investorSelect.innerHTML = `
@@ -675,11 +668,9 @@ async function loadInvestors() {
         error
     } =
         await supabaseClient
-            .from("profiles")
-            .select("*")
-            .order("created_at", {
-                ascending: false
-            });
+            .rpc(
+                "get_admin_investors"
+            );
 
 
     if (error) {
@@ -734,15 +725,10 @@ async function loadInvestors() {
                 investor.id;
 
 
-            const name =
+            option.textContent =
                 investor.full_name ||
-                investor.name ||
                 investor.email ||
                 "Investor";
-
-
-            option.textContent =
-                name;
 
 
             investorSelect.appendChild(
@@ -754,14 +740,17 @@ async function loadInvestors() {
 }
 
 
+/* ================================
+   LOAD CONVERSATIONS
+================================ */
+
 async function loadConversations() {
 
-    conversationsList.innerHTML =
-        `
+    conversationsList.innerHTML = `
         <div class="loading">
             Loading conversations...
         </div>
-        `;
+    `;
 
 
     const {
@@ -769,7 +758,9 @@ async function loadConversations() {
         error
     } =
         await supabaseClient
-            .from("support_conversations")
+            .from(
+                "support_conversations"
+            )
             .select("*")
             .order(
                 "updated_at",
@@ -784,11 +775,17 @@ async function loadConversations() {
         conversationsList.innerHTML = `
             <div class="error">
                 Unable to load support conversations.
-                ${escapeHtml(error.message)}
+                <br><br>
+                ${escapeHtml(
+                    error.message
+                )}
             </div>
         `;
 
-        console.error(error);
+        console.error(
+            "Conversation loading error:",
+            error
+        );
 
         return;
     }
@@ -809,7 +806,8 @@ async function loadConversations() {
     }
 
 
-    conversationsList.innerHTML = "";
+    conversationsList.innerHTML =
+        "";
 
 
     data.forEach(
@@ -891,6 +889,10 @@ async function loadConversations() {
     );
 }
 
+
+/* ================================
+   OPEN CONVERSATION
+================================ */
 
 async function openConversation(
     conversation
@@ -989,16 +991,19 @@ async function openConversation(
 }
 
 
+/* ================================
+   LOAD MESSAGES
+================================ */
+
 async function loadMessages(
     conversationId
 ) {
 
-    messagesContainer.innerHTML =
-        `
+    messagesContainer.innerHTML = `
         <div class="loading">
             Loading messages...
         </div>
-        `;
+    `;
 
 
     const {
@@ -1006,7 +1011,9 @@ async function loadMessages(
         error
     } =
         await supabaseClient
-            .from("support_messages")
+            .from(
+                "support_messages"
+            )
             .select("*")
             .eq(
                 "conversation_id",
@@ -1079,6 +1086,10 @@ async function loadMessages(
         messagesContainer.scrollHeight;
 }
 
+
+/* ================================
+   DISPLAY MESSAGE
+================================ */
 
 function displayMessage(
     message
@@ -1153,6 +1164,10 @@ function displayMessage(
 }
 
 
+/* ================================
+   REALTIME
+================================ */
+
 function addLiveMessage(
     message
 ) {
@@ -1160,7 +1175,6 @@ function addLiveMessage(
     if (
         !currentConversation
     ) {
-
         return;
     }
 
@@ -1173,7 +1187,6 @@ function addLiveMessage(
             currentConversation.id
         )
     ) {
-
         return;
     }
 
@@ -1184,7 +1197,6 @@ function addLiveMessage(
             `[data-message-id="${message.id}"]`
         )
     ) {
-
         return;
     }
 
@@ -1255,6 +1267,10 @@ function startRealtime() {
 }
 
 
+/* ================================
+   ADMIN REPLY
+================================ */
+
 async function sendReply() {
 
     if (
@@ -1303,7 +1319,9 @@ async function sendReply() {
         error
     } =
         await supabaseClient
-            .from("support_messages")
+            .from(
+                "support_messages"
+            )
             .insert({
 
                 conversation_id:
@@ -1340,7 +1358,9 @@ async function sendReply() {
 
 
     await supabaseClient
-        .from("support_conversations")
+        .from(
+            "support_conversations"
+        )
         .update({
             updated_at:
                 new Date().toISOString()
@@ -1376,6 +1396,10 @@ async function sendReply() {
         "Send Reply";
 }
 
+
+/* ================================
+   START NEW CONVERSATION
+================================ */
 
 async function startNewConversation() {
 
@@ -1572,6 +1596,10 @@ async function startNewConversation() {
 }
 
 
+/* ================================
+   CLEAR BUTTONS
+================================ */
+
 function clearReply() {
 
     replyMessage.value =
@@ -1600,14 +1628,16 @@ function clearNewConversation() {
 }
 
 
+/* ================================
+   HELPERS
+================================ */
+
 function formatDate(
     date
 ) {
 
     if (!date) {
-
         return "Unknown";
-
     }
 
 
@@ -1646,6 +1676,10 @@ function escapeHtml(
         );
 }
 
+
+/* ================================
+   BUTTON EVENTS
+================================ */
 
 document
     .getElementById(
@@ -1714,9 +1748,14 @@ document
 
             window.location.href =
                 "admin-login.html";
+
         }
     );
 
+
+/* ================================
+   INITIALIZE
+================================ */
 
 async function initialize() {
 
@@ -1725,9 +1764,7 @@ async function initialize() {
 
 
     if (!isAdmin) {
-
         return;
-
     }
 
 
