@@ -280,7 +280,25 @@
     </div>
 
 
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
     <script>
+
+        const supabaseUrl =
+            "https://grgmsezyxxceheofmsoj.supabase.co";
+
+        const supabaseKey =
+            "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+
+        const supabaseClient =
+            supabase.createClient(
+                supabaseUrl,
+                supabaseKey
+            );
+
 
         const adminLoginForm =
             document.getElementById("adminLoginForm");
@@ -295,53 +313,94 @@
             document.getElementById("successMessage");
 
 
-        adminLoginForm.addEventListener("submit", function(event) {
+        adminLoginForm.addEventListener(
+            "submit",
+            async function(event) {
 
-            event.preventDefault();
-
-            errorMessage.style.display = "none";
-            successMessage.style.display = "none";
-
-            const email =
-                document.getElementById("adminEmail").value.trim();
-
-            const password =
-                document.getElementById("adminPassword").value;
+                event.preventDefault();
 
 
-            if (!email || !password) {
+                errorMessage.style.display = "none";
+                successMessage.style.display = "none";
 
-                errorMessage.textContent =
-                    "Please enter your administrator email and password.";
 
-                errorMessage.style.display = "block";
+                const email =
+                    document.getElementById("adminEmail")
+                    .value
+                    .trim();
 
-                return;
+                const password =
+                    document.getElementById("adminPassword")
+                    .value;
+
+
+                loginButton.disabled = true;
+                loginButton.textContent = "Signing In...";
+
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (error) {
+
+                    loginButton.disabled = false;
+                    loginButton.textContent = "Sign In";
+
+                    errorMessage.textContent =
+                        "Invalid administrator email or password.";
+
+                    errorMessage.style.display = "block";
+
+                    return;
+                }
+
+
+                const user =
+                    data.user;
+
+
+                const adminRole =
+                    user?.app_metadata?.role;
+
+
+                if (adminRole !== "admin") {
+
+                    await supabaseClient.auth.signOut();
+
+                    loginButton.disabled = false;
+                    loginButton.textContent = "Sign In";
+
+                    errorMessage.textContent =
+                        "Access denied. This account is not authorized as an administrator.";
+
+                    errorMessage.style.display = "block";
+
+                    return;
+                }
+
+
+                successMessage.textContent =
+                    "Administrator verified. Opening dashboard...";
+
+                successMessage.style.display = "block";
+
+
+                setTimeout(function() {
+
+                    window.location.href =
+                        "admin-dashboard.html";
+
+                }, 700);
+
             }
-
-
-            /*
-                Authentication will be connected securely
-                through Supabase in the next step.
-            */
-
-            loginButton.disabled = true;
-            loginButton.textContent = "Signing In...";
-
-
-            setTimeout(function() {
-
-                loginButton.disabled = false;
-                loginButton.textContent = "Sign In";
-
-                errorMessage.textContent =
-                    "Admin authentication has not been connected yet.";
-
-                errorMessage.style.display = "block";
-
-            }, 800);
-
-        });
+        );
 
     </script>
 
