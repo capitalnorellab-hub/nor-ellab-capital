@@ -272,45 +272,34 @@ let currentAdminUser = null;
 
 async function checkAdmin() {
 
-
     const {
         data: {
             user
         }
-    } =
-        await supabaseClient.auth.getUser();
-
+    } = await supabaseClient.auth.getUser();
 
 
     if (!user) {
 
         window.location.href =
-            "login.html";
+            "admin-login.html";
 
         return null;
 
     }
 
 
-
     const {
-        data,
-        error
+        data: isAdmin,
+        error: adminError
     } =
         await supabaseClient
-            .from("admin_users")
-            .select("user_id")
-            .eq(
-                "user_id",
-                user.id
-            )
-            .maybeSingle();
-
+            .rpc("is_admin");
 
 
     if (
-        error ||
-        !data
+        adminError ||
+        isAdmin !== true
     ) {
 
         adminStatus.textContent =
@@ -322,7 +311,6 @@ async function checkAdmin() {
         return null;
 
     }
-
 
 
     adminStatus.textContent =
@@ -346,7 +334,6 @@ async function checkAdmin() {
 
 async function loadConversations() {
 
-
     const {
         data,
         error
@@ -364,7 +351,6 @@ async function loadConversations() {
             );
 
 
-
     if (error) {
 
         conversationList.innerHTML =
@@ -375,7 +361,6 @@ async function loadConversations() {
         return;
 
     }
-
 
 
     if (
@@ -391,15 +376,12 @@ async function loadConversations() {
     }
 
 
-
     conversationList.innerHTML =
         "";
 
 
-
     data.forEach(
         function(conversation) {
-
 
             const card =
                 document.createElement(
@@ -427,7 +409,6 @@ async function loadConversations() {
                 "#ffffff";
 
 
-
             const title =
                 document.createElement(
                     "h4"
@@ -437,7 +418,6 @@ async function loadConversations() {
             title.textContent =
                 conversation.subject ||
                 "General Support";
-
 
 
             const userId =
@@ -451,7 +431,6 @@ async function loadConversations() {
                 conversation.user_id;
 
 
-
             const status =
                 document.createElement(
                     "p"
@@ -461,7 +440,6 @@ async function loadConversations() {
             status.textContent =
                 "Status: " +
                 conversation.status;
-
 
 
             const updated =
@@ -475,7 +453,6 @@ async function loadConversations() {
                 new Date(
                     conversation.updated_at
                 ).toLocaleString();
-
 
 
             const openButton =
@@ -492,7 +469,6 @@ async function loadConversations() {
                 "dashboard-button";
 
 
-
             openButton.addEventListener(
                 "click",
                 function() {
@@ -503,7 +479,6 @@ async function loadConversations() {
 
                 }
             );
-
 
 
             card.appendChild(
@@ -531,7 +506,6 @@ async function loadConversations() {
             );
 
 
-
             conversationList.appendChild(
                 card
             );
@@ -552,15 +526,12 @@ async function loadMessages(
     conversation
 ) {
 
-
     currentConversation =
         conversation;
 
 
-
     messagesSection.style.display =
         "block";
-
 
 
     conversationTitle.textContent =
@@ -568,16 +539,13 @@ async function loadMessages(
         "General Support";
 
 
-
     conversationInfo.textContent =
         "Investor ID: " +
         conversation.user_id;
 
 
-
     messagesContainer.innerHTML =
         "<p>Loading messages...</p>";
-
 
 
     adminReply.value =
@@ -586,7 +554,6 @@ async function loadMessages(
 
     replyStatus.textContent =
         "";
-
 
 
     const {
@@ -610,7 +577,6 @@ async function loadMessages(
             );
 
 
-
     if (error) {
 
         messagesContainer.innerHTML =
@@ -621,7 +587,6 @@ async function loadMessages(
         return;
 
     }
-
 
 
     if (
@@ -637,15 +602,12 @@ async function loadMessages(
     }
 
 
-
     messagesContainer.innerHTML =
         "";
 
 
-
     data.forEach(
         function(message) {
-
 
             const messageBox =
                 document.createElement(
@@ -665,7 +627,6 @@ async function loadMessages(
                 "8px";
 
 
-
             const text =
                 document.createElement(
                     "p"
@@ -674,7 +635,6 @@ async function loadMessages(
 
             text.textContent =
                 message.message;
-
 
 
             const time =
@@ -689,7 +649,6 @@ async function loadMessages(
                 ).toLocaleString();
 
 
-
             messageBox.appendChild(
                 text
             );
@@ -698,7 +657,6 @@ async function loadMessages(
             messageBox.appendChild(
                 time
             );
-
 
 
             if (
@@ -715,7 +673,6 @@ async function loadMessages(
                     "#ffffff";
 
             }
-
 
 
             messagesContainer.appendChild(
@@ -738,7 +695,6 @@ sendReplyButton.addEventListener(
     "click",
     async function() {
 
-
         if (
             !currentConversation
         ) {
@@ -751,10 +707,8 @@ sendReplyButton.addEventListener(
         }
 
 
-
         const message =
             adminReply.value.trim();
-
 
 
         if (!message) {
@@ -767,7 +721,6 @@ sendReplyButton.addEventListener(
         }
 
 
-
         if (!currentAdminUser) {
 
             replyStatus.textContent =
@@ -778,14 +731,12 @@ sendReplyButton.addEventListener(
         }
 
 
-
         sendReplyButton.disabled =
             true;
 
 
         replyStatus.textContent =
             "Sending reply...";
-
 
 
         const {
@@ -807,7 +758,6 @@ sendReplyButton.addEventListener(
                         message
 
                 });
-
 
 
         if (error) {
@@ -838,7 +788,9 @@ sendReplyButton.addEventListener(
             error: notificationError
         } =
             await supabaseClient
-                .from("notifications")
+                .from(
+                    "notifications"
+                )
                 .insert({
 
                     user_id:
@@ -851,10 +803,12 @@ sendReplyButton.addEventListener(
                         "You have a new message from Nor Ellab Capital.",
 
                     type:
-                        "support"
+                        "support",
+
+                    read:
+                        false
 
                 });
-
 
 
         if (notificationError) {
@@ -889,7 +843,6 @@ sendReplyButton.addEventListener(
             );
 
 
-
         adminReply.value =
             "";
 
@@ -898,14 +851,12 @@ sendReplyButton.addEventListener(
             "Reply sent successfully.";
 
 
-
         await loadMessages(
             currentConversation
         );
 
 
         await loadConversations();
-
 
 
         sendReplyButton.disabled =
@@ -925,17 +876,14 @@ logoutButton.addEventListener(
     "click",
     async function(event) {
 
-
         event.preventDefault();
-
 
 
         await supabaseClient.auth.signOut();
 
 
-
         window.location.href =
-            "login.html";
+            "admin-login.html";
 
     }
 );
@@ -949,10 +897,8 @@ logoutButton.addEventListener(
 
 async function startAdminPage() {
 
-
     const user =
         await checkAdmin();
-
 
 
     if (!user) {
@@ -962,11 +908,9 @@ async function startAdminPage() {
     }
 
 
-
     await loadConversations();
 
 }
-
 
 
 startAdminPage();
