@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Investor Support Center</title>
 
     <style>
@@ -116,6 +117,7 @@
         .conversation-meta {
             color: #667085;
             font-size: 13px;
+            margin-top: 4px;
         }
 
         .status {
@@ -197,10 +199,39 @@
             border-color: #315f9b;
         }
 
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            background: white;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #315f9b;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
         .button-row {
             display: flex;
             gap: 10px;
             margin-top: 12px;
+            flex-wrap: wrap;
         }
 
         .primary-btn {
@@ -224,6 +255,10 @@
             padding: 12px 18px;
             border-radius: 8px;
             cursor: pointer;
+        }
+
+        .secondary-btn:hover {
+            background: #e2e7ee;
         }
 
         .empty {
@@ -253,7 +288,25 @@
             margin-bottom: 15px;
         }
 
+        .new-conversation-box {
+            border-top: 1px solid #e1e6ee;
+            margin-top: 25px;
+            padding-top: 25px;
+        }
+
+        .new-conversation-box h3 {
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .small-note {
+            color: #667085;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
         @media (max-width: 700px) {
+
             header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -282,48 +335,87 @@
 <body>
 
 <header>
+
     <h2>Nor Ellab Capital — Admin</h2>
 
     <nav>
-        <a href="dashboard.html">Investor Dashboard</a>
-        <a href="admin-deposits.html">Deposits</a>
-        <a href="admin-support.html">Support</a>
-        <button id="logoutBtn">Logout</button>
+
+        <a href="dashboard.html">
+            Investor Dashboard
+        </a>
+
+        <a href="admin-deposits.html">
+            Deposits
+        </a>
+
+        <a href="admin-support.html">
+            Support
+        </a>
+
+        <button id="logoutBtn">
+            Logout
+        </button>
+
     </nav>
+
 </header>
 
 <section class="hero">
-    <h1>Investor Support Center</h1>
+
+    <h1>
+        Investor Support Center
+    </h1>
+
     <p>
         Review investor conversations and respond directly from the administration center.
     </p>
+
 </section>
 
 <div class="container">
 
     <div id="alertBox"></div>
 
+    <!-- CONVERSATIONS -->
+
     <div class="card">
-        <h2>Support Conversations</h2>
+
+        <h2>
+            Support Conversations
+        </h2>
 
         <div id="conversationsList">
+
             <div class="loading">
                 Loading conversations...
             </div>
+
         </div>
+
     </div>
+
+
+    <!-- OPEN CONVERSATION -->
 
     <div class="card">
 
-        <h2>Open Conversation</h2>
+        <h2>
+            Open Conversation
+        </h2>
 
         <div id="conversationInfo" class="empty">
+
             Select a conversation above to view messages.
+
         </div>
 
         <div id="messagesContainer" class="messages"></div>
 
-        <div id="replyArea" class="reply-area" style="display:none;">
+        <div
+            id="replyArea"
+            class="reply-area"
+            style="display:none;"
+        >
 
             <textarea
                 id="replyMessage"
@@ -332,11 +424,100 @@
 
             <div class="button-row">
 
-                <button class="primary-btn" id="sendReplyBtn">
+                <button
+                    class="primary-btn"
+                    id="sendReplyBtn"
+                >
                     Send Reply
                 </button>
 
-                <button class="secondary-btn" id="clearReplyBtn">
+                <button
+                    class="secondary-btn"
+                    id="clearReplyBtn"
+                >
+                    Clear
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NEW CONVERSATION -->
+
+    <div class="card">
+
+        <h2>
+            Start New Conversation
+        </h2>
+
+        <div class="new-conversation-box">
+
+            <div class="form-group">
+
+                <label for="investorSelect">
+                    Select Investor
+                </label>
+
+                <select id="investorSelect">
+
+                    <option value="">
+                        Loading investors...
+                    </option>
+
+                </select>
+
+                <div class="small-note">
+                    Choose the investor you want to contact.
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="newSubject">
+                    Subject
+                </label>
+
+                <input
+                    type="text"
+                    id="newSubject"
+                    placeholder="Enter conversation subject"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="newMessage">
+                    Message
+                </label>
+
+                <textarea
+                    id="newMessage"
+                    placeholder="Write your message to the investor..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="button-row">
+
+                <button
+                    class="primary-btn"
+                    id="startConversationBtn"
+                >
+                    Start Conversation
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    id="clearNewConversationBtn"
+                >
                     Clear
                 </button>
 
@@ -347,6 +528,7 @@
     </div>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -364,40 +546,66 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
+
 let currentAdminUser = null;
+
 let currentConversation = null;
+
 let supportChannel = null;
 
+
 const conversationsList =
-    document.getElementById("conversationsList");
+    document.getElementById(
+        "conversationsList"
+    );
 
 const conversationInfo =
-    document.getElementById("conversationInfo");
+    document.getElementById(
+        "conversationInfo"
+    );
 
 const messagesContainer =
-    document.getElementById("messagesContainer");
+    document.getElementById(
+        "messagesContainer"
+    );
 
 const replyArea =
-    document.getElementById("replyArea");
+    document.getElementById(
+        "replyArea"
+    );
 
 const replyMessage =
-    document.getElementById("replyMessage");
+    document.getElementById(
+        "replyMessage"
+    );
 
 const alertBox =
-    document.getElementById("alertBox");
+    document.getElementById(
+        "alertBox"
+    );
+
+const investorSelect =
+    document.getElementById(
+        "investorSelect"
+    );
 
 
-function showAlert(message, type = "success") {
+function showAlert(
+    message,
+    type = "success"
+) {
 
     alertBox.innerHTML = `
         <div class="${type}">
-            ${message}
+            ${escapeHtml(message)}
         </div>
     `;
 
     setTimeout(() => {
+
         alertBox.innerHTML = "";
-    }, 4000);
+
+    }, 5000);
 }
 
 
@@ -407,7 +615,9 @@ async function checkAdmin() {
         data: {
             user
         }
-    } = await supabaseClient.auth.getUser();
+    } =
+        await supabaseClient.auth.getUser();
+
 
     if (!user) {
 
@@ -417,16 +627,28 @@ async function checkAdmin() {
         return false;
     }
 
-    currentAdminUser = user;
+
+    currentAdminUser =
+        user;
+
 
     const {
         data: isAdmin,
         error: adminError
-    } = await supabaseClient.rpc("is_admin");
+    } =
+        await supabaseClient.rpc(
+            "is_admin"
+        );
 
-    if (adminError || !isAdmin) {
 
-        await supabaseClient.auth.signOut();
+    if (
+        adminError ||
+        !isAdmin
+    ) {
+
+        await supabaseClient
+            .auth
+            .signOut();
 
         window.location.href =
             "admin-login.html";
@@ -434,26 +656,128 @@ async function checkAdmin() {
         return false;
     }
 
+
     return true;
+}
+
+
+async function loadInvestors() {
+
+    investorSelect.innerHTML = `
+        <option value="">
+            Loading investors...
+        </option>
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select("*")
+            .order("created_at", {
+                ascending: false
+            });
+
+
+    if (error) {
+
+        investorSelect.innerHTML = `
+            <option value="">
+                Unable to load investors
+            </option>
+        `;
+
+        console.error(
+            "Investor loading error:",
+            error
+        );
+
+        return;
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        investorSelect.innerHTML = `
+            <option value="">
+                No investors found
+            </option>
+        `;
+
+        return;
+    }
+
+
+    investorSelect.innerHTML = `
+        <option value="">
+            Select an investor
+        </option>
+    `;
+
+
+    data.forEach(
+        investor => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                investor.id;
+
+
+            const name =
+                investor.full_name ||
+                investor.name ||
+                investor.email ||
+                "Investor";
+
+
+            option.textContent =
+                name;
+
+
+            investorSelect.appendChild(
+                option
+            );
+
+        }
+    );
 }
 
 
 async function loadConversations() {
 
     conversationsList.innerHTML =
-        `<div class="loading">
+        `
+        <div class="loading">
             Loading conversations...
-        </div>`;
+        </div>
+        `;
+
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("support_conversations")
-        .select("*")
-        .order("updated_at", {
-            ascending: false
-        });
+    } =
+        await supabaseClient
+            .from("support_conversations")
+            .select("*")
+            .order(
+                "updated_at",
+                {
+                    ascending: false
+                }
+            );
+
 
     if (error) {
 
@@ -464,10 +788,16 @@ async function loadConversations() {
             </div>
         `;
 
+        console.error(error);
+
         return;
     }
 
-    if (!data || data.length === 0) {
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         conversationsList.innerHTML = `
             <div class="empty">
@@ -478,111 +808,180 @@ async function loadConversations() {
         return;
     }
 
+
     conversationsList.innerHTML = "";
 
-    data.forEach(conversation => {
 
-        const item =
-            document.createElement("div");
+    data.forEach(
+        conversation => {
 
-        item.className =
-            "conversation";
+            const item =
+                document.createElement(
+                    "div"
+                );
 
-        item.dataset.id =
-            conversation.id;
 
-        item.innerHTML = `
-            <div class="conversation-title">
-                ${escapeHtml(
-                    conversation.subject ||
-                    "Support Conversation"
-                )}
-            </div>
+            item.className =
+                "conversation";
 
-            <div class="conversation-meta">
-                Investor ID:
-                ${escapeHtml(
-                    conversation.user_id || ""
-                )}
-            </div>
 
-            <div class="conversation-meta">
-                Updated:
-                ${formatDate(
-                    conversation.updated_at
-                )}
-            </div>
+            item.dataset.id =
+                conversation.id;
 
-            <span class="status">
-                ${escapeHtml(
-                    conversation.status ||
-                    "open"
-                )}
-            </span>
-        `;
 
-        item.addEventListener(
-            "click",
-            () => openConversation(conversation)
-        );
+            item.innerHTML = `
 
-        conversationsList.appendChild(item);
+                <div class="conversation-title">
 
-    });
+                    ${escapeHtml(
+                        conversation.subject ||
+                        "Support Conversation"
+                    )}
+
+                </div>
+
+
+                <div class="conversation-meta">
+
+                    Investor ID:
+                    ${escapeHtml(
+                        conversation.user_id ||
+                        ""
+                    )}
+
+                </div>
+
+
+                <div class="conversation-meta">
+
+                    Updated:
+                    ${formatDate(
+                        conversation.updated_at
+                    )}
+
+                </div>
+
+
+                <span class="status">
+
+                    ${escapeHtml(
+                        conversation.status ||
+                        "open"
+                    )}
+
+                </span>
+
+            `;
+
+
+            item.addEventListener(
+                "click",
+                () =>
+                    openConversation(
+                        conversation
+                    )
+            );
+
+
+            conversationsList.appendChild(
+                item
+            );
+
+        }
+    );
 }
 
 
-async function openConversation(conversation) {
+async function openConversation(
+    conversation
+) {
 
     currentConversation =
         conversation;
 
+
     document
-        .querySelectorAll(".conversation")
-        .forEach(item => {
+        .querySelectorAll(
+            ".conversation"
+        )
+        .forEach(
+            item => {
 
-            item.classList.remove("active");
+                item.classList.remove(
+                    "active"
+                );
 
-            if (
-                item.dataset.id ==
-                conversation.id
-            ) {
 
-                item.classList.add("active");
+                if (
+                    item.dataset.id ==
+                    conversation.id
+                ) {
+
+                    item.classList.add(
+                        "active"
+                    );
+
+                }
+
             }
+        );
 
-        });
 
     conversationInfo.innerHTML = `
+
         <div style="text-align:left;">
 
             <strong>
+
                 ${escapeHtml(
                     conversation.subject ||
                     "Support Conversation"
                 )}
+
             </strong>
 
-            <div style="margin-top:8px;color:#667085;font-size:13px;">
+
+            <div
+                style="
+                    margin-top:8px;
+                    color:#667085;
+                    font-size:13px;
+                "
+            >
+
                 Investor ID:
                 ${escapeHtml(
-                    conversation.user_id
+                    conversation.user_id ||
+                    ""
                 )}
+
             </div>
 
-            <div style="margin-top:5px;color:#667085;font-size:13px;">
+
+            <div
+                style="
+                    margin-top:5px;
+                    color:#667085;
+                    font-size:13px;
+                "
+            >
+
                 Status:
                 ${escapeHtml(
                     conversation.status ||
                     "open"
                 )}
+
             </div>
 
         </div>
+
     `;
+
 
     replyArea.style.display =
         "block";
+
 
     await loadMessages(
         conversation.id
@@ -590,40 +989,66 @@ async function openConversation(conversation) {
 }
 
 
-async function loadMessages(conversationId) {
+async function loadMessages(
+    conversationId
+) {
 
     messagesContainer.innerHTML =
-        `<div class="loading">
+        `
+        <div class="loading">
             Loading messages...
-        </div>`;
+        </div>
+        `;
+
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("support_messages")
-        .select("*")
-        .eq(
-            "conversation_id",
-            conversationId
-        )
-        .order("created_at", {
-            ascending: true
-        });
+    } =
+        await supabaseClient
+            .from("support_messages")
+            .select("*")
+            .eq(
+                "conversation_id",
+                conversationId
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
 
     if (error) {
 
         messagesContainer.innerHTML = `
             <div class="error">
+
                 Unable to load messages.
-                ${escapeHtml(error.message)}
+
+                <br><br>
+
+                ${escapeHtml(
+                    error.message
+                )}
+
             </div>
         `;
+
+        console.error(
+            "Message loading error:",
+            error
+        );
 
         return;
     }
 
-    if (!data || data.length === 0) {
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
         messagesContainer.innerHTML = `
             <div class="empty">
@@ -634,28 +1059,42 @@ async function loadMessages(conversationId) {
         return;
     }
 
-    messagesContainer.innerHTML = "";
 
-    data.forEach(message => {
+    messagesContainer.innerHTML =
+        "";
 
-        displayMessage(message);
 
-    });
+    data.forEach(
+        message => {
+
+            displayMessage(
+                message
+            );
+
+        }
+    );
+
 
     messagesContainer.scrollTop =
         messagesContainer.scrollHeight;
 }
 
 
-function displayMessage(message) {
+function displayMessage(
+    message
+) {
 
     const isAdmin =
         currentAdminUser &&
         message.sender_id ===
         currentAdminUser.id;
 
+
     const wrapper =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     wrapper.className =
         "message " +
@@ -665,34 +1104,48 @@ function displayMessage(message) {
                 : "investor"
         );
 
+
     wrapper.dataset.messageId =
         message.id || "";
 
+
     wrapper.innerHTML = `
+
         <div class="message-box">
 
             <div class="message-sender">
+
                 ${
                     isAdmin
                         ? "Nor Ellab Capital"
                         : "Investor"
                 }
+
             </div>
+
 
             <div>
+
                 ${escapeHtml(
-                    message.message || ""
+                    message.message ||
+                    ""
                 )}
+
             </div>
 
+
             <div class="message-time">
+
                 ${formatDate(
                     message.created_at
                 )}
+
             </div>
 
         </div>
+
     `;
+
 
     messagesContainer.appendChild(
         wrapper
@@ -700,18 +1153,30 @@ function displayMessage(message) {
 }
 
 
-function addLiveMessage(message) {
-
-    if (!currentConversation) {
-        return;
-    }
+function addLiveMessage(
+    message
+) {
 
     if (
-        String(message.conversation_id) !==
-        String(currentConversation.id)
+        !currentConversation
     ) {
+
         return;
     }
+
+
+    if (
+        String(
+            message.conversation_id
+        ) !==
+        String(
+            currentConversation.id
+        )
+    ) {
+
+        return;
+    }
+
 
     if (
         message.id &&
@@ -719,10 +1184,15 @@ function addLiveMessage(message) {
             `[data-message-id="${message.id}"]`
         )
     ) {
+
         return;
     }
 
-    displayMessage(message);
+
+    displayMessage(
+        message
+    );
+
 
     messagesContainer.scrollTop =
         messagesContainer.scrollHeight;
@@ -731,13 +1201,17 @@ function addLiveMessage(message) {
 
 function startRealtime() {
 
-    if (supportChannel) {
+    if (
+        supportChannel
+    ) {
 
         supabaseClient
             .removeChannel(
                 supportChannel
             );
+
     }
+
 
     supportChannel =
         supabaseClient
@@ -758,9 +1232,11 @@ function startRealtime() {
                         payload.new
                     );
 
+
                     addLiveMessage(
                         payload.new
                     );
+
 
                     await loadConversations();
 
@@ -781,7 +1257,9 @@ function startRealtime() {
 
 async function sendReply() {
 
-    if (!currentConversation) {
+    if (
+        !currentConversation
+    ) {
 
         showAlert(
             "Please select a conversation first.",
@@ -791,8 +1269,10 @@ async function sendReply() {
         return;
     }
 
+
     const message =
         replyMessage.value.trim();
+
 
     if (!message) {
 
@@ -804,33 +1284,39 @@ async function sendReply() {
         return;
     }
 
+
     const sendButton =
         document.getElementById(
             "sendReplyBtn"
         );
 
+
     sendButton.disabled =
         true;
+
 
     sendButton.textContent =
         "Sending...";
 
+
     const {
         error
-    } = await supabaseClient
-        .from("support_messages")
-        .insert({
+    } =
+        await supabaseClient
+            .from("support_messages")
+            .insert({
 
-            conversation_id:
-                currentConversation.id,
+                conversation_id:
+                    currentConversation.id,
 
-            sender_id:
-                currentAdminUser.id,
+                sender_id:
+                    currentAdminUser.id,
 
-            message:
-                message
+                message:
+                    message
 
-        });
+            });
+
 
     if (error) {
 
@@ -840,18 +1326,20 @@ async function sendReply() {
             "error"
         );
 
+
         sendButton.disabled =
             false;
+
 
         sendButton.textContent =
             "Send Reply";
 
+
         return;
     }
 
-    const {
-        error: updateError
-    } = await supabaseClient
+
+    await supabaseClient
         .from("support_conversations")
         .update({
             updated_at:
@@ -862,67 +1350,307 @@ async function sendReply() {
             currentConversation.id
         );
 
-    if (updateError) {
 
-        console.warn(
-            "Conversation timestamp update failed:",
-            updateError.message
-        );
-    }
+    replyMessage.value =
+        "";
 
-    replyMessage.value = "";
 
     showAlert(
         "Reply sent successfully."
     );
 
+
     await loadMessages(
         currentConversation.id
     );
 
+
     await loadConversations();
+
 
     sendButton.disabled =
         false;
+
 
     sendButton.textContent =
         "Send Reply";
 }
 
 
-function clearReply() {
+async function startNewConversation() {
 
-    replyMessage.value = "";
+    const investorId =
+        investorSelect.value;
 
-}
+
+    const subject =
+        document
+            .getElementById(
+                "newSubject"
+            )
+            .value
+            .trim();
 
 
-function formatDate(date) {
+    const message =
+        document
+            .getElementById(
+                "newMessage"
+            )
+            .value
+            .trim();
 
-    if (!date) {
-        return "Unknown";
+
+    if (!investorId) {
+
+        showAlert(
+            "Please select an investor.",
+            "error"
+        );
+
+        return;
     }
 
-    return new Date(date)
-        .toLocaleString();
 
+    if (!subject) {
+
+        showAlert(
+            "Please enter a subject.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!message) {
+
+        showAlert(
+            "Please enter a message.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const button =
+        document.getElementById(
+            "startConversationBtn"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Creating...";
+
+
+    try {
+
+        const {
+            data: conversation,
+            error: conversationError
+        } =
+            await supabaseClient
+                .from(
+                    "support_conversations"
+                )
+                .insert({
+
+                    user_id:
+                        investorId,
+
+                    subject:
+                        subject,
+
+                    status:
+                        "open"
+
+                })
+                .select()
+                .single();
+
+
+        if (
+            conversationError
+        ) {
+
+            throw conversationError;
+
+        }
+
+
+        const {
+            error: messageError
+        } =
+            await supabaseClient
+                .from(
+                    "support_messages"
+                )
+                .insert({
+
+                    conversation_id:
+                        conversation.id,
+
+                    sender_id:
+                        currentAdminUser.id,
+
+                    message:
+                        message
+
+                });
+
+
+        if (
+            messageError
+        ) {
+
+            throw messageError;
+
+        }
+
+
+        document
+            .getElementById(
+                "newSubject"
+            )
+            .value = "";
+
+
+        document
+            .getElementById(
+                "newMessage"
+            )
+            .value = "";
+
+
+        investorSelect.value =
+            "";
+
+
+        showAlert(
+            "New conversation started successfully."
+        );
+
+
+        await loadConversations();
+
+
+        await openConversation(
+            conversation
+        );
+
+
+    } catch (
+        error
+    ) {
+
+        console.error(
+            "New conversation error:",
+            error
+        );
+
+
+        showAlert(
+            "Unable to start conversation: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+
+    button.disabled =
+        false;
+
+
+    button.textContent =
+        "Start Conversation";
 }
 
 
-function escapeHtml(value) {
+function clearReply() {
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    replyMessage.value =
+        "";
+}
 
+
+function clearNewConversation() {
+
+    document
+        .getElementById(
+            "newSubject"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "newMessage"
+        )
+        .value = "";
+
+
+    investorSelect.value =
+        "";
+}
+
+
+function formatDate(
+    date
+) {
+
+    if (!date) {
+
+        return "Unknown";
+
+    }
+
+
+    return new Date(
+        date
+    ).toLocaleString();
+}
+
+
+function escapeHtml(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
 document
-    .getElementById("sendReplyBtn")
+    .getElementById(
+        "sendReplyBtn"
+    )
     .addEventListener(
         "click",
         sendReply
@@ -930,7 +1658,9 @@ document
 
 
 document
-    .getElementById("clearReplyBtn")
+    .getElementById(
+        "clearReplyBtn"
+    )
     .addEventListener(
         "click",
         clearReply
@@ -938,22 +1668,49 @@ document
 
 
 document
-    .getElementById("logoutBtn")
+    .getElementById(
+        "startConversationBtn"
+    )
+    .addEventListener(
+        "click",
+        startNewConversation
+    );
+
+
+document
+    .getElementById(
+        "clearNewConversationBtn"
+    )
+    .addEventListener(
+        "click",
+        clearNewConversation
+    );
+
+
+document
+    .getElementById(
+        "logoutBtn"
+    )
     .addEventListener(
         "click",
         async () => {
 
-            if (supportChannel) {
+            if (
+                supportChannel
+            ) {
 
                 await supabaseClient
                     .removeChannel(
                         supportChannel
                     );
+
             }
+
 
             await supabaseClient
                 .auth
                 .signOut();
+
 
             window.location.href =
                 "admin-login.html";
@@ -966,9 +1723,15 @@ async function initialize() {
     const isAdmin =
         await checkAdmin();
 
+
     if (!isAdmin) {
+
         return;
+
     }
+
+
+    await loadInvestors();
 
     await loadConversations();
 
