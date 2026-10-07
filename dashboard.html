@@ -1,30 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>
         Investor Dashboard | Nor Ellab Capital
     </title>
-
     <link
         rel="stylesheet"
         href="style.css"
     >
-
     <style>
-
         /* =========================================
            INVESTOR DASHBOARD
         ========================================= */
-
         .portfolio-summary {
             display: grid;
             grid-template-columns:
@@ -32,32 +24,24 @@
             gap: 18px;
             margin-bottom: 22px;
         }
-
-
         .portfolio-item {
             padding: 20px;
             background: #f8fafc;
             border: 1px solid #e5e7eb;
             border-radius: 10px;
         }
-
-
         .portfolio-item span {
             display: block;
             color: #6b7280;
             font-size: 14px;
             margin-bottom: 8px;
         }
-
-
         .portfolio-item strong {
             display: block;
             color: #111827;
             font-size: 24px;
             font-weight: 700;
         }
-
-
         .portfolio-secondary {
             display: grid;
             grid-template-columns:
@@ -65,88 +49,62 @@
             gap: 18px;
             margin-bottom: 22px;
         }
-
-
         .portfolio-stat {
             padding: 18px 20px;
             border: 1px solid #e5e7eb;
             border-radius: 10px;
             background: #ffffff;
         }
-
-
         .portfolio-stat span {
             display: block;
             color: #6b7280;
             font-size: 14px;
             margin-bottom: 7px;
         }
-
-
         .portfolio-stat strong {
             color: #111827;
             font-size: 22px;
         }
-
-
         /* =========================================
            INVESTMENTS
         ========================================= */
-
         .investment-item {
             padding: 20px 0;
             border-bottom: 1px solid #e5e7eb;
         }
-
-
         .investment-item:first-child {
             padding-top: 0;
         }
-
-
         .investment-item:last-child {
             border-bottom: none;
         }
-
-
         .investment-item h3 {
             margin-top: 0;
             margin-bottom: 10px;
             color: #111827;
         }
-
-
         .investment-item p {
             color: #6b7280;
             margin: 6px 0;
             line-height: 1.5;
         }
-
-
         .investment-empty,
         .transaction-empty {
             padding: 10px 0;
         }
-
-
         .investment-empty h3,
         .transaction-empty h3 {
             color: #111827;
             margin-top: 0;
         }
-
-
         .investment-empty p,
         .transaction-empty p {
             color: #6b7280;
             line-height: 1.6;
         }
-
-
         /* =========================================
            STATUS BADGES
         ========================================= */
-
         .status-badge {
             display: inline-flex;
             align-items: center;
@@ -158,8 +116,6 @@
             line-height: 1;
             border: 1px solid transparent;
         }
-
-
         .status-badge::before {
             content: "";
             width: 7px;
@@ -167,439 +123,489 @@
             border-radius: 50%;
             background: currentColor;
         }
-
-
         .status-active {
             color: #166534;
             background: #f0fdf4;
             border-color: #bbf7d0;
         }
-
-
         .status-pending {
             color: #92400e;
             background: #fffbeb;
             border-color: #fde68a;
         }
-
-
         .status-completed {
             color: #1d4ed8;
             background: #eff6ff;
             border-color: #bfdbfe;
         }
-
-
         .status-processing {
             color: #6d28d9;
             background: #f5f3ff;
             border-color: #ddd6fe;
         }
-
-
         .status-cancelled {
             color: #991b1b;
             background: #fef2f2;
             border-color: #fecaca;
         }
-
-
         .status-failed {
             color: #991b1b;
             background: #fef2f2;
             border-color: #fecaca;
         }
-
-
         .status-default {
             color: #374151;
             background: #f3f4f6;
             border-color: #d1d5db;
         }
-
-
+        /* =========================================
+           PUSH NOTIFICATIONS
+        ========================================= */
+        .notification-card {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+        }
+        .notification-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .notification-button {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            background: #111827;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .notification-button:hover {
+            opacity: 0.9;
+        }
+        .notification-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .notification-status {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #6b7280;
+        }
         /* =========================================
            RESPONSIVE
         ========================================= */
-
         @media (max-width: 800px) {
-
             .portfolio-summary {
                 grid-template-columns: 1fr;
             }
-
         }
-
-
         @media (max-width: 560px) {
-
             .portfolio-secondary {
                 grid-template-columns: 1fr;
             }
-
-
             .portfolio-item strong {
                 font-size: 22px;
             }
-
         }
-
     </style>
-
 </head>
-
-
 <body>
-
-
 <header class="site-header">
-
     <div class="logo">
         Nor Ellab Capital
     </div>
-
     <nav>
-
         <a href="index.html">
             Home
         </a>
-
         <a href="investments.html">
             Investments
         </a>
-
         <a href="dashboard.html">
             Dashboard
         </a>
-
         <a
             href="#"
             id="logout-button"
         >
             Logout
         </a>
-
     </nav>
-
 </header>
-
-
 <section class="dashboard-hero">
-
     <h1>
         Investor Dashboard
     </h1>
-
     <p id="welcome-message">
         Welcome to your Nor Ellab Capital investor account.
     </p>
-
 </section>
-
-
 <section class="dashboard-section">
-
     <div class="dashboard-container">
-
-
         <!-- INVESTMENTS -->
-
         <div class="dashboard-card">
-
             <h2>
                 My Investments
             </h2>
-
             <div id="investments-list">
-
                 <p>
                     Loading your investments...
                 </p>
-
             </div>
-
         </div>
-
-
         <!-- PORTFOLIO -->
-
         <div class="dashboard-card">
-
             <h2>
                 Portfolio Overview
             </h2>
-
-
             <div class="portfolio-summary">
-
-
                 <div class="portfolio-item">
-
                     <span>
                         Total Invested
                     </span>
-
                     <strong id="total-invested">
                         $0.00
                     </strong>
-
                 </div>
-
-
                 <div class="portfolio-item">
-
                     <span>
                         Portfolio Value
                     </span>
-
                     <strong id="portfolio-value">
                         $0.00
                     </strong>
-
                 </div>
-
-
                 <div class="portfolio-item">
-
                     <span>
                         Available Balance
                     </span>
-
                     <strong id="available-balance">
                         $0.00
                     </strong>
-
                 </div>
-
             </div>
-
-
             <!-- INVESTMENT STATUS -->
-
             <div class="portfolio-secondary">
-
-
                 <div class="portfolio-stat">
-
                     <span>
                         Active Investments
                     </span>
-
                     <strong id="active-investments">
                         0
                     </strong>
-
                 </div>
-
-
                 <div class="portfolio-stat">
-
                     <span>
                         Pending Investments
                     </span>
-
                     <strong id="pending-investments">
                         0
                     </strong>
-
                 </div>
-
             </div>
-
-
             <div class="dashboard-actions">
-
                 <a
                     href="deposit.html"
                     class="dashboard-button"
                 >
                     Deposit Funds
                 </a>
-
                 <a
                     href="withdraw.html"
                     class="dashboard-button"
                 >
                     Withdraw Funds
                 </a>
-
             </div>
-
         </div>
-
-
         <!-- TRANSACTIONS -->
-
         <div class="dashboard-card">
-
             <h2>
                 Transactions
             </h2>
-
             <div id="transactions-list">
-
                 <p>
                     Loading your transactions...
                 </p>
-
             </div>
-
         </div>
-
-
         <!-- DEPOSIT HISTORY -->
-
         <div class="dashboard-card">
-
             <h2>
                 Deposit History
             </h2>
-
             <div id="deposit-history">
-
                 <p>
                     Loading your deposit history...
                 </p>
-
             </div>
-
         </div>
-
-
         <!-- CRYPTO PAYMENT HISTORY -->
-
         <div class="dashboard-card">
-
             <h2>
                 Crypto Payment History
             </h2>
-
             <div id="crypto-payment-history">
-
                 <p>
                     Loading your crypto payment history...
                 </p>
-
             </div>
-
         </div>
-
-
         <!-- ACCOUNT -->
-
         <div class="dashboard-card">
-
             <h2>
                 Account
             </h2>
-
             <p>
                 Your account is securely connected.
             </p>
-
             <p id="dashboard-name">
                 Loading your name...
             </p>
-
             <p id="dashboard-email">
                 Loading account information...
             </p>
-
             <p id="dashboard-phone">
                 Loading phone number...
             </p>
-
             <p id="dashboard-status">
                 Loading account status...
             </p>
-
             <div class="dashboard-actions">
-
                 <a
                     href="profile.html"
                     class="dashboard-button"
                 >
                     Edit Profile
                 </a>
-
             </div>
-
         </div>
-
-
         <!-- SUPPORT -->
-
         <div class="dashboard-card">
-
             <h2>
                 Investor Support
             </h2>
-
             <p>
                 Need help with your account, investments,
                 deposits, or withdrawals?
             </p>
-
             <a
                 href="support-chat.html"
                 class="dashboard-button"
             >
                 Contact Support
             </a>
-
         </div>
-
-
+        <!-- PHONE NOTIFICATIONS -->
+        <div class="dashboard-card notification-card">
+            <h2>
+                Phone Notifications
+            </h2>
+            <p>
+                Enable notifications to receive alerts from
+                Nor Ellab Capital when you receive important
+                account or support updates.
+            </p>
+            <button
+                type="button"
+                id="enable-notifications-button"
+                class="notification-button"
+            >
+                Enable Notifications
+            </button>
+            <div
+                id="notification-status"
+                class="notification-status"
+            >
+                Notifications are currently not enabled.
+            </div>
+        </div>
     </div>
-
 </section>
-
-
 <footer>
-
     <p>
         © 2026 Nor Ellab Capital.
         All rights reserved.
     </p>
-
 </footer>
-
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
-
-
 const supabaseUrl =
     "https://grgmsezyxxceheofmsoj.supabase.co";
-
-
 const supabaseKey =
     "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
-
-
 const supabaseClient =
     supabase.createClient(
         supabaseUrl,
         supabaseKey
     );
-
-
+/* =========================================
+   WEB PUSH
+========================================= */
+/*
+    Public VAPID key.
+    This key identifies Nor Ellab Capital
+    to the browser's push service.
+    The matching private key must NEVER
+    be placed inside this file.
+*/
+const VAPID_PUBLIC_KEY =
+    "BGvjQL6NXaZPVT6nacHnyhIx1AQ4WXaopreKi88vgANF6BE2qJke60WvxFcCfMBtO3pk_XaTPxnAEGx91avWBbA";
+function urlBase64ToUint8Array(base64String) {
+    const padding =
+        "=".repeat(
+            (4 - base64String.length % 4) % 4
+        );
+    const base64 =
+        (
+            base64String +
+            padding
+        )
+        .replace(
+            /-/g,
+            "+"
+        )
+        .replace(
+            /_/g,
+            "/"
+        );
+    const rawData =
+        window.atob(base64);
+    const outputArray =
+        new Uint8Array(
+            rawData.length
+        );
+    for (
+        let i = 0;
+        i < rawData.length;
+        ++i
+    ) {
+        outputArray[i] =
+            rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+async function enablePushNotifications(userId) {
+    const button =
+        document.getElementById(
+            "enable-notifications-button"
+        );
+    const status =
+        document.getElementById(
+            "notification-status"
+        );
+    if (
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !("Notification" in window)
+    ) {
+        status.textContent =
+            "Push notifications are not supported by this browser.";
+        return;
+    }
+    try {
+        button.disabled = true;
+        button.textContent =
+            "Enabling...";
+        const registration =
+            await navigator.serviceWorker.register(
+                "/sw.js"
+            );
+        const permission =
+            await Notification.requestPermission();
+        if (
+            permission !== "granted"
+        ) {
+            status.textContent =
+                "Notification permission was not granted.";
+            button.disabled = false;
+            button.textContent =
+                "Enable Notifications";
+            return;
+        }
+        let subscription =
+            await registration.pushManager.getSubscription();
+        if (!subscription) {
+            subscription =
+                await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey:
+                        urlBase64ToUint8Array(
+                            VAPID_PUBLIC_KEY
+                        )
+                });
+        }
+        const subscriptionJson =
+            subscription.toJSON();
+        const endpoint =
+            subscriptionJson.endpoint;
+        const p256dh =
+            subscriptionJson.keys?.p256dh;
+        const auth =
+            subscriptionJson.keys?.auth;
+        if (
+            !endpoint ||
+            !p256dh ||
+            !auth
+        ) {
+            throw new Error(
+                "The browser did not return a valid push subscription."
+            );
+        }
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("push_subscriptions")
+                .upsert(
+                    {
+                        user_id:
+                            userId,
+                        endpoint:
+                            endpoint,
+                        p256dh:
+                            p256dh,
+                        auth:
+                            auth,
+                        updated_at:
+                            new Date().toISOString()
+                    },
+                    {
+                        onConflict:
+                            "user_id,endpoint"
+                    }
+                );
+        if (error) {
+            throw error;
+        }
+        status.textContent =
+            "Phone notifications are enabled.";
+        button.textContent =
+            "Notifications Enabled";
+    } catch (error) {
+        console.error(
+            "Push notification setup failed:",
+            error
+        );
+        status.textContent =
+            "Unable to enable notifications. Please try again.";
+        button.disabled = false;
+        button.textContent =
+            "Enable Notifications";
+    }
+}
 /* =========================================
    STATUS BADGE
 ========================================= */
-
 function createStatusBadge(status) {
-
     const cleanStatus =
         String(
             status ||
             "Pending"
         )
         .trim();
-
-
     const normalizedStatus =
         cleanStatus
             .toLowerCase()
@@ -607,80 +613,57 @@ function createStatusBadge(status) {
                 /[\s_-]/g,
                 ""
             );
-
-
     let statusClass =
         "status-default";
-
-
     if (
         normalizedStatus ===
         "active"
     ) {
-
         statusClass =
             "status-active";
-
     } else if (
         normalizedStatus ===
         "pending"
     ) {
-
         statusClass =
             "status-pending";
-
     } else if (
         normalizedStatus ===
         "completed"
     ) {
-
         statusClass =
             "status-completed";
-
     } else if (
         normalizedStatus ===
         "processing"
     ) {
-
         statusClass =
             "status-processing";
-
     } else if (
         normalizedStatus ===
         "cancelled" ||
         normalizedStatus ===
         "canceled"
     ) {
-
         statusClass =
             "status-cancelled";
-
     } else if (
         normalizedStatus ===
         "failed"
     ) {
-
         statusClass =
             "status-failed";
-
     }
-
-
     return `
         <span class="status-badge ${statusClass}">
             ${cleanStatus}
         </span>
     `;
-
 }
-
-
 /* =========================================
    FORMAT MONEY
 ========================================= */
-
 function formatMoney(amount) {
-
     return "$" +
         Number(
             amount || 0
@@ -691,47 +674,30 @@ function formatMoney(amount) {
                 maximumFractionDigits: 2
             }
         );
-
 }
-
-
 /* =========================================
    LOAD DASHBOARD
 ========================================= */
-
 async function loadDashboard() {
-
-
     /* GET CURRENT USER */
-
     const {
         data,
         error
     } =
         await supabaseClient.auth.getUser();
-
-
     if (
         error ||
         !data.user
     ) {
-
         window.location.href =
             "login.html";
-
         return;
-
     }
-
-
     const user =
         data.user;
-
-
     /* =====================================
        ACCOUNT PROFILE
     ===================================== */
-
     const {
         data: profile,
         error: profileError
@@ -746,51 +712,35 @@ async function loadDashboard() {
                 user.id
             )
             .maybeSingle();
-
-
     const profileName =
         profile?.full_name ||
         user.user_metadata?.full_name ||
         "Name not available";
-
-
     const profileEmail =
         profile?.email ||
         user.email ||
         "Email not available";
-
-
     const profilePhone =
         profile?.phone ||
         "Not provided";
-
-
     const profileStatus =
         profile?.account_status ||
         "Active";
-
-
     document.getElementById(
         "dashboard-name"
     ).textContent =
         "Name: " +
         profileName;
-
-
     document.getElementById(
         "dashboard-email"
     ).textContent =
         "Email: " +
         profileEmail;
-
-
     document.getElementById(
         "dashboard-phone"
     ).textContent =
         "Phone: " +
         profilePhone;
-
-
     document.getElementById(
         "dashboard-status"
     ).innerHTML =
@@ -798,30 +748,21 @@ async function loadDashboard() {
         createStatusBadge(
             profileStatus
         );
-
-
     document.getElementById(
         "welcome-message"
     ).textContent =
         "Welcome, " +
         profileName +
         ".";
-
-
     if (profileError) {
-
         console.log(
             "Unable to load profile:",
             profileError
         );
-
     }
-
-
     /* =====================================
        LOAD INVESTMENTS
     ===================================== */
-
     const {
         data: investments,
         error: investmentError
@@ -839,118 +780,76 @@ async function loadDashboard() {
                     ascending: false
                 }
             );
-
-
     const investmentsList =
         document.getElementById(
             "investments-list"
         );
-
-
     let totalInvested =
         0;
-
-
     let activeInvestments =
         0;
-
-
     let pendingInvestments =
         0;
-
-
     if (investmentError) {
-
         investmentsList.innerHTML =
             "<p>Unable to load investments.</p>";
-
         console.log(
             investmentError
         );
-
     } else if (
         !investments ||
         investments.length === 0
     ) {
-
         investmentsList.innerHTML = `
-
             <div class="investment-empty">
-
                 <h3>
                     No investments yet
                 </h3>
-
                 <p>
                     Your active investments will appear
                     here once an investment is added
                     to your account.
                 </p>
-
                 <a
                     href="investments.html"
                     class="dashboard-button"
                 >
                     Explore Investments
                 </a>
-
             </div>
-
         `;
-
     } else {
-
         let investmentHTML =
             "";
-
-
         investments.forEach(
             function(investment) {
-
-
                 const investmentAmount =
                     Number(
                         investment.amount || 0
                     );
-
-
                 totalInvested +=
                     investmentAmount;
-
-
                 const investmentStatus =
                     String(
                         investment.status ||
                         "Pending"
                     );
-
-
                 const normalizedStatus =
                     investmentStatus
                         .toLowerCase()
                         .trim();
-
-
                 if (
                     normalizedStatus ===
                     "active"
                 ) {
-
                     activeInvestments++;
-
                 }
-
-
                 if (
                     normalizedStatus ===
                     "pending"
                 ) {
-
                     pendingInvestments++;
-
                 }
-
-
                 const investmentDate =
                     investment.created_at
                     ? new Date(
@@ -964,12 +863,8 @@ async function loadDashboard() {
                         }
                     )
                     : "Date not available";
-
-
                 investmentHTML += `
-
                     <div class="investment-item">
-
                         <h3>
                             ${
                                 investment.investment_name
@@ -977,7 +872,6 @@ async function loadDashboard() {
                                 "Investment"
                             }
                         </h3>
-
                         <p>
                             Type:
                             ${
@@ -986,89 +880,61 @@ async function loadDashboard() {
                                 "Not specified"
                             }
                         </p>
-
                         <p>
                             Amount:
                             ${formatMoney(
                                 investmentAmount
                             )}
                         </p>
-
                         <p>
                             Status:
                             ${createStatusBadge(
                                 investmentStatus
                             )}
                         </p>
-
                         <p>
                             Investment Date:
                             ${investmentDate}
                         </p>
-
                         <a
                             href="investment-details.html?id=${investment.id}"
                             class="dashboard-button"
                         >
                             View Details
                         </a>
-
                     </div>
-
                 `;
-
             }
         );
-
-
         investmentsList.innerHTML =
             investmentHTML;
-
     }
-
-
     /* =====================================
        PORTFOLIO OVERVIEW
     ===================================== */
-
     document.getElementById(
         "total-invested"
     ).textContent =
         formatMoney(
             totalInvested
         );
-
-
-    /*
-        Portfolio Value currently mirrors
-        Total Invested because there is not
-        yet a live valuation/profit engine.
-    */
-
     document.getElementById(
         "portfolio-value"
     ).textContent =
         formatMoney(
             totalInvested
         );
-
-
     document.getElementById(
         "active-investments"
     ).textContent =
         activeInvestments;
-
-
     document.getElementById(
         "pending-investments"
     ).textContent =
         pendingInvestments;
-
-
     /* =====================================
        AVAILABLE BALANCE
     ===================================== */
-
     const {
         data: account,
         error: accountError
@@ -1083,34 +949,25 @@ async function loadDashboard() {
                 user.id
             )
             .single();
-
-
     if (
         !accountError &&
         account
     ) {
-
         document.getElementById(
             "available-balance"
         ).textContent =
             formatMoney(
                 account.available_balance
             );
-
     } else {
-
         document.getElementById(
             "available-balance"
         ).textContent =
             "$0.00";
-
     }
-
-
     /* =====================================
        TRANSACTIONS
     ===================================== */
-
     const {
         data: transactions,
         error: transactionError
@@ -1128,55 +985,36 @@ async function loadDashboard() {
                     ascending: false
                 }
             );
-
-
     const transactionsList =
         document.getElementById(
             "transactions-list"
         );
-
-
     if (transactionError) {
-
         transactionsList.innerHTML =
             "<p>Unable to load transactions.</p>";
-
         console.log(
             transactionError
         );
-
     } else if (
         !transactions ||
         transactions.length === 0
     ) {
-
         transactionsList.innerHTML = `
-
             <div class="transaction-empty">
-
                 <h3>
                     No transactions yet
                 </h3>
-
                 <p>
                     Your deposits, withdrawals, and
                     investment transactions will appear here.
                 </p>
-
             </div>
-
         `;
-
     } else {
-
         let transactionHTML =
             "";
-
-
         transactions.forEach(
             function(transaction) {
-
-
                 const transactionDate =
                     transaction.created_at
                     ? new Date(
@@ -1190,8 +1028,6 @@ async function loadDashboard() {
                         }
                     )
                     : "Date not available";
-
-
                 const transactionTime =
                     transaction.created_at
                     ? new Date(
@@ -1204,12 +1040,8 @@ async function loadDashboard() {
                         }
                     )
                     : "Time not available";
-
-
                 transactionHTML += `
-
                     <div class="investment-item">
-
                         <h3>
                             ${
                                 transaction.transaction_type
@@ -1217,14 +1049,12 @@ async function loadDashboard() {
                                 "Transaction"
                             }
                         </h3>
-
                         <p>
                             Amount:
                             ${formatMoney(
                                 transaction.amount
                             )}
                         </p>
-
                         <p>
                             Asset:
                             ${
@@ -1232,7 +1062,6 @@ async function loadDashboard() {
                                 "USD"
                             }
                         </p>
-
                         <p>
                             Status:
                             ${createStatusBadge(
@@ -1240,7 +1069,6 @@ async function loadDashboard() {
                                 "Pending"
                             )}
                         </p>
-
                         <p>
                             Reference:
                             ${
@@ -1248,7 +1076,6 @@ async function loadDashboard() {
                                 "Not available"
                             }
                         </p>
-
                         <p>
                             Description:
                             ${
@@ -1256,7 +1083,6 @@ async function loadDashboard() {
                                 "No description"
                             }
                         </p>
-
                         ${
                             transaction.transaction_hash
                                 ? `
@@ -1267,35 +1093,24 @@ async function loadDashboard() {
                                 `
                                 : ""
                         }
-
                         <p>
                             Date:
                             ${transactionDate}
                         </p>
-
                         <p>
                             Time:
                             ${transactionTime}
                         </p>
-
                     </div>
-
                 `;
-
             }
         );
-
-
         transactionsList.innerHTML =
             transactionHTML;
-
     }
-
-
     /* =====================================
        DEPOSIT HISTORY
     ===================================== */
-
     const {
         data: deposits,
         error: depositError
@@ -1313,54 +1128,35 @@ async function loadDashboard() {
                     ascending: false
                 }
             );
-
-
     const depositHistory =
         document.getElementById(
             "deposit-history"
         );
-
-
     if (depositError) {
-
         depositHistory.innerHTML =
             "<p>Unable to load deposit history.</p>";
-
         console.log(
             depositError
         );
-
     } else if (
         !deposits ||
         deposits.length === 0
     ) {
-
         depositHistory.innerHTML = `
-
             <div class="transaction-empty">
-
                 <h3>
                     No deposits yet
                 </h3>
-
                 <p>
                     Your deposit requests will appear here.
                 </p>
-
             </div>
-
         `;
-
     } else {
-
         let depositHTML =
             "";
-
-
         deposits.forEach(
             function(deposit) {
-
-
                 const depositDate =
                     deposit.created_at
                     ? new Date(
@@ -1374,8 +1170,6 @@ async function loadDashboard() {
                         }
                     )
                     : "Date not available";
-
-
                 const depositTime =
                     deposit.created_at
                     ? new Date(
@@ -1388,19 +1182,14 @@ async function loadDashboard() {
                         }
                     )
                     : "Time not available";
-
-
                 depositHTML += `
-
                     <div class="investment-item">
-
                         <h3>
                             ${
                                 deposit.asset ||
                                 "Deposit"
                             }
                         </h3>
-
                         <p>
                             Network:
                             ${
@@ -1408,14 +1197,12 @@ async function loadDashboard() {
                                 "Not specified"
                             }
                         </p>
-
                         <p>
                             Amount:
                             ${formatMoney(
                                 deposit.amount
                             )}
                         </p>
-
                         <p>
                             Status:
                             ${createStatusBadge(
@@ -1423,7 +1210,6 @@ async function loadDashboard() {
                                 "Pending"
                             )}
                         </p>
-
                         <p>
                             Transaction Hash / TXID:
                             ${
@@ -1432,35 +1218,24 @@ async function loadDashboard() {
                                 "Not provided"
                             }
                         </p>
-
                         <p>
                             Date:
                             ${depositDate}
                         </p>
-
                         <p>
                             Time:
                             ${depositTime}
                         </p>
-
                     </div>
-
                 `;
-
             }
         );
-
-
         depositHistory.innerHTML =
             depositHTML;
-
     }
-
-
     /* =====================================
        CRYPTO PAYMENT HISTORY
     ===================================== */
-
     const {
         data: cryptoPayments,
         error: cryptoPaymentError
@@ -1478,55 +1253,36 @@ async function loadDashboard() {
                     ascending: false
                 }
             );
-
-
     const cryptoPaymentHistory =
         document.getElementById(
             "crypto-payment-history"
         );
-
-
     if (cryptoPaymentError) {
-
         cryptoPaymentHistory.innerHTML =
             "<p>Unable to load crypto payment history.</p>";
-
         console.log(
             cryptoPaymentError
         );
-
     } else if (
         !cryptoPayments ||
         cryptoPayments.length === 0
     ) {
-
         cryptoPaymentHistory.innerHTML = `
-
             <div class="transaction-empty">
-
                 <h3>
                     No crypto payments yet
                 </h3>
-
                 <p>
                     Your cryptocurrency payment requests
                     will appear here after you submit one.
                 </p>
-
             </div>
-
         `;
-
     } else {
-
         let cryptoHTML =
             "";
-
-
         cryptoPayments.forEach(
             function(payment) {
-
-
                 const paymentDate =
                     payment.created_at
                     ? new Date(
@@ -1540,8 +1296,6 @@ async function loadDashboard() {
                         }
                     )
                     : "Date not available";
-
-
                 const paymentTime =
                     payment.created_at
                     ? new Date(
@@ -1554,19 +1308,14 @@ async function loadDashboard() {
                         }
                     )
                     : "Time not available";
-
-
                 cryptoHTML += `
-
                     <div class="investment-item">
-
                         <h3>
                             ${
                                 payment.asset ||
                                 "Crypto Payment"
                             }
                         </h3>
-
                         <p>
                             Amount:
                             ${Number(
@@ -1578,7 +1327,6 @@ async function loadDashboard() {
                                 }
                             )}
                         </p>
-
                         <p>
                             Payment Method:
                             ${
@@ -1586,14 +1334,12 @@ async function loadDashboard() {
                                 "Not available"
                             }
                         </p>
-
                         <p>
                             Estimated Total:
                             ${formatMoney(
                                 payment.total
                             )}
                         </p>
-
                         <p>
                             Status:
                             ${createStatusBadge(
@@ -1601,7 +1347,6 @@ async function loadDashboard() {
                                 "Pending"
                             )}
                         </p>
-
                         <p>
                             Transaction Hash / TXID:
                             ${
@@ -1609,92 +1354,85 @@ async function loadDashboard() {
                                 "Not provided"
                             }
                         </p>
-
                         <p>
                             Date:
                             ${paymentDate}
                         </p>
-
                         <p>
                             Time:
                             ${paymentTime}
                         </p>
-
                     </div>
-
                 `;
-
             }
         );
-
-
         cryptoPaymentHistory.innerHTML =
             cryptoHTML;
-
     }
-
 }
-
-
+/* =========================================
+   ENABLE NOTIFICATIONS BUTTON
+========================================= */
+document
+    .getElementById(
+        "enable-notifications-button"
+    )
+    .addEventListener(
+        "click",
+        async function() {
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .auth
+                    .getUser();
+            if (
+                error ||
+                !data.user
+            ) {
+                window.location.href =
+                    "login.html";
+                return;
+            }
+            await enablePushNotifications(
+                data.user.id
+            );
+        }
+    );
 /* =========================================
    LOGOUT
 ========================================= */
-
 const logoutButton =
     document.getElementById(
         "logout-button"
     );
-
-
 logoutButton.addEventListener(
     "click",
     async function(event) {
-
         event.preventDefault();
-
-
         logoutButton.textContent =
             "Logging out...";
-
-
         const {
             error
         } =
             await supabaseClient.auth.signOut();
-
-
         if (error) {
-
             logoutButton.textContent =
                 "Logout";
-
-
             alert(
                 "Unable to log out. Please try again."
             );
-
-
             return;
-
         }
-
-
         window.location.href =
             "login.html";
-
     }
 );
-
-
 /* =========================================
    START
 ========================================= */
-
 loadDashboard();
-
 </script>
-
-
 </body>
-
 </html>
