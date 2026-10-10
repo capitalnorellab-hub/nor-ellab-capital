@@ -159,41 +159,6 @@
             border-color: #d1d5db;
         }
         /* =========================================
-           PUSH NOTIFICATIONS
-        ========================================= */
-        .notification-card {
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-        }
-        .notification-card p {
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        .notification-button {
-            display: inline-block;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 18px;
-            background: #111827;
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .notification-button:hover {
-            opacity: 0.9;
-        }
-        .notification-button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .notification-status {
-            margin-top: 12px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        /* =========================================
            RESPONSIVE
         ========================================= */
         @media (max-width: 800px) {
@@ -398,30 +363,6 @@
                 Contact Support
             </a>
         </div>
-        <!-- PHONE NOTIFICATIONS -->
-        <div class="dashboard-card notification-card">
-            <h2>
-                Phone Notifications
-            </h2>
-            <p>
-                Enable notifications to receive alerts from
-                Nor Ellab Capital when you receive important
-                account or support updates.
-            </p>
-            <button
-                type="button"
-                id="enable-notifications-button"
-                class="notification-button"
-            >
-                Enable Notifications
-            </button>
-            <div
-                id="notification-status"
-                class="notification-status"
-            >
-                Notifications are currently not enabled.
-            </div>
-        </div>
     </div>
 </section>
 <footer>
@@ -441,161 +382,6 @@ const supabaseClient =
         supabaseUrl,
         supabaseKey
     );
-/* =========================================
-   WEB PUSH
-========================================= */
-/*
-    Public VAPID key.
-    This key identifies Nor Ellab Capital
-    to the browser's push service.
-    The matching private key must NEVER
-    be placed inside this file.
-*/
-const VAPID_PUBLIC_KEY =
-    "BGvjQL6NXaZPVT6nacHnyhIx1AQ4WXaopreKi88vgANF6BE2qJke60WvxFcCfMBtO3pk_XaTPxnAEGx91avWBbA";
-function urlBase64ToUint8Array(base64String) {
-    const padding =
-        "=".repeat(
-            (4 - base64String.length % 4) % 4
-        );
-    const base64 =
-        (
-            base64String +
-            padding
-        )
-        .replace(
-            /-/g,
-            "+"
-        )
-        .replace(
-            /_/g,
-            "/"
-        );
-    const rawData =
-        window.atob(base64);
-    const outputArray =
-        new Uint8Array(
-            rawData.length
-        );
-    for (
-        let i = 0;
-        i < rawData.length;
-        ++i
-    ) {
-        outputArray[i] =
-            rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-async function enablePushNotifications(userId) {
-    const button =
-        document.getElementById(
-            "enable-notifications-button"
-        );
-    const status =
-        document.getElementById(
-            "notification-status"
-        );
-    if (
-        !("serviceWorker" in navigator) ||
-        !("PushManager" in window) ||
-        !("Notification" in window)
-    ) {
-        status.textContent =
-            "Push notifications are not supported by this browser.";
-        return;
-    }
-    try {
-        button.disabled = true;
-        button.textContent =
-            "Enabling...";
-        const registration =
-            await navigator.serviceWorker.register(
-                "/sw.js"
-            );
-        const permission =
-            await Notification.requestPermission();
-        if (
-            permission !== "granted"
-        ) {
-            status.textContent =
-                "Notification permission was not granted.";
-            button.disabled = false;
-            button.textContent =
-                "Enable Notifications";
-            return;
-        }
-        let subscription =
-            await registration.pushManager.getSubscription();
-        if (!subscription) {
-            subscription =
-                await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey:
-                        urlBase64ToUint8Array(
-                            VAPID_PUBLIC_KEY
-                        )
-                });
-        }
-        const subscriptionJson =
-            subscription.toJSON();
-        const endpoint =
-            subscriptionJson.endpoint;
-        const p256dh =
-            subscriptionJson.keys?.p256dh;
-        const auth =
-            subscriptionJson.keys?.auth;
-        if (
-            !endpoint ||
-            !p256dh ||
-            !auth
-        ) {
-            throw new Error(
-                "The browser did not return a valid push subscription."
-            );
-        }
-        const {
-            error
-        } =
-            await supabaseClient
-                .from("push_subscriptions")
-                .upsert(
-                    {
-                        user_id:
-                            userId,
-                        endpoint:
-                            endpoint,
-                        p256dh:
-                            p256dh,
-                        auth:
-                            auth,
-                        updated_at:
-                            new Date().toISOString()
-                    },
-                    {
-                        onConflict:
-                            "user_id,endpoint"
-                    }
-                );
-        if (error) {
-            throw error;
-        }
-        status.textContent =
-            "Phone notifications are enabled.";
-        button.textContent =
-            "Notifications Enabled";
-    } catch (error) {
-        console.error(
-            "Push notification setup failed:",
-            error
-        );
-        status.textContent =
-            "Unable to enable notifications. Please try again.";
-        button.disabled = false;
-        button.textContent =
-            "Enable Notifications";
-    }
-}
 /* =========================================
    STATUS BADGE
 ========================================= */
@@ -1370,36 +1156,6 @@ async function loadDashboard() {
             cryptoHTML;
     }
 }
-/* =========================================
-   ENABLE NOTIFICATIONS BUTTON
-========================================= */
-document
-    .getElementById(
-        "enable-notifications-button"
-    )
-    .addEventListener(
-        "click",
-        async function() {
-            const {
-                data,
-                error
-            } =
-                await supabaseClient
-                    .auth
-                    .getUser();
-            if (
-                error ||
-                !data.user
-            ) {
-                window.location.href =
-                    "login.html";
-                return;
-            }
-            await enablePushNotifications(
-                data.user.id
-            );
-        }
-    );
 /* =========================================
    LOGOUT
 ========================================= */
