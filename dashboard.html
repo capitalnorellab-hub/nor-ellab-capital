@@ -1,178 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Investor Dashboard | Nor Ellab Capital</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#f4f6f8;color:#18221d;line-height:1.6}
-header{background:#07130f;color:white;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-header h2{color:#d4af37}
-button{cursor:pointer;border:0;border-radius:5px;padding:12px 16px;font-weight:bold}
-.logout{background:#d4af37;color:#07130f}
-.container{width:94%;max-width:1200px;margin:28px auto}
-.welcome{margin-bottom:24px}
-.welcome h1{font-size:27px}
-.muted{color:#66736b}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-.card{background:white;padding:21px;border-radius:10px;box-shadow:0 3px 12px #0000000a;margin-bottom:24px}
-.stat-label{color:#66736b;font-size:14px}
-.stat-value{font-size:24px;font-weight:bold;overflow-wrap:anywhere}
-h2.section-title{font-size:20px;margin-bottom:15px}
-label{display:block;font-weight:bold;margin:12px 0 6px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d5ddd7;border-radius:5px;font-size:15px;background:white}
-.primary{background:#0b3022;color:white;margin-top:14px}
-.primary:hover{background:#145238}
-button:disabled{opacity:.6;cursor:not-allowed}
-.notice{display:none;padding:12px;border-radius:5px;margin:12px 0;overflow-wrap:anywhere}
-.notice.success{display:block;background:#e5f5eb;color:#176538}
-.notice.error{display:block;background:#fde9e9;color:#9b2020}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:520px}
-th,td{padding:12px 10px;border-bottom:1px solid #edf0ed;text-align:left;font-size:14px}
-th{background:#f8faf8;color:#5c6a61}
-.status{display:inline-block;padding:4px 9px;background:#fff1cc;color:#765400;border-radius:20px;font-size:12px;font-weight:bold}
-.wallet-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
-.wallet-row input{flex:1;min-width:220px}
-.wallet-row button{margin-top:0;background:#d4af37;color:#07130f}
-.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.links a{padding:13px;background:#f1f6f2;color:#0b3022;border:1px solid #e0e9e2;border-radius:6px;text-decoration:none;font-weight:bold}
-.empty{color:#758078;padding:12px 0}
-footer{text-align:center;padding:24px;color:#718077;font-size:13px}
-@media(max-width:600px){header{padding:16px}.container{margin-top:20px}.card{padding:16px}.welcome h1{font-size:23px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Dashboard | Nor Ellab Capital</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #18221d;
+            line-height: 1.6;
+        }
+        header {
+            background: #07130f;
+            color: white;
+            padding: 18px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        header h2 {
+            color: #d4af37;
+            font-size: 21px;
+        }
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 12px 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .logout {
+            background: #d4af37;
+            color: #07130f;
+        }
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 28px auto;
+        }
+        .welcome {
+            margin-bottom: 24px;
+        }
+        .welcome h1 {
+            font-size: 27px;
+            margin-bottom: 5px;
+        }
+        .muted {
+            color: #66736b;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+        }
+        .stat-label {
+            color: #66736b;
+            font-size: 14px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 15px 0 6px;
+        }
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5ddd7;
+            border-radius: 5px;
+            font-size: 15px;
+            background: white;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #d4af37;
+        }
+        .primary {
+            background: #0b3022;
+            color: white;
+            margin-top: 18px;
+            width: 100%;
+        }
+        .primary:hover {
+            background: #145238;
+        }
+        .wallet-box {
+            margin-top: 16px;
+            padding: 16px;
+            border: 1px solid #e0e6e1;
+            background: #f8faf8;
+            border-radius: 7px;
+        }
+        .wallet-box p {
+            overflow-wrap: anywhere;
+        }
+        .wallet-address {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #0b3022;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        .copy-button {
+            background: #d4af37;
+            color: #07130f;
+            margin-top: 12px;
+        }
+        .notice {
+            display: none;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 14px 0;
+            overflow-wrap: anywhere;
+        }
+        .notice.success {
+            display: block;
+            background: #e5f5eb;
+            color: #176538;
+        }
+        .notice.error {
+            display: block;
+            background: #fde9e9;
+            color: #9b2020;
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 520px;
+        }
+        th,
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #edf0ed;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background: #f8faf8;
+            color: #5c6a61;
+        }
+        .links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+        .links a {
+            padding: 13px;
+            background: #f1f6f2;
+            color: #0b3022;
+            border: 1px solid #e0e9e2;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .empty {
+            color: #758078;
+            padding: 12px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #718077;
+            font-size: 13px;
+        }
+        @media (max-width: 600px) {
+            header {
+                padding: 16px;
+            }
+            .container {
+                margin-top: 20px;
+            }
+            .card {
+                padding: 17px;
+            }
+            .welcome h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
     <h2>Nor Ellab Capital</h2>
-    <button class="logout" id="logout-button" type="button">Log Out</button>
+    <button type="button" class="logout" id="logout-button">
+        Log Out
+    </button>
 </header>
 <main class="container">
     <section class="welcome">
         <h1>Investor Dashboard</h1>
-        <p class="muted">Welcome back, <span id="investor-email">Investor</span>.</p>
+        <p class="muted">
+            Welcome back, <span id="investor-email">Investor</span>.
+        </p>
     </section>
     <div id="page-notice" class="notice" role="status"></div>
     <section class="grid">
         <div class="card">
-            <p class="stat-label">Investment Requests</p>
+            <p class="stat-label">My Investment Requests</p>
             <p class="stat-value" id="investment-count">0</p>
         </div>
         <div class="card">
-            <p class="stat-label">Pending Requests</p>
+            <p class="stat-label">Pending Investments</p>
             <p class="stat-value" id="pending-count">0</p>
         </div>
         <div class="card">
-            <p class="stat-label">Approved Investment Amount</p>
-            <p class="stat-value" id="approved-total">$0.00</p>
-        </div>
-        <div class="card">
-            <p class="stat-label">Payment Submissions</p>
+            <p class="stat-label">Payment Reviews</p>
             <p class="stat-value" id="payment-count">0</p>
         </div>
     </section>
+    <!-- INVEST NOW -->
     <section class="card" id="invest">
         <h2 class="section-title">Invest Now</h2>
-        <p class="muted">Select an investment category and enter the amount you wish to request.</p>
+        <p class="muted">
+            Select your investment category, enter your amount, and choose
+            the cryptocurrency wallet you intend to use.
+        </p>
         <form id="investment-form">
-            <label for="investment-type">Investment Category</label>
+            <label for="investment-type">
+                Investment Category
+            </label>
             <select id="investment-type" required>
-                <option value="">Choose a category</option>
+                <option value="">Choose investment category</option>
                 <option value="Digital Assets">Digital Assets</option>
                 <option value="Crypto Trading">Crypto Trading</option>
                 <option value="Real Estate">Real Estate</option>
                 <option value="Equities">Equities</option>
             </select>
-            <label for="investment-amount">Amount (USD)</label>
-            <input type="number" id="investment-amount" min="1" step="0.01" placeholder="Enter amount in USD" required>
-            <button type="submit" id="investment-submit" class="primary">Invest Now</button>
+            <label for="investment-amount">
+                Amount (USD)
+            </label>
+            <input
+                type="number"
+                id="investment-amount"
+                min="1"
+                step="0.01"
+                placeholder="Enter investment amount in USD"
+                required
+            >
+            <label for="deposit-wallet">
+                Deposit Wallet Address
+            </label>
+            <select id="deposit-wallet" required>
+                <option value="">Choose deposit wallet</option>
+                <option value="USDT">USDT</option>
+                <option value="BTC">Bitcoin (BTC)</option>
+            </select>
+            <div class="wallet-box" id="selected-wallet-box" hidden>
+                <p><strong id="wallet-title">Deposit Wallet</strong></p>
+                <p class="wallet-address" id="wallet-address"></p>
+                <button
+                    type="button"
+                    class="copy-button"
+                    id="copy-wallet-button"
+                >
+                    Copy Wallet Address
+                </button>
+                <p class="muted" style="font-size:13px;margin-top:10px">
+                    Verify the cryptocurrency and network before sending.
+                    Sending to the wrong network may result in lost funds.
+                </p>
+            </div>
+            <button
+                type="submit"
+                class="primary"
+                id="investment-submit"
+            >
+                Invest Now
+            </button>
         </form>
     </section>
-    <section class="card" id="crypto-wallets">
-        <h2 class="section-title">Crypto Deposit Wallets</h2>
-        <p class="muted">Use the correct cryptocurrency and supported network. Check the address carefully before sending funds.</p>
-        <label for="usdt-wallet">USDT Wallet Address</label>
-        <div class="wallet-row">
-            <input id="usdt-wallet" type="text" value="TFx5QpQQFJuEYJsGcC7v19W8Lafi64iqdf" readonly>
-            <button type="button" onclick="copyWallet('usdt-wallet')">Copy USDT</button>
-        </div>
-        <p class="muted" style="font-size:13px;margin-top:6px">Confirm the recipient supports the USDT network you intend to use before transferring.</p>
-        <label for="btc-wallet">Bitcoin (BTC) Wallet Address</label>
-        <div class="wallet-row">
-            <input id="btc-wallet" type="text" value="bc1qu5vz52cyld9kma0f0y7jrhpcqv686httm822u6" readonly>
-            <button type="button" onclick="copyWallet('btc-wallet')">Copy BTC</button>
-        </div>
-        <div id="wallet-copy-message" class="muted" role="status" style="margin-top:8px"></div>
-    </section>
+    <!-- PAYMENT REVIEW -->
     <section class="card" id="payment-review">
         <h2 class="section-title">Payment Review</h2>
-        <p class="muted">After sending a payment, submit its details below for administrator verification. Submitting this form does not itself confirm receipt of funds.</p>
+        <p class="muted">
+            After sending your funds, submit your transaction reference
+            so an administrator can review it.
+        </p>
         <form id="payment-form">
-            <label for="payment-currency">Payment Currency</label>
+            <label for="payment-currency">
+                Payment Currency
+            </label>
             <select id="payment-currency" required>
                 <option value="">Choose currency</option>
                 <option value="USDT">USDT</option>
                 <option value="BTC">BTC</option>
             </select>
-            <label for="payment-amount">Amount Sent</label>
-            <input id="payment-amount" type="number" min="0.00000001" step="any" placeholder="Enter amount sent" required>
-            <label for="transaction-reference">Transaction Hash / Reference</label>
-            <input id="transaction-reference" type="text" maxlength="200" placeholder="Paste transaction hash or reference" required>
-            <label for="payment-notes">Additional Information (optional)</label>
-            <textarea id="payment-notes" rows="3" maxlength="1000" placeholder="Add any relevant payment details"></textarea>
-            <button type="submit" id="payment-submit" class="primary">Submit Payment for Review</button>
+            <label for="payment-amount">
+                Amount Sent
+            </label>
+            <input
+                type="number"
+                id="payment-amount"
+                min="0.00000001"
+                step="any"
+                placeholder="Enter amount sent"
+                required
+            >
+            <label for="transaction-reference">
+                Transaction Hash / Reference
+            </label>
+            <input
+                type="text"
+                id="transaction-reference"
+                maxlength="200"
+                placeholder="Enter your transaction reference"
+                required
+            >
+            <label for="payment-notes">
+                Additional Information (Optional)
+            </label>
+            <textarea
+                id="payment-notes"
+                rows="3"
+                maxlength="1000"
+                placeholder="Additional payment details"
+            ></textarea>
+            <button
+                type="submit"
+                class="primary"
+                id="payment-submit"
+            >
+                Submit Payment for Review
+            </button>
         </form>
     </section>
+    <!-- MY INVESTMENTS -->
     <section class="card">
         <h2 class="section-title">My Investments</h2>
         <div class="table-wrap">
             <table>
                 <thead>
-                    <tr><th>Investment</th><th>Category</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+                    <tr>
+                        <th>Investment</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
                 </thead>
                 <tbody id="investments-list">
-                    <tr><td colspan="5">Loading investments...</td></tr>
+                    <tr>
+                        <td colspan="5">Loading investments...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </section>
-    <section class="card">
-        <h2 class="section-title">Payment History</h2>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr><th>Currency</th><th>Amount</th><th>Reference</th><th>Status</th><th>Date</th></tr>
-                </thead>
-                <tbody id="payments-list">
-                    <tr><td colspan="5">Loading payment submissions...</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+    <!-- TRANSACTIONS -->
     <section class="card" id="transactions">
         <h2 class="section-title">Transactions</h2>
-        <p class="empty">Transaction history will appear here once connected to your transactions table.</p>
+        <p class="empty">
+            Transaction records will appear here when connected to your
+            transactions database.
+        </p>
     </section>
-    <section class="card" id="deposits">
-        <h2 class="section-title">Deposit History</h2>
-        <p class="empty">Deposit records will appear here once connected to your deposits table.</p>
-    </section>
-    <section class="card" id="crypto-payments">
-        <h2 class="section-title">Crypto Payment History</h2>
-        <p class="empty">Your submitted crypto payments are listed in the Payment History section above.</p>
-    </section>
-    <section class="card">
-        <h2 class="section-title">Portfolio Overview</h2>
-        <p class="muted">Approved investment amounts are shown above. No projected profit is displayed without verified account data.</p>
-    </section>
+    <!-- SUPPORT -->
     <section class="card" id="support">
         <h2 class="section-title">Support</h2>
         <p>Need assistance? Contact our support team.</p>
-        <p>Email: <a href="mailto:capitalnorellab@gmail.com">capitalnorellab@gmail.com</a></p>
-        <p>Phone: <a href="tel:+12679815103">+1 (267) 981-5103</a></p>
+        <p>
+            Email:
+            <a href="mailto:capitalnorellab@gmail.com">
+                capitalnorellab@gmail.com
+            </a>
+        </p>
+        <p>
+            Phone:
+            <a href="tel:+12679815103">+1 (267) 981-5103</a>
+        </p>
     </section>
+    <!-- ACCOUNT SERVICES -->
     <section class="card">
         <h2 class="section-title">Account Services</h2>
         <div class="links">
@@ -183,46 +410,114 @@ footer{text-align:center;padding:24px;color:#718077;font-size:13px}
         </div>
     </section>
 </main>
-<footer>© 2026 Nor Ellab Capital. All rights reserved.</footer>
+<footer>
+    © 2026 Nor Ellab Capital. All rights reserved.
+</footer>
 <script>
-const SUPABASE_URL = "https://grgmsezyxxceheofmsoj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL =
+    "https://grgmsezyxxceheofmsoj.supabase.co";
+const SUPABASE_KEY =
+    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+const WALLET_ADDRESSES = {
+    USDT: "TFx5QpQQFJuEYJsGcC7v19W8Lafi64iqdf",
+    BTC: "bc1qu5vz52cyld9kma0f0y7jrhpcqv686httm822u6"
+};
 let currentUser = null;
 function showNotice(message, type) {
-    const el = document.getElementById("page-notice");
-    el.textContent = message;
-    el.className = "notice " + type;
-    el.scrollIntoView({behavior:"smooth", block:"center"});
+    const notice = document.getElementById("page-notice");
+    notice.textContent = message;
+    notice.className = "notice " + type;
+    notice.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
 }
-function usd(value) {
+function formatUSD(amount) {
     return new Intl.NumberFormat("en-US", {
-        style:"currency", currency:"USD"
-    }).format(Number(value) || 0);
+        style: "currency",
+        currency: "USD"
+    }).format(Number(amount) || 0);
 }
-function dateText(value) {
+function formatDate(value) {
     if (!value) return "—";
     const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? "—" :
-        date.toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"});
+    if (Number.isNaN(date.getTime())) return "—";
+    return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    });
 }
-async function copyWallet(id) {
-    const input = document.getElementById(id);
-    const message = document.getElementById("wallet-copy-message");
-    try {
-        await navigator.clipboard.writeText(input.value);
-        message.textContent = "Wallet address copied.";
-    } catch (error) {
-        input.focus();
-        input.select();
-        const copied = document.execCommand("copy");
-        message.textContent = copied
-            ? "Wallet address copied."
-            : "Please select and copy the address manually.";
+function addCell(row, value) {
+    const cell = document.createElement("td");
+    cell.textContent = String(value ?? "—");
+    row.appendChild(cell);
+}
+function showTableMessage(message) {
+    const tbody = document.getElementById("investments-list");
+    tbody.replaceChildren();
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = message;
+    row.appendChild(cell);
+    tbody.appendChild(row);
+}
+function updateWalletDisplay() {
+    const currency = document.getElementById("deposit-wallet").value;
+    const box = document.getElementById("selected-wallet-box");
+    const title = document.getElementById("wallet-title");
+    const address = document.getElementById("wallet-address");
+    if (!currency || !WALLET_ADDRESSES[currency]) {
+        box.hidden = true;
+        address.textContent = "";
+        return;
     }
+    box.hidden = false;
+    title.textContent =
+        currency === "BTC"
+            ? "Bitcoin (BTC) Deposit Address"
+            : "USDT Deposit Address";
+    address.textContent = WALLET_ADDRESSES[currency];
 }
+document.getElementById("deposit-wallet").addEventListener(
+    "change",
+    updateWalletDisplay
+);
+document.getElementById("copy-wallet-button").addEventListener(
+    "click",
+    async function () {
+        const currency = document.getElementById("deposit-wallet").value;
+        const address = WALLET_ADDRESSES[currency];
+        if (!address) {
+            showNotice("Please select a deposit wallet first.", "error");
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(address);
+            showNotice(currency + " wallet address copied.", "success");
+        } catch (error) {
+            const temporaryInput = document.createElement("textarea");
+            temporaryInput.value = address;
+            document.body.appendChild(temporaryInput);
+            temporaryInput.select();
+            const copied = document.execCommand("copy");
+            temporaryInput.remove();
+            showNotice(
+                copied
+                    ? currency + " wallet address copied."
+                    : "Please copy the wallet address manually.",
+                copied ? "success" : "error"
+            );
+        }
+    }
+);
 async function checkLogin() {
-    const {data, error} = await supabaseClient.auth.getSession();
+    const { data, error } = await supabaseClient.auth.getSession();
     if (error || !data.session) {
         window.location.href = "login.html";
         return false;
@@ -232,174 +527,186 @@ async function checkLogin() {
         currentUser.email || "Investor";
     return true;
 }
-function addCell(row, value) {
-    const cell = document.createElement("td");
-    cell.textContent = String(value ?? "—");
-    row.appendChild(cell);
-}
-function showTableMessage(tbodyId, columns, message) {
-    const tbody = document.getElementById(tbodyId);
-    tbody.replaceChildren();
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-    cell.colSpan = columns;
-    cell.textContent = message;
-    row.appendChild(cell);
-    tbody.appendChild(row);
-}
 async function loadInvestments() {
-    const tbody = document.getElementById("investments-list");
-    const {data, error} = await supabaseClient
+    const { data, error } = await supabaseClient
         .from("investments")
-        .select("investment_name,investment_type,amount,status,created_at")
+        .select(
+            "investment_name,investment_type,amount,status,created_at"
+        )
         .eq("user_id", currentUser.id)
-        .order("created_at",{ascending:false});
+        .order("created_at", { ascending: false });
     if (error) {
-        console.error("Could not load investments:", error);
-        showTableMessage("investments-list",5,"Unable to load investments. Check your database permissions.");
+        console.error("Investment loading error:", error);
+        showTableMessage("Unable to load investments. Check database permissions.");
         return;
     }
-    const rows = data || [];
-    document.getElementById("investment-count").textContent = rows.length;
+    const investments = data || [];
+    document.getElementById("investment-count").textContent =
+        investments.length;
     document.getElementById("pending-count").textContent =
-        rows.filter(x => String(x.status).toLowerCase() === "pending").length;
-    const approvedTotal = rows
-        .filter(x => String(x.status).toLowerCase() === "approved")
-        .reduce((sum,x) => sum + Number(x.amount || 0),0);
-    document.getElementById("approved-total").textContent = usd(approvedTotal);
+        investments.filter(
+            item => String(item.status).toLowerCase() === "pending"
+        ).length;
+    const tbody = document.getElementById("investments-list");
     tbody.replaceChildren();
-    if (!rows.length) {
-        showTableMessage("investments-list",5,"No investment requests yet.");
+    if (investments.length === 0) {
+        showTableMessage("You have not submitted any investments yet.");
         return;
     }
-    rows.forEach(item => {
+    investments.forEach(item => {
         const row = document.createElement("tr");
-        addCell(row,item.investment_name || "Investment");
-        addCell(row,item.investment_type);
-        addCell(row,usd(item.amount));
-        addCell(row,item.status || "Pending");
-        addCell(row,dateText(item.created_at));
+        addCell(row, item.investment_name || "Investment");
+        addCell(row, item.investment_type);
+        addCell(row, formatUSD(item.amount));
+        addCell(row, item.status || "Pending");
+        addCell(row, formatDate(item.created_at));
         tbody.appendChild(row);
     });
 }
-async function loadPayments() {
-    const tbody = document.getElementById("payments-list");
-    // This section expects a Supabase table named crypto_payments.
-    // It will show a helpful message until that table and its policies exist.
-    const {data,error} = await supabaseClient
-        .from("crypto_payments")
-        .select("currency,amount,transaction_reference,status,created_at")
-        .eq("user_id",currentUser.id)
-        .order("created_at",{ascending:false});
-    if (error) {
-        console.warn("Payment history is not connected yet:",error);
-        showTableMessage("payments-list",5,"Payment history needs the crypto_payments table and suitable Row Level Security policies.");
-        return;
-    }
-    const rows = data || [];
-    document.getElementById("payment-count").textContent = rows.length;
-    tbody.replaceChildren();
-    if (!rows.length) {
-        showTableMessage("payments-list",5,"No payment submissions yet.");
-        return;
-    }
-    rows.forEach(item => {
-        const row = document.createElement("tr");
-        addCell(row,item.currency);
-        addCell(row,item.amount);
-        addCell(row,item.transaction_reference);
-        addCell(row,item.status || "Pending");
-        addCell(row,dateText(item.created_at));
-        tbody.appendChild(row);
-    });
-}
-document.getElementById("investment-form").addEventListener("submit",async event => {
-    event.preventDefault();
-    const type = document.getElementById("investment-type").value;
-    const amount = Number(document.getElementById("investment-amount").value);
-    if (!currentUser || !type || !Number.isFinite(amount) || amount <= 0) {
-        showNotice("Choose a category and enter a valid amount.", "error");
-        return;
-    }
-    const button = document.getElementById("investment-submit");
-    button.disabled = true;
-    button.textContent = "Submitting...";
-    try {
-        const {error} = await supabaseClient.from("investments").insert({
-            user_id:currentUser.id,
-            investment_name:type + " Investment",
-            investment_type:type,
-            amount:amount,
-            status:"Pending"
-        });
-        if (error) {
+document.getElementById("investment-form").addEventListener(
+    "submit",
+    async function (event) {
+        event.preventDefault();
+        if (!currentUser) {
+            showNotice("Please log in again.", "error");
+            return;
+        }
+        const type =
+            document.getElementById("investment-type").value;
+        const amount = Number(
+            document.getElementById("investment-amount").value
+        );
+        const currency =
+            document.getElementById("deposit-wallet").value;
+        if (!type || !currency || !Number.isFinite(amount) || amount <= 0) {
+            showNotice(
+                "Choose an investment category and wallet, and enter a valid amount.",
+                "error"
+            );
+            return;
+        }
+        const button = document.getElementById("investment-submit");
+        button.disabled = true;
+        button.textContent = "Submitting...";
+        try {
+            const { error } = await supabaseClient
+                .from("investments")
+                .insert({
+                    user_id: currentUser.id,
+                    investment_name: type + " Investment",
+                    investment_type: type,
+                    amount: amount,
+                    status: "Pending"
+                });
+            if (error) {
+                console.error("Investment submission error:", error);
+                showNotice(
+                    "Your investment request could not be saved. Please try again.",
+                    "error"
+                );
+                return;
+            }
+            document.getElementById("investment-form").reset();
+            updateWalletDisplay();
+            showNotice(
+                "Your investment request was submitted and is pending review. Please use Payment Review below to submit your transaction reference after sending funds. This request does not confirm receipt of funds.",
+                "success"
+            );
+            await loadInvestments();
+        } catch (error) {
             console.error(error);
-            showNotice("The investment request could not be submitted. Please try again.", "error");
+            showNotice("Something went wrong. Please try again.", "error");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Invest Now";
+        }
+    }
+);
+document.getElementById("payment-form").addEventListener(
+    "submit",
+    async function (event) {
+        event.preventDefault();
+        const currency =
+            document.getElementById("payment-currency").value;
+        const amount = Number(
+            document.getElementById("payment-amount").value
+        );
+        const reference =
+            document.getElementById("transaction-reference").value.trim();
+        const notes =
+            document.getElementById("payment-notes").value.trim();
+        if (
+            !currentUser ||
+            !currency ||
+            !Number.isFinite(amount) ||
+            amount <= 0 ||
+            !reference
+        ) {
+            showNotice(
+                "Enter a valid currency, amount, and transaction reference.",
+                "error"
+            );
             return;
         }
-        event.target.reset();
-        showNotice("Investment request submitted. Its status is Pending until an administrator reviews it. This request does not transfer funds.", "success");
-        await loadInvestments();
-    } catch (error) {
-        console.error(error);
-        showNotice("Something went wrong while submitting your request.", "error");
-    } finally {
-        button.disabled = false;
-        button.textContent = "Invest Now";
+        const button = document.getElementById("payment-submit");
+        button.disabled = true;
+        button.textContent = "Submitting...";
+        try {
+            /*
+             * Requires a crypto_payments table with:
+             * user_id, currency, amount, transaction_reference,
+             * notes, status, created_at.
+             */
+            const { error } = await supabaseClient
+                .from("crypto_payments")
+                .insert({
+                    user_id: currentUser.id,
+                    currency: currency,
+                    amount: amount,
+                    transaction_reference: reference,
+                    notes: notes || null,
+                    status: "Pending"
+                });
+            if (error) {
+                console.error("Payment review error:", error);
+                showNotice(
+                    "Payment review could not be saved. The crypto_payments table and its security policies must be configured first.",
+                    "error"
+                );
+                return;
+            }
+            event.target.reset();
+            showNotice(
+                "Payment details submitted for administrator review. This does not confirm that funds have been received.",
+                "success"
+            );
+        } catch (error) {
+            console.error(error);
+            showNotice(
+                "Something went wrong while submitting payment details.",
+                "error"
+            );
+        } finally {
+            button.disabled = false;
+            button.textContent = "Submit Payment for Review";
+        }
     }
-});
-document.getElementById("payment-form").addEventListener("submit",async event => {
-    event.preventDefault();
-    const currency = document.getElementById("payment-currency").value;
-    const amount = Number(document.getElementById("payment-amount").value);
-    const reference = document.getElementById("transaction-reference").value.trim();
-    const notes = document.getElementById("payment-notes").value.trim();
-    if (!currentUser || !currency || !Number.isFinite(amount) || amount <= 0 || !reference) {
-        showNotice("Enter the currency, a valid amount, and the transaction reference.", "error");
-        return;
-    }
-    const button = document.getElementById("payment-submit");
-    button.disabled = true;
-    button.textContent = "Submitting...";
-    try {
-        // Requires a crypto_payments table with these columns:
-        // user_id, currency, amount, transaction_reference, notes, status, created_at.
-        const {error} = await supabaseClient.from("crypto_payments").insert({
-            user_id:currentUser.id,
-            currency:currency,
-            amount:amount,
-            transaction_reference:reference,
-            notes:notes || null,
-            status:"Pending"
-        });
+);
+document.getElementById("logout-button").addEventListener(
+    "click",
+    async function () {
+        const { error } = await supabaseClient.auth.signOut();
         if (error) {
-            console.error("Payment submission error:",error);
-            showNotice("Payment review could not be submitted. The required database table or permissions may not be set up yet. No payment has been verified.", "error");
+            showNotice("Unable to log out. Please try again.", "error");
             return;
         }
-        event.target.reset();
-        showNotice("Payment details submitted for administrator review. This is not confirmation that funds have been received.", "success");
-        await loadPayments();
-    } catch (error) {
-        console.error(error);
-        showNotice("Something went wrong while submitting payment details.", "error");
-    } finally {
-        button.disabled = false;
-        button.textContent = "Submit Payment for Review";
+        window.location.href = "login.html";
     }
-});
-document.getElementById("logout-button").addEventListener("click",async () => {
-    const {error} = await supabaseClient.auth.signOut();
-    if (error) {
-        showNotice("Unable to log out. Please try again.", "error");
-        return;
-    }
-    window.location.href = "login.html";
-});
+);
 async function initializeDashboard() {
     const loggedIn = await checkLogin();
     if (!loggedIn) return;
-    await Promise.all([loadInvestments(),loadPayments()]);
+    await loadInvestments();
 }
 initializeDashboard();
 </script>
