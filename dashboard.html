@@ -1,1819 +1,564 @@
-
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Investor Dashboard | Nor Ellab Capital</title>
-
-    <link rel="stylesheet" href="style.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-
-        .portfolio-summary {
-
-            display: grid;
-
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-
-            gap: 18px;
-
-            margin-bottom: 22px;
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        .portfolio-item,
-
-        .portfolio-stat {
-
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #18221d;
+            line-height: 1.6;
+        }
+        header {
+            background: #07130f;
+            color: white;
             padding: 20px;
-
-            background: #fff;
-
-            border: 1px solid #e5e7eb;
-
-            border-radius: 10px;
-
-        }
-
-        .portfolio-item {
-
-            background: #f8fafc;
-
-        }
-
-        .portfolio-item span,
-
-        .portfolio-stat span {
-
-            display: block;
-
-            color: #6b7280;
-
-            font-size: 14px;
-
-            margin-bottom: 8px;
-
-        }
-
-        .portfolio-item strong,
-
-        .portfolio-stat strong {
-
-            color: #111827;
-
-            font-size: 23px;
-
-        }
-
-        .portfolio-secondary {
-
-            display: grid;
-
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-
-            gap: 18px;
-
-            margin-bottom: 22px;
-
-        }
-
-        .investment-item {
-
-            padding: 20px 0;
-
-            border-bottom: 1px solid #e5e7eb;
-
-        }
-
-        .investment-item:first-child {
-
-            padding-top: 0;
-
-        }
-
-        .investment-item:last-child {
-
-            border-bottom: none;
-
-        }
-
-        .investment-item h3,
-
-        .investment-empty h3,
-
-        .transaction-empty h3 {
-
-            color: #111827;
-
-            margin-top: 0;
-
-            margin-bottom: 10px;
-
-        }
-
-        .investment-item p,
-
-        .investment-empty p,
-
-        .transaction-empty p {
-
-            color: #6b7280;
-
-            margin: 7px 0;
-
-            line-height: 1.6;
-
-        }
-
-        .status-badge {
-
-            display: inline-flex;
-
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-
-            gap: 6px;
-
-            padding: 5px 11px;
-
-            border-radius: 999px;
-
-            font-size: 13px;
-
-            font-weight: 700;
-
-            border: 1px solid transparent;
-
+            gap: 15px;
+            flex-wrap: wrap;
         }
-
-        .status-badge::before {
-
-            content: "";
-
-            width: 7px;
-
-            height: 7px;
-
-            border-radius: 50%;
-
-            background: currentColor;
-
+        header h2 {
+            color: #d4af37;
+            font-size: 21px;
         }
-
-        .status-active {
-
-            color: #166534;
-
-            background: #f0fdf4;
-
-            border-color: #bbf7d0;
-
-        }
-
-        .status-pending {
-
-            color: #92400e;
-
-            background: #fffbeb;
-
-            border-color: #fde68a;
-
-        }
-
-        .status-completed {
-
-            color: #1d4ed8;
-
-            background: #eff6ff;
-
-            border-color: #bfdbfe;
-
-        }
-
-        .status-processing {
-
-            color: #6d28d9;
-
-            background: #f5f3ff;
-
-            border-color: #ddd6fe;
-
-        }
-
-        .status-cancelled,
-
-        .status-failed {
-
-            color: #991b1b;
-
-            background: #fef2f2;
-
-            border-color: #fecaca;
-
-        }
-
-        .status-default {
-
-            color: #374151;
-
-            background: #f3f4f6;
-
-            border-color: #d1d5db;
-
-        }
-
-        /* INVEST NOW FORM */
-
-        .invest-form {
-
-            margin-top: 18px;
-
-        }
-
-        .invest-form label {
-
-            display: block;
-
-            margin: 16px 0 7px;
-
-            color: #1f2937;
-
-            font-weight: 600;
-
-        }
-
-        .invest-form select,
-
-        .invest-form input {
-
-            display: block;
-
-            width: 100%;
-
-            min-height: 46px;
-
-            padding: 11px 12px;
-
-            border: 1px solid #d1d5db;
-
-            border-radius: 7px;
-
-            background: #fff;
-
-            color: #111827;
-
-            font: inherit;
-
-        }
-
-        .invest-form input:focus,
-
-        .invest-form select:focus {
-
-            outline: 2px solid #64748b;
-
-            outline-offset: 1px;
-
-        }
-
-        .invest-form button {
-
-            width: 100%;
-
-            margin-top: 20px;
-
-            padding: 13px 16px;
-
+        header button {
+            background: #d4af37;
+            color: #07130f;
             border: none;
-
-            border-radius: 7px;
-
-            background: #123b2a;
-
-            color: #fff;
-
-            font: inherit;
-
-            font-weight: 700;
-
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-weight: bold;
             cursor: pointer;
-
         }
-
-        .invest-form button:disabled {
-
-            opacity: 0.6;
-
-            cursor: not-allowed;
-
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 30px auto;
         }
-
-        .investment-notice {
-
-            margin-top: 15px;
-
-            padding: 12px;
-
-            border-radius: 7px;
-
-            background: #f8fafc;
-
-            color: #475569;
-
+        .welcome {
+            margin-bottom: 25px;
+        }
+        .welcome h1 {
+            font-size: 27px;
+            margin-bottom: 5px;
+        }
+        .welcome p {
+            color: #647067;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        .stat-label {
+            color: #66736b;
             font-size: 14px;
-
-            line-height: 1.6;
-
+            margin-bottom: 8px;
         }
-
-        #investment-message {
-
-            margin-top: 15px;
-
-            line-height: 1.6;
-
+        .stat-value {
+            font-size: 25px;
+            font-weight: bold;
             overflow-wrap: anywhere;
-
         }
-
-        .message-success {
-
-            color: #166534;
-
+        h2.section-title {
+            font-size: 20px;
+            margin-bottom: 18px;
         }
-
-        .message-error {
-
-            color: #b91c1c;
-
+        .investment-form {
+            display: grid;
+            gap: 15px;
         }
-
-        @media (max-width: 800px) {
-
-            .portfolio-summary {
-
-                grid-template-columns: 1fr;
-
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5ddd7;
+            border-radius: 5px;
+            font-size: 15px;
+            background: white;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #d4af37;
+            border-color: #d4af37;
+        }
+        .primary-button {
+            background: #0b3022;
+            color: white;
+            padding: 13px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .primary-button:hover {
+            background: #145238;
+        }
+        .primary-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .notice {
+            display: none;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            overflow-wrap: anywhere;
+        }
+        .notice.success {
+            display: block;
+            background: #e5f5eb;
+            color: #176538;
+        }
+        .notice.error {
+            display: block;
+            background: #fde9e9;
+            color: #9b2020;
+        }
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+        th,
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #edf0ed;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            color: #5c6a61;
+            background: #f8faf8;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 9px;
+            background: #fff1cc;
+            color: #765400;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .quick-links a {
+            display: block;
+            padding: 15px;
+            color: #0b3022;
+            background: #f1f6f2;
+            border: 1px solid #e0e9e2;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .quick-links a:hover {
+            background: #e4eee6;
+        }
+        .empty {
+            color: #758078;
+            padding: 12px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #718077;
+            font-size: 13px;
+        }
+        @media (max-width: 600px) {
+            header {
+                padding: 16px;
             }
-
-        }
-
-        @media (max-width: 560px) {
-
-            .portfolio-secondary {
-
-                grid-template-columns: 1fr;
-
+            .container {
+                width: 94%;
+                margin-top: 22px;
             }
-
-            .portfolio-item strong {
-
+            .welcome h1 {
+                font-size: 23px;
+            }
+            .card {
+                padding: 17px;
+            }
+            .stat-value {
                 font-size: 22px;
-
             }
-
         }
-
     </style>
-
 </head>
-
 <body>
-
-<header class="site-header">
-
-    <div class="logo">Nor Ellab Capital</div>
-
-    <nav>
-
-        <a href="index.html">Home</a>
-
-        <a href="investments.html">Investments</a>
-
-        <a href="dashboard.html">Dashboard</a>
-
-        <a href="#" id="logout-button">Logout</a>
-
-    </nav>
-
+<header>
+    <h2>Nor Ellab Capital</h2>
+    <button id="logout-button" type="button">Log Out</button>
 </header>
-
-<section class="dashboard-hero">
-
-    <h1>Investor Dashboard</h1>
-
-    <p id="welcome-message">
-
-        Welcome to your Nor Ellab Capital investor account.
-
-    </p>
-
-</section>
-
-<section class="dashboard-section">
-
-    <div class="dashboard-container">
-
-        <!-- MY INVESTMENTS -->
-
-        <div class="dashboard-card">
-
-            <h2>My Investments</h2>
-
-            <div id="investments-list">
-
-                <p>Loading your investments...</p>
-
-            </div>
-
+<main class="container">
+    <section class="welcome">
+        <h1>Investor Dashboard</h1>
+        <p>Welcome back, <span id="investor-email">Investor</span>.</p>
+    </section>
+    <div id="page-notice" class="notice" role="status"></div>
+    <section class="grid">
+        <div class="card">
+            <p class="stat-label">Total Investments</p>
+            <p class="stat-value" id="investment-count">0</p>
         </div>
-
-        <!-- INVEST NOW -->
-
-        <div class="dashboard-card" id="invest-now">
-
-            <h2>Invest Now</h2>
-
-            <p>
-
-                Choose an investment category and submit
-
-                your investment request for review.
-
-            </p>
-
-            <form id="investment-form" class="invest-form">
-
-                <label for="investment-type">
-
-                    Investment Category
-
-                </label>
-
+        <div class="card">
+            <p class="stat-label">Pending Requests</p>
+            <p class="stat-value" id="pending-count">0</p>
+        </div>
+        <div class="card">
+            <p class="stat-label">Approved Investment Amount</p>
+            <p class="stat-value" id="approved-total">$0.00</p>
+        </div>
+        <div class="card">
+            <p class="stat-label">Account Status</p>
+            <p class="stat-value" style="font-size: 20px;">Connected</p>
+        </div>
+    </section>
+    <section class="card" id="invest">
+        <h2 class="section-title">Invest Now</h2>
+        <p style="color: #66736b; margin-bottom: 18px;">
+            Choose an investment category and enter the amount you wish
+            to request. Your request will remain pending until reviewed
+            and approved by an authorized administrator.
+        </p>
+        <form id="investment-form" class="investment-form">
+            <div>
+                <label for="investment-type">Investment Category</label>
                 <select id="investment-type" required>
-
                     <option value="">Choose a category</option>
-
-                    <option value="Digital Assets">
-
-                        Digital Assets
-
-                    </option>
-
-                    <option value="Crypto Trading">
-
-                        Crypto Trading
-
-                    </option>
-
-                    <option value="Real Estate">
-
-                        Real Estate
-
-                    </option>
-
-                    <option value="Equities">
-
-                        Equities
-
-                    </option>
-
+                    <option value="Digital Assets">Digital Assets</option>
+                    <option value="Crypto Trading">Crypto Trading</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Equities">Equities</option>
                 </select>
-
-                <label for="investment-amount">
-
-                    Investment Amount (USD)
-
-                </label>
-
+            </div>
+            <div>
+                <label for="investment-amount">Amount (USD)</label>
                 <input
-
                     type="number"
-
                     id="investment-amount"
-
                     min="1"
-
                     step="0.01"
-
                     placeholder="Enter amount in USD"
-
                     required
-
                 >
-
-                <div class="investment-notice">
-
-                    Review your selected category and amount
-
-                    before submitting. Submitting a request
-
-                    does not transfer money, confirm an
-
-                    investment, or guarantee returns.
-
-                    Your request will remain pending until
-
-                    it is reviewed.
-
-                </div>
-
-                <button type="submit" id="investment-submit">
-
-                    Review Investment Request
-
-                </button>
-
-                <p
-
-                    id="investment-message"
-
-                    role="status"
-
-                    aria-live="polite"
-
-                ></p>
-
-            </form>
-
+            </div>
+            <button
+                type="submit"
+                id="investment-submit"
+                class="primary-button"
+            >
+                Invest Now
+            </button>
+        </form>
+    </section>
+    <section class="card">
+        <h2 class="section-title">My Investments</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Investment</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="investments-list">
+                    <tr>
+                        <td colspan="5">Loading investments...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <!-- PORTFOLIO OVERVIEW -->
-
-        <div class="dashboard-card">
-
-            <h2>Portfolio Overview</h2>
-
-            <div class="portfolio-summary">
-
-                <div class="portfolio-item">
-
-                    <span>Total Invested</span>
-
-                    <strong id="total-invested">$0.00</strong>
-
-                </div>
-
-                <div class="portfolio-item">
-
-                    <span>Portfolio Value</span>
-
-                    <strong id="portfolio-value">$0.00</strong>
-
-                </div>
-
-                <div class="portfolio-item">
-
-                    <span>Available Balance</span>
-
-                    <strong id="available-balance">$0.00</strong>
-
-                </div>
-
-            </div>
-
-            <div class="portfolio-secondary">
-
-                <div class="portfolio-stat">
-
-                    <span>Active Investments</span>
-
-                    <strong id="active-investments">0</strong>
-
-                </div>
-
-                <div class="portfolio-stat">
-
-                    <span>Pending Investments</span>
-
-                    <strong id="pending-investments">0</strong>
-
-                </div>
-
-            </div>
-
-            <div class="dashboard-actions">
-
-                <a href="deposit.html" class="dashboard-button">
-
-                    Deposit Funds
-
-                </a>
-
-                <a href="withdraw.html" class="dashboard-button">
-
-                    Withdraw Funds
-
-                </a>
-
-            </div>
-
+    </section>
+    <section class="card">
+        <h2 class="section-title">Portfolio Overview</h2>
+        <p style="color: #66736b;">
+            Your approved investment requests are shown in the total above.
+            No projected profit or return is displayed unless it is supported
+            by verified account data.
+        </p>
+    </section>
+    <section class="card">
+        <h2 class="section-title">Transactions</h2>
+        <p class="empty">
+            Transaction records will appear here when connected to your
+            transactions table.
+        </p>
+    </section>
+    <section class="card" id="deposits">
+        <h2 class="section-title">Deposit History</h2>
+        <p class="empty">
+            Your deposit history will appear here when the deposit records
+            are connected.
+        </p>
+    </section>
+    <section class="card" id="crypto-payments">
+        <h2 class="section-title">Crypto Payment History</h2>
+        <p class="empty">
+            Your crypto payment records will appear here when connected
+            to the payment records table.
+        </p>
+    </section>
+    <section class="card">
+        <h2 class="section-title">Account Services</h2>
+        <div class="quick-links">
+            <a href="investments.html">Investment Opportunities</a>
+            <a href="create-account.html">Account Information</a>
+            <a href="login.html">Login Page</a>
+            <a href="index.html">Visit Homepage</a>
         </div>
-
-        <!-- TRANSACTIONS -->
-
-        <div class="dashboard-card">
-
-            <h2>Transactions</h2>
-
-            <div id="transactions-list">
-
-                <p>Loading your transactions...</p>
-
-            </div>
-
-        </div>
-
-        <!-- DEPOSIT HISTORY -->
-
-        <div class="dashboard-card">
-
-            <h2>Deposit History</h2>
-
-            <div id="deposit-history">
-
-                <p>Loading your deposit history...</p>
-
-            </div>
-
-        </div>
-
-        <!-- CRYPTO PAYMENT HISTORY -->
-
-        <div class="dashboard-card">
-
-            <h2>Crypto Payment History</h2>
-
-            <div id="crypto-payment-history">
-
-                <p>Loading your crypto payment history...</p>
-
-            </div>
-
-        </div>
-
-        <!-- ACCOUNT -->
-
-        <div class="dashboard-card">
-
-            <h2>Account</h2>
-
-            <p>Your account is connected to the dashboard.</p>
-
-            <p id="dashboard-name">Loading your name...</p>
-
-            <p id="dashboard-email">Loading account information...</p>
-
-            <p id="dashboard-phone">Loading phone number...</p>
-
-            <p id="dashboard-status">Loading account status...</p>
-
-            <div class="dashboard-actions">
-
-                <a href="profile.html" class="dashboard-button">
-
-                    Edit Profile
-
-                </a>
-
-            </div>
-
-        </div>
-
-        <!-- SUPPORT -->
-
-        <div class="dashboard-card">
-
-            <h2>Investor Support</h2>
-
-            <p>
-
-                Need help with your account, investment
-
-                requests, deposits, or withdrawals?
-
-            </p>
-
-            <a href="support-chat.html" class="dashboard-button">
-
-                Contact Support
-
+    </section>
+    <section class="card" id="support">
+        <h2 class="section-title">Support</h2>
+        <p style="margin-bottom: 12px;">
+            Need assistance? Contact our support team.
+        </p>
+        <p>
+            Email:
+            <a href="mailto:capitalnorellab@gmail.com">
+                capitalnorellab@gmail.com
             </a>
-
-        </div>
-
-    </div>
-
-</section>
-
+        </p>
+        <p>
+            Phone:
+            <a href="tel:+12679815103">+1 (267) 981-5103</a>
+        </p>
+    </section>
+</main>
 <footer>
-
-    <p>© 2026 Nor Ellab Capital. All rights reserved.</p>
-
+    © 2026 Nor Ellab Capital. All rights reserved.
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-
-const supabaseUrl =
-
-    "https://grgmsezyxxceheofmsoj.supabase.co";
-
-const supabaseKey =
-
-    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
-
-const supabaseClient =
-
-    supabase.createClient(supabaseUrl, supabaseKey);
-
-/* =========================================
-
-   SAFE TEXT DISPLAY
-
-========================================= */
-
-function escapeHTML(value) {
-
-    return String(value ?? "").replace(/[&<>"']/g, function(char) {
-
-        const entities = {
-
-            "&": "&amp;",
-
-            "<": "&lt;",
-
-            ">": "&gt;",
-
-            '"': "&quot;",
-
-            "'": "&#39;"
-
-        };
-
-        return entities[char];
-
-    });
-
-}
-
-/* =========================================
-
-   STATUS BADGE
-
-========================================= */
-
-function createStatusBadge(status) {
-
-    const cleanStatus = String(status || "Pending").trim();
-
-    const normalizedStatus = cleanStatus
-
-        .toLowerCase()
-
-        .replace(/[\s_-]/g, "");
-
-    let statusClass = "status-default";
-
-    if (normalizedStatus === "active") {
-
-        statusClass = "status-active";
-
-    } else if (normalizedStatus === "pending") {
-
-        statusClass = "status-pending";
-
-    } else if (normalizedStatus === "completed") {
-
-        statusClass = "status-completed";
-
-    } else if (normalizedStatus === "processing") {
-
-        statusClass = "status-processing";
-
-    } else if (
-
-        normalizedStatus === "cancelled" ||
-
-        normalizedStatus === "canceled"
-
-    ) {
-
-        statusClass = "status-cancelled";
-
-    } else if (normalizedStatus === "failed") {
-
-        statusClass = "status-failed";
-
-    }
-
-    return `
-
-        <span class="status-badge ${statusClass}">
-
-            ${escapeHTML(cleanStatus)}
-
-        </span>
-
-    `;
-
-}
-
-/* =========================================
-
-   FORMAT MONEY
-
-========================================= */
-
-function formatMoney(amount) {
-
-    return "$" + Number(amount || 0).toLocaleString(
-
-        "en-US",
-
-        {
-
-            minimumFractionDigits: 2,
-
-            maximumFractionDigits: 2
-
-        }
-
+    const SUPABASE_URL = "https://grgmsezyxxceheofmsoj.supabase.co";
+    const SUPABASE_KEY =
+        "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+    const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
-
-}
-
-/* =========================================
-
-   LOAD DASHBOARD
-
-========================================= */
-
-async function loadDashboard() {
-
-    const { data, error } =
-
-        await supabaseClient.auth.getUser();
-
-    if (error || !data.user) {
-
-        window.location.href = "login.html";
-
-        return;
-
-    }
-
-    const user = data.user;
-
-    /* ACCOUNT PROFILE */
-
-    const {
-
-        data: profile,
-
-        error: profileError
-
-    } = await supabaseClient
-
-        .from("profiles")
-
-        .select("full_name, phone, email, account_status")
-
-        .eq("user_id", user.id)
-
-        .maybeSingle();
-
-    const profileName =
-
-        profile?.full_name ||
-
-        user.user_metadata?.full_name ||
-
-        "Name not available";
-
-    const profileEmail =
-
-        profile?.email ||
-
-        user.email ||
-
-        "Email not available";
-
-    const profilePhone =
-
-        profile?.phone ||
-
-        "Not provided";
-
-    const profileStatus =
-
-        profile?.account_status ||
-
-        "Active";
-
-    document.getElementById("dashboard-name").textContent =
-
-        "Name: " + profileName;
-
-    document.getElementById("dashboard-email").textContent =
-
-        "Email: " + profileEmail;
-
-    document.getElementById("dashboard-phone").textContent =
-
-        "Phone: " + profilePhone;
-
-    document.getElementById("dashboard-status").innerHTML =
-
-        "Account Status: " + createStatusBadge(profileStatus);
-
-    document.getElementById("welcome-message").textContent =
-
-        "Welcome, " + profileName + ".";
-
-    if (profileError) {
-
-        console.error("Unable to load profile:", profileError);
-
-    }
-
-    /* LOAD INVESTMENTS */
-
-    const {
-
-        data: investments,
-
-        error: investmentError
-
-    } = await supabaseClient
-
-        .from("investments")
-
-        .select("*")
-
-        .eq("user_id", user.id)
-
-        .order("created_at", { ascending: false });
-
-    const investmentsList =
-
-        document.getElementById("investments-list");
-
-    let totalInvested = 0;
-
-    let activeInvestments = 0;
-
-    let pendingInvestments = 0;
-
-    if (investmentError) {
-
-        investmentsList.textContent =
-
-            "Unable to load investments.";
-
-        console.error("Investment loading error:", investmentError);
-
-    } else if (!investments || investments.length === 0) {
-
-        investmentsList.innerHTML = `
-
-            <div class="investment-empty">
-
-                <h3>No investments yet</h3>
-
-                <p>
-
-                    Choose an investment category using the
-
-                    Invest Now section to submit a request.
-
-                </p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        let investmentHTML = "";
-
-        investments.forEach(function(investment) {
-
-            const investmentAmount =
-
-                Number(investment.amount || 0);
-
-            const investmentStatus =
-
-                String(investment.status || "Pending");
-
-            const normalizedStatus =
-
-                investmentStatus.toLowerCase().trim();
-
-            /*
-
-              Only active investments count toward
-
-              the confirmed invested total.
-
-            */
-
-            if (normalizedStatus === "active") {
-
-                totalInvested += investmentAmount;
-
-                activeInvestments++;
-
-            }
-
-            if (normalizedStatus === "pending") {
-
-                pendingInvestments++;
-
-            }
-
-            const investmentDate = investment.created_at
-
-                ? new Date(investment.created_at).toLocaleDateString(
-
-                    "en-US",
-
-                    {
-
-                        year: "numeric",
-
-                        month: "long",
-
-                        day: "numeric"
-
-                    }
-
-                )
-
-                : "Date not available";
-
-            investmentHTML += `
-
-                <div class="investment-item">
-
-                    <h3>
-
-                        ${escapeHTML(
-
-                            investment.investment_name || "Investment"
-
-                        )}
-
-                    </h3>
-
-                    <p>
-
-                        Type:
-
-                        ${escapeHTML(
-
-                            investment.investment_type || "Not specified"
-
-                        )}
-
-                    </p>
-
-                    <p>
-
-                        Requested Amount:
-
-                        ${formatMoney(investmentAmount)}
-
-                    </p>
-
-                    <p>
-
-                        Status:
-
-                        ${createStatusBadge(investmentStatus)}
-
-                    </p>
-
-                    <p>
-
-                        Request Date:
-
-                        ${escapeHTML(investmentDate)}
-
-                    </p>
-
-                    <a
-
-                        href="investment-details.html?id=${encodeURIComponent(
-
-                            investment.id
-
-                        )}"
-
-                        class="dashboard-button"
-
-                    >
-
-                        View Details
-
-                    </a>
-
-                </div>
-
-            `;
-
+    const investmentForm = document.getElementById("investment-form");
+    const investmentSubmit = document.getElementById("investment-submit");
+    const pageNotice = document.getElementById("page-notice");
+    let currentUser = null;
+    function showNotice(message, type) {
+        pageNotice.textContent = message;
+        pageNotice.className = "notice " + type;
+        pageNotice.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
         });
-
-        investmentsList.innerHTML = investmentHTML;
-
     }
-
-    document.getElementById("total-invested").textContent =
-
-        formatMoney(totalInvested);
-
-    /*
-
-      Do not treat pending requests as portfolio value.
-
-      A verified valuation system is needed for this figure.
-
-    */
-
-    document.getElementById("portfolio-value").textContent =
-
-        formatMoney(totalInvested);
-
-    document.getElementById("active-investments").textContent =
-
-        activeInvestments;
-
-    document.getElementById("pending-investments").textContent =
-
-        pendingInvestments;
-
-    /* AVAILABLE BALANCE */
-
-    const {
-
-        data: account,
-
-        error: accountError
-
-    } = await supabaseClient
-
-        .from("investor_accounts")
-
-        .select("available_balance")
-
-        .eq("user_id", user.id)
-
-        .maybeSingle();
-
-    document.getElementById("available-balance").textContent =
-
-        !accountError && account
-
-            ? formatMoney(account.available_balance)
-
-            : "$0.00";
-
-    /* TRANSACTIONS */
-
-    const {
-
-        data: transactions,
-
-        error: transactionError
-
-    } = await supabaseClient
-
-        .from("transactions")
-
-        .select("*")
-
-        .eq("user_id", user.id)
-
-        .order("created_at", { ascending: false });
-
-    const transactionsList =
-
-        document.getElementById("transactions-list");
-
-    if (transactionError) {
-
-        transactionsList.textContent =
-
-            "Unable to load transactions.";
-
-        console.error(transactionError);
-
-    } else if (!transactions || transactions.length === 0) {
-
-        transactionsList.innerHTML = `
-
-            <div class="transaction-empty">
-
-                <h3>No transactions yet</h3>
-
-                <p>
-
-                    Your deposits, withdrawals, and transactions
-
-                    will appear here when recorded.
-
-                </p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        let transactionHTML = "";
-
-        transactions.forEach(function(transaction) {
-
-            const date = transaction.created_at
-
-                ? new Date(transaction.created_at).toLocaleString()
-
-                : "Date not available";
-
-            transactionHTML += `
-
-                <div class="investment-item">
-
-                    <h3>
-
-                        ${escapeHTML(
-
-                            transaction.transaction_type || "Transaction"
-
-                        )}
-
-                    </h3>
-
-                    <p>Amount: ${formatMoney(transaction.amount)}</p>
-
-                    <p>
-
-                        Asset:
-
-                        ${escapeHTML(transaction.asset || "USD")}
-
-                    </p>
-
-                    <p>
-
-                        Status:
-
-                        ${createStatusBadge(
-
-                            transaction.status || "Pending"
-
-                        )}
-
-                    </p>
-
-                    <p>
-
-                        Reference:
-
-                        ${escapeHTML(
-
-                            transaction.reference || "Not available"
-
-                        )}
-
-                    </p>
-
-                    <p>
-
-                        Description:
-
-                        ${escapeHTML(
-
-                            transaction.description || "No description"
-
-                        )}
-
-                    </p>
-
-                    ${
-
-                        transaction.transaction_hash
-
-                            ? `<p>Transaction Hash / TXID: ${
-
-                                escapeHTML(transaction.transaction_hash)
-
-                            }</p>`
-
-                            : ""
-
-                    }
-
-                    <p>Date: ${escapeHTML(date)}</p>
-
-                </div>
-
-            `;
-
+    function formatUSD(amount) {
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD"
+        }).format(Number(amount) || 0);
+    }
+    function safeText(value) {
+        return String(value ?? "");
+    }
+    function formatDate(value) {
+        if (!value) return "—";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "—";
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
         });
-
-        transactionsList.innerHTML = transactionHTML;
-
     }
-
-    /* DEPOSIT HISTORY */
-
-    const {
-
-        data: deposits,
-
-        error: depositError
-
-    } = await supabaseClient
-
-        .from("deposits")
-
-        .select("*")
-
-        .eq("user_id", user.id)
-
-        .order("created_at", { ascending: false });
-
-    const depositHistory =
-
-        document.getElementById("deposit-history");
-
-    if (depositError) {
-
-        depositHistory.textContent =
-
-            "Unable to load deposit history.";
-
-        console.error(depositError);
-
-    } else if (!deposits || deposits.length === 0) {
-
-        depositHistory.innerHTML = `
-
-            <div class="transaction-empty">
-
-                <h3>No deposits yet</h3>
-
-                <p>Your deposit history will appear here.</p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        let depositHTML = "";
-
-        deposits.forEach(function(deposit) {
-
-            const date = deposit.created_at
-
-                ? new Date(deposit.created_at).toLocaleString()
-
-                : "Date not available";
-
-            depositHTML += `
-
-                <div class="investment-item">
-
-                    <h3>${escapeHTML(deposit.asset || "Deposit")}</h3>
-
-                    <p>
-
-                        Network:
-
-                        ${escapeHTML(deposit.network || "Not specified")}
-
-                    </p>
-
-                    <p>Amount: ${formatMoney(deposit.amount)}</p>
-
-                    <p>
-
-                        Status:
-
-                        ${createStatusBadge(deposit.status || "Pending")}
-
-                    </p>
-
-                    <p>
-
-                        Transaction Hash / TXID:
-
-                        ${escapeHTML(
-
-                            deposit.transaction_hash || "Not provided"
-
-                        )}
-
-                    </p>
-
-                    <p>Date: ${escapeHTML(date)}</p>
-
-                </div>
-
-            `;
-
-        });
-
-        depositHistory.innerHTML = depositHTML;
-
-    }
-
-    /* CRYPTO PAYMENT HISTORY */
-
-    const {
-
-        data: cryptoPayments,
-
-        error: cryptoPaymentError
-
-    } = await supabaseClient
-
-        .from("crypto_payment_requests")
-
-        .select("*")
-
-        .eq("user_id", user.id)
-
-        .order("created_at", { ascending: false });
-
-    const cryptoPaymentHistory =
-
-        document.getElementById("crypto-payment-history");
-
-    if (cryptoPaymentError) {
-
-        cryptoPaymentHistory.textContent =
-
-            "Unable to load crypto payment history.";
-
-        console.error(cryptoPaymentError);
-
-    } else if (!cryptoPayments || cryptoPayments.length === 0) {
-
-        cryptoPaymentHistory.innerHTML = `
-
-            <div class="transaction-empty">
-
-                <h3>No crypto payments yet</h3>
-
-                <p>
-
-                    Your crypto payment requests will appear here
-
-                    after you submit one.
-
-                </p>
-
-            </div>
-
-        `;
-
-    } else {
-
-        let cryptoHTML = "";
-
-        cryptoPayments.forEach(function(payment) {
-
-            const date = payment.created_at
-
-                ? new Date(payment.created_at).toLocaleString()
-
-                : "Date not available";
-
-            cryptoHTML += `
-
-                <div class="investment-item">
-
-                    <h3>${escapeHTML(payment.asset || "Crypto Payment")}</h3>
-
-                    <p>
-
-                        Amount:
-
-                        ${Number(payment.amount || 0).toLocaleString(
-
-                            "en-US",
-
-                            { maximumFractionDigits: 8 }
-
-                        )}
-
-                    </p>
-
-                    <p>
-
-                        Payment Method:
-
-                        ${escapeHTML(
-
-                            payment.payment_method || "Not available"
-
-                        )}
-
-                    </p>
-
-                    <p>
-
-                        Estimated Total:
-
-                        ${formatMoney(payment.total)}
-
-                    </p>
-
-                    <p>
-
-                        Status:
-
-                        ${createStatusBadge(payment.status || "Pending")}
-
-                    </p>
-
-                    <p>
-
-                        Transaction Hash / TXID:
-
-                        ${escapeHTML(
-
-                            payment.payment_reference || "Not provided"
-
-                        )}
-
-                    </p>
-
-                    <p>Date: ${escapeHTML(date)}</p>
-
-                </div>
-
-            `;
-
-        });
-
-        cryptoPaymentHistory.innerHTML = cryptoHTML;
-
-    }
-
-}
-
-/* =========================================
-
-   INVESTMENT REQUEST FORM
-
-========================================= */
-
-const investmentForm =
-
-    document.getElementById("investment-form");
-
-const investmentTypeInput =
-
-    document.getElementById("investment-type");
-
-const investmentAmountInput =
-
-    document.getElementById("investment-amount");
-
-const investmentSubmit =
-
-    document.getElementById("investment-submit");
-
-const investmentMessage =
-
-    document.getElementById("investment-message");
-
-investmentForm.addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    investmentMessage.textContent = "";
-
-    investmentMessage.className = "";
-
-    const investmentType = investmentTypeInput.value;
-
-    const amount = Number(investmentAmountInput.value);
-
-    if (!investmentType) {
-
-        investmentMessage.textContent =
-
-            "Please select an investment category.";
-
-        investmentMessage.className = "message-error";
-
-        return;
-
-    }
-
-    if (!Number.isFinite(amount) || amount < 1) {
-
-        investmentMessage.textContent =
-
-            "Enter a valid investment amount of at least $1.";
-
-        investmentMessage.className = "message-error";
-
-        return;
-
-    }
-
-    if (!window.confirm(
-
-        "Review your request:\n\n" +
-
-        "Category: " + investmentType + "\n" +
-
-        "Amount: " + formatMoney(amount) + "\n\n" +
-
-        "Submit this request for review? It will not transfer money."
-
-    )) {
-
-        return;
-
-    }
-
-    investmentSubmit.disabled = true;
-
-    investmentSubmit.textContent = "Submitting...";
-
-    investmentMessage.textContent = "Submitting your request...";
-
-    try {
-
+    async function checkLogin() {
         const {
-
-            data: userData,
-
-            error: userError
-
-        } = await supabaseClient.auth.getUser();
-
-        if (userError || !userData.user) {
-
+            data: { session },
+            error
+        } = await supabaseClient.auth.getSession();
+        if (error || !session) {
             window.location.href = "login.html";
-
-            return;
-
+            return false;
         }
-
-        const user = userData.user;
-
-        const {
-
-            data: insertedInvestment,
-
-            error: insertError
-
-        } = await supabaseClient
-
+        currentUser = session.user;
+        document.getElementById("investor-email").textContent =
+            currentUser.email || "Investor";
+        return true;
+    }
+    async function loadInvestments() {
+        const list = document.getElementById("investments-list");
+        const { data, error } = await supabaseClient
             .from("investments")
-
-            .insert({
-
-                user_id: user.id,
-
-                investment_name: investmentType + " Investment",
-
-                investment_type: investmentType,
-
-                amount: amount,
-
-                status: "Pending"
-
-            })
-
-            .select("id")
-
-            .single();
-
-        if (insertError) {
-
-            console.error("Investment request error:", insertError);
-
-            throw new Error(
-
-                "We could not submit your request. Please check your " +
-
-                "investment table permissions and required columns, " +
-
-                "then try again."
-
-            );
-
-        }
-
-        investmentMessage.textContent =
-
-            "Your " + investmentType +
-
-            " request for " + formatMoney(amount) +
-
-            " was submitted successfully and is Pending review. " +
-
-            "No payment has been taken.";
-
-        investmentMessage.className = "message-success";
-
-        investmentForm.reset();
-
-        await loadDashboard();
-
-        investmentMessage.textContent =
-
-            "Your " + investmentType +
-
-            " request for " + formatMoney(amount) +
-
-            " was submitted successfully and is Pending review. " +
-
-            "No payment has been taken.";
-
-        investmentMessage.className = "message-success";
-
-    } catch (error) {
-
-        investmentMessage.textContent =
-
-            error.message || "Something went wrong. Please try again.";
-
-        investmentMessage.className = "message-error";
-
-    } finally {
-
-        investmentSubmit.disabled = false;
-
-        investmentSubmit.textContent = "Review Investment Request";
-
-    }
-
-});
-
-/* =========================================
-
-   LOGOUT
-
-========================================= */
-
-document.getElementById("logout-button").addEventListener(
-
-    "click",
-
-    async function(event) {
-
-        event.preventDefault();
-
-        const logoutButton = event.currentTarget;
-
-        logoutButton.textContent = "Logging out...";
-
-        const { error } = await supabaseClient.auth.signOut();
-
+            .select(
+                "user_id, investment_name, investment_type, amount, status, created_at"
+            )
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending: false });
         if (error) {
-
-            logoutButton.textContent = "Logout";
-
-            alert("Unable to log out. Please try again.");
-
+            list.innerHTML = "";
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 5;
+            cell.textContent =
+                "Unable to load investments. Please check your account permissions.";
+            row.appendChild(cell);
+            list.appendChild(row);
+            console.error("Investment loading error:", error);
             return;
-
         }
-
-        window.location.href = "login.html";
-
+        const investments = data || [];
+        document.getElementById("investment-count").textContent =
+            investments.length;
+        const pending = investments.filter(item =>
+            String(item.status || "").toLowerCase() === "pending"
+        );
+        document.getElementById("pending-count").textContent =
+            pending.length;
+        const approvedTotal = investments
+            .filter(item =>
+                String(item.status || "").toLowerCase() === "approved"
+            )
+            .reduce((total, item) => total + Number(item.amount || 0), 0);
+        document.getElementById("approved-total").textContent =
+            formatUSD(approvedTotal);
+        list.innerHTML = "";
+        if (investments.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 5;
+            cell.textContent = "You have not submitted any investments yet.";
+            row.appendChild(cell);
+            list.appendChild(row);
+            return;
+        }
+        investments.forEach(item => {
+            const row = document.createElement("tr");
+            const values = [
+                item.investment_name || "Investment",
+                item.investment_type || "—",
+                formatUSD(item.amount),
+                item.status || "Pending",
+                formatDate(item.created_at)
+            ];
+            values.forEach((value, index) => {
+                const cell = document.createElement("td");
+                if (index === 3) {
+                    const badge = document.createElement("span");
+                    badge.className = "status";
+                    badge.textContent = safeText(value);
+                    cell.appendChild(badge);
+                } else {
+                    cell.textContent = safeText(value);
+                }
+                row.appendChild(cell);
+            });
+            list.appendChild(row);
+        });
     }
-
-);
-
-/* =========================================
-
-   START
-
-========================================= */
-
-loadDashboard();
-
+    investmentForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if (!currentUser) {
+            showNotice("Please log in again before investing.", "error");
+            return;
+        }
+        const investmentType =
+            document.getElementById("investment-type").value;
+        const amount = Number(
+            document.getElementById("investment-amount").value
+        );
+        if (!investmentType) {
+            showNotice("Please choose an investment category.", "error");
+            return;
+        }
+        if (!Number.isFinite(amount) || amount <= 0) {
+            showNotice("Enter a valid amount greater than zero.", "error");
+            return;
+        }
+        investmentSubmit.disabled = true;
+        investmentSubmit.textContent = "Submitting...";
+        try {
+            const { error } = await supabaseClient
+                .from("investments")
+                .insert({
+                    user_id: currentUser.id,
+                    investment_name: investmentType + " Investment",
+                    investment_type: investmentType,
+                    amount: amount,
+                    status: "Pending"
+                });
+            if (error) {
+                console.error("Investment submission error:", error);
+                showNotice(
+                    "Your request could not be submitted. Please try again or contact support.",
+                    "error"
+                );
+                return;
+            }
+            investmentForm.reset();
+            showNotice(
+                "Your investment request has been submitted successfully and is pending administrator review. No funds have been transferred by this request.",
+                "success"
+            );
+            await loadInvestments();
+        } catch (error) {
+            console.error(error);
+            showNotice(
+                "Something went wrong. Please try again.",
+                "error"
+            );
+        } finally {
+            investmentSubmit.disabled = false;
+            investmentSubmit.textContent = "Invest Now";
+        }
+    });
+    document.getElementById("logout-button").addEventListener(
+        "click",
+        async function () {
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                showNotice("Unable to log out. Please try again.", "error");
+                return;
+            }
+            window.location.href = "login.html";
+        }
+    );
+    async function initializeDashboard() {
+        const loggedIn = await checkLogin();
+        if (!loggedIn) return;
+        await loadInvestments();
+    }
+    initializeDashboard();
 </script>
-
 </body>
-
 </html>
