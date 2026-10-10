@@ -1,221 +1,1336 @@
+
+
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Investment Opportunities | Nor Ellab Capital</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Explore crypto trading, digital assets, real estate and equities with Nor Ellab Capital. Review the risks before making financial decisions.">
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        :root {
+
+            --navy: #071626;
+
+            --navy-light: #102943;
+
+            --gold: #d4af37;
+
+            --cream: #f6f3ec;
+
+            --white: #ffffff;
+
+            --muted: #b9c4d0;
+
+            --dark-text: #172332;
+
+        }
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background: var(--cream);
+
+            color: var(--dark-text);
+
+            line-height: 1.6;
+
+        }
+
+        a {
+
+            text-decoration: none;
+
+        }
+
+        /* HEADER */
+
+        .site-header {
+
+            background: var(--navy);
+
+            padding: 18px 6%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+
+        }
+
+        .brand {
+
+            color: var(--gold);
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+        }
+
+        .site-nav {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 18px;
+
+            flex-wrap: wrap;
+
+        }
+
+        .site-nav a {
+
+            color: var(--white);
+
+            font-size: 13px;
+
+            transition: color 0.3s;
+
+        }
+
+        .site-nav a:hover {
+
+            color: var(--gold);
+
+        }
+
+        .site-nav .nav-cta {
+
+            color: var(--navy);
+
+            background: var(--gold);
+
+            padding: 10px 15px;
+
+            border-radius: 4px;
+
+            font-weight: bold;
+
+        }
+
+        .site-nav .nav-cta:hover {
+
+            background: #efd77e;
+
+            color: var(--navy);
+
+        }
+
+        /* HERO */
+
+        .investment-hero {
+
+            min-height: 510px;
+
+            padding: 90px 8%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: flex-start;
+
+            background:
+
+                linear-gradient(
+
+                    90deg,
+
+                    rgba(4, 16, 32, 0.96),
+
+                    rgba(4, 16, 32, 0.76),
+
+                    rgba(4, 16, 32, 0.30)
+
+                ),
+
+                url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+
+            background-position: center;
+
+            color: var(--white);
+
+        }
+
+        .hero-label {
+
+            color: var(--gold);
+
+            text-transform: uppercase;
+
+            letter-spacing: 3px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 18px;
+
+        }
+
+        .investment-hero h1 {
+
+            max-width: 750px;
+
+            font-size: clamp(36px, 5vw, 60px);
+
+            line-height: 1.12;
+
+            margin-bottom: 22px;
+
+        }
+
+        .investment-hero h1 span {
+
+            color: var(--gold);
+
+        }
+
+        .investment-hero p {
+
+            max-width: 600px;
+
+            color: #e0e7ef;
+
+            font-size: 17px;
+
+            margin-bottom: 30px;
+
+        }
+
+        .hero-actions {
+
+            display: flex;
+
+            gap: 14px;
+
+            flex-wrap: wrap;
+
+        }
+
+        .button {
+
+            display: inline-block;
+
+            padding: 13px 22px;
+
+            border-radius: 4px;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+
+        }
+
+        .button-gold {
+
+            background: var(--gold);
+
+            color: var(--navy);
+
+        }
+
+        .button-gold:hover {
+
+            background: #efd77e;
+
+        }
+
+        .button-outline {
+
+            border: 1px solid var(--gold);
+
+            color: var(--white);
+
+        }
+
+        .button-outline:hover {
+
+            background: rgba(212, 175, 55, 0.15);
+
+        }
+
+        /* INTRODUCTION */
+
+        .section-intro {
+
+            max-width: 760px;
+
+            margin: 0 auto 38px;
+
+            text-align: center;
+
+        }
+
+        .section-label {
+
+            color: #92751b;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+        }
+
+        .section-intro h2 {
+
+            color: var(--navy);
+
+            font-size: clamp(28px, 4vw, 38px);
+
+            margin-bottom: 12px;
+
+        }
+
+        .section-intro p {
+
+            color: #627080;
+
+            font-size: 15px;
+
+        }
+
+        /* INVESTMENT CARDS */
+
+        .investment-list {
+
+            padding: 80px 6%;
+
+        }
+
+        .investment-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+
+            gap: 26px;
+
+            max-width: 1180px;
+
+            margin: 0 auto;
+
+        }
+
+        .investment-option {
+
+            background: var(--white);
+
+            border: 1px solid #e6e2d9;
+
+            border-radius: 9px;
+
+            overflow: hidden;
+
+            box-shadow: 0 8px 25px rgba(7, 22, 38, 0.06);
+
+            transition: transform 0.3s, box-shadow 0.3s;
+
+        }
+
+        .investment-option:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: 0 15px 35px rgba(7, 22, 38, 0.13);
+
+        }
+
+        .investment-image {
+
+            height: 225px;
+
+            position: relative;
+
+            background-size: cover;
+
+            background-position: center;
+
+        }
+
+        .investment-image::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background: linear-gradient(
+
+                0deg,
+
+                rgba(7, 22, 38, 0.55),
+
+                transparent 70%
+
+            );
+
+        }
+
+        .crypto-image {
+
+            background-image: url("https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=85");
+
+        }
+
+        .digital-image {
+
+            background-image: url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85");
+
+        }
+
+        .real-estate-image {
+
+            background-image: url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85");
+
+        }
+
+        .equities-image {
+
+            background-image: url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=85");
+
+        }
+
+        .image-category {
+
+            position: absolute;
+
+            z-index: 1;
+
+            left: 20px;
+
+            bottom: 17px;
+
+            color: var(--white);
+
+            background: rgba(7, 22, 38, 0.78);
+
+            border: 1px solid rgba(212, 175, 55, 0.65);
+
+            padding: 6px 11px;
+
+            border-radius: 3px;
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+        .investment-content {
+
+            padding: 25px;
+
+        }
+
+        .investment-content h3 {
+
+            color: var(--navy);
+
+            font-size: 23px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .investment-content > p {
+
+            color: #637181;
+
+            font-size: 14px;
+
+            margin-bottom: 22px;
+
+            min-height: 68px;
+
+        }
+
+        .investment-info {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 0;
+
+            border-top: 1px solid #ece8df;
+
+            font-size: 13px;
+
+        }
+
+        .investment-info span {
+
+            color: #6b7684;
+
+        }
+
+        .investment-info strong {
+
+            color: var(--navy);
+
+            text-align: right;
+
+        }
+
+        .risk-high {
+
+            color: #b04436 !important;
+
+        }
+
+        .risk-varies {
+
+            color: #92751b !important;
+
+        }
+
+        .details-link {
+
+            display: block;
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            padding: 12px;
+
+            background: var(--navy);
+
+            color: var(--gold);
+
+            border: 1px solid var(--navy);
+
+            border-radius: 4px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.3s;
+
+        }
+
+        .details-link:hover {
+
+            background: var(--gold);
+
+            color: var(--navy);
+
+            border-color: var(--gold);
+
+        }
+
+        /* INFORMATION BANNER */
+
+        .information-banner {
+
+            margin: 0 6% 75px;
+
+            padding: 35px;
+
+            background: var(--navy);
+
+            border-left: 4px solid var(--gold);
+
+            border-radius: 5px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 25px;
+
+            flex-wrap: wrap;
+
+        }
+
+        .information-banner h2 {
+
+            color: var(--gold);
+
+            font-size: 24px;
+
+            margin-bottom: 8px;
+
+        }
+
+        .information-banner p {
+
+            color: #d6dfe8;
+
+            font-size: 14px;
+
+            max-width: 680px;
+
+        }
+
+        /* DISCLAIMER */
+
+        .investment-disclaimer {
+
+            padding: 55px 8%;
+
+            text-align: center;
+
+            background: #eae6dc;
+
+        }
+
+        .investment-disclaimer h2 {
+
+            color: var(--navy);
+
+            font-size: 25px;
+
+            margin-bottom: 14px;
+
+        }
+
+        .investment-disclaimer p {
+
+            max-width: 850px;
+
+            margin: 0 auto;
+
+            color: #596575;
+
+            font-size: 13px;
+
+        }
+
+        /* FOOTER */
+
+        footer {
+
+            background: var(--navy);
+
+            color: var(--white);
+
+            padding: 55px 6% 0;
+
+        }
+
+        .footer-content {
+
+            display: grid;
+
+            grid-template-columns: 2fr 1fr 1fr;
+
+            gap: 40px;
+
+            padding-bottom: 40px;
+
+        }
+
+        .footer-company h2 {
+
+            color: var(--gold);
+
+            font-size: 23px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .footer-company p {
+
+            max-width: 390px;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+        }
+
+        .footer-links h3,
+
+        .footer-contact h3 {
+
+            color: var(--gold);
+
+            font-size: 16px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .footer-links a {
+
+            display: block;
+
+            width: fit-content;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            margin-bottom: 9px;
+
+        }
+
+        .footer-links a:hover {
+
+            color: var(--gold);
+
+        }
+
+        .footer-contact p,
+
+        .footer-contact a {
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+
+            overflow-wrap: anywhere;
+
+        }
+
+        .footer-bottom {
+
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+            padding: 20px 0;
+
+            text-align: center;
+
+            color: #aeb9c6;
+
+            font-size: 12px;
+
+        }
+
+        /* MOBILE LAYOUT */
+
+        @media (max-width: 850px) {
+
+            .site-header {
+
+                flex-direction: column;
+
+                text-align: center;
+
+            }
+
+            .site-nav {
+
+                gap: 13px;
+
+            }
+
+            .investment-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .investment-content > p {
+
+                min-height: 0;
+
+            }
+
+            .footer-content {
+
+                grid-template-columns: 1fr 1fr;
+
+            }
+
+            .footer-company {
+
+                grid-column: 1 / -1;
+
+            }
+
+        }
+
+        @media (max-width: 520px) {
+
+            .site-header {
+
+                padding: 18px 5%;
+
+            }
+
+            .brand {
+
+                font-size: 20px;
+
+            }
+
+            .site-nav {
+
+                gap: 10px 14px;
+
+            }
+
+            .site-nav a {
+
+                font-size: 12px;
+
+            }
+
+            .investment-hero {
+
+                min-height: 470px;
+
+                padding: 65px 6%;
+
+            }
+
+            .investment-hero p {
+
+                font-size: 15px;
+
+            }
+
+            .investment-list {
+
+                padding: 55px 5%;
+
+            }
+
+            .investment-image {
+
+                height: 190px;
+
+            }
+
+            .investment-content {
+
+                padding: 20px;
+
+            }
+
+            .information-banner {
+
+                margin: 0 5% 50px;
+
+                padding: 25px 20px;
+
+            }
+
+            .footer-content {
+
+                grid-template-columns: 1fr;
+
+                gap: 28px;
+
+            }
+
+            .footer-company {
+
+                grid-column: auto;
+
+            }
+
+            .investment-disclaimer {
+
+                padding: 45px 6%;
+
+            }
+
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-    <!-- Header -->
-    <header>
-        <h2>Nor Ellab Capital</h2>
+    <!-- HEADER -->
 
-        <nav>
+    <header class="site-header">
+
+        <a class="brand" href="index.html">NOR ELLAB CAPITAL</a>
+
+        <nav class="site-nav" aria-label="Main navigation">
+
             <a href="index.html">Home</a>
+
             <a href="investments.html">Investments</a>
-            <a href="#">About</a>
-            <a href="#">How It Works</a>
-            <a href="#">FAQ</a>
-            <a href="#">Contact</a>
-            <a href="#">Login</a>
-            <a href="create-account.html">Create Account</a>
+
+            <a href="about.html">About</a>
+
+            <a href="#opportunities">Opportunities</a>
+
+            <a href="#important-information">Information</a>
+
+            <a href="login.html">Login</a>
+
+            <a class="nav-cta" href="create-account.html">Create Account</a>
+
         </nav>
+
     </header>
 
+    <!-- HERO -->
 
-    <!-- Investments Hero -->
     <section class="investment-hero">
 
-        <h1>Investment Opportunities</h1>
+        <span class="hero-label">Nor Ellab Capital</span>
+
+        <h1>
+
+            Explore Opportunities.<br>
+
+            <span>Make Informed Decisions.</span>
+
+        </h1>
 
         <p>
-            Explore available investment opportunities and review
-            the relevant terms, information and risks before making
-            an investment decision.
+
+            Discover investment categories spanning digital assets,
+
+            cryptocurrency markets, real estate and equities.
+
+            Explore the information and risks associated with each category
+
+            before deciding what is appropriate for you.
+
         </p>
 
-    </section>
+        <div class="hero-actions">
 
+            <a class="button button-gold" href="#opportunities">
 
-    <!-- Investment Categories -->
-    <section class="investment-list">
+                Explore Opportunities
 
-        <h2>Explore Opportunities</h2>
+            </a>
 
-        <p>
-            Browse investment opportunities across selected sectors.
-        </p>
+            <a class="button button-outline" href="create-account.html">
 
+                Create an Account
 
-        <div class="investment-grid">
-
-            <!-- Crypto Trading -->
-            <div class="investment-option">
-
-                <h3>Crypto Trading</h3>
-
-                <p>
-                    Explore cryptocurrency markets and digital-asset
-                    trading opportunities through the platform.
-                </p>
-
-                <div class="investment-info">
-                    <span>Risk Level</span>
-                    <strong>High</strong>
-                </div>
-
-                <div class="investment-info">
-                    <span>Investment Type</span>
-                    <strong>Crypto Trading</strong>
-                </div>
-
-                <a href="crypto-trading.html#crypto-trading">View Details</a>
-
-            </div>
-
-
-            <!-- Digital Assets -->
-            <div class="investment-option">
-
-                <h3>Digital Assets</h3>
-
-                <p>
-                    Explore opportunities connected to the evolving
-                    digital-asset market.
-                </p>
-
-                <div class="investment-info">
-                    <span>Risk Level</span>
-                    <strong>High</strong>
-                </div>
-
-                <div class="investment-info">
-                    <span>Investment Type</span>
-                    <strong>Digital Assets</strong>
-                </div>
-
-                <a href="digital-assets.html#digital-assets">View Details</a>
-
-            </div>
-
-
-            <!-- Real Estate -->
-            <div class="investment-option">
-
-                <h3>Real Estate</h3>
-
-                <p>
-                    Explore property-related investment opportunities
-                    with clearly defined investment terms.
-                </p>
-
-                <div class="investment-info">
-                    <span>Risk Level</span>
-                    <strong>Medium</strong>
-                </div>
-
-                <div class="investment-info">
-                    <span>Investment Type</span>
-                    <strong>Real Estate</strong>
-                </div>
-
-                <a href="real-estate.html#real-estate">View Details</a>
-
-            </div>
-
-
-            <!-- Equities -->
-            <div class="investment-option">
-
-                <h3>Equities</h3>
-
-                <p>
-                    Explore equity-related opportunities through
-                    appropriate investment arrangements.
-                </p>
-
-                <div class="investment-info">
-                    <span>Risk Level</span>
-                    <strong>Medium to High</strong>
-                </div>
-
-                <div class="investment-info">
-                    <span>Investment Type</span>
-                    <strong>Equities</strong>
-                </div>
-
-                <a href="equities.html#equities">View Details</a>
-
-            </div>
+            </a>
 
         </div>
 
     </section>
 
+    <!-- INVESTMENT CATEGORIES -->
 
-    <!-- Investment Disclaimer -->
-    <section class="investment-disclaimer">
+    <section class="investment-list" id="opportunities">
 
-        <h2>Important Information</h2>
+        <div class="section-intro">
+
+            <div class="section-label">Explore Our Categories</div>
+
+            <h2>Investment Opportunities</h2>
+
+            <p>
+
+                Explore each category to learn about its characteristics,
+
+                potential risks and relevant information. Risk varies by
+
+                asset, strategy, market conditions and individual circumstances.
+
+            </p>
+
+        </div>
+
+        <div class="investment-grid">
+
+            <!-- CRYPTO TRADING -->
+
+            <article class="investment-option">
+
+                <div class="investment-image crypto-image">
+
+                    <span class="image-category">Digital Markets</span>
+
+                </div>
+
+                <div class="investment-content">
+
+                    <h3>Crypto Trading</h3>
+
+                    <p>
+
+                        Explore cryptocurrency markets and learn about
+
+                        the price movements and risks associated with
+
+                        trading digital currencies.
+
+                    </p>
+
+                    <div class="investment-info">
+
+                        <span>Risk Consideration</span>
+
+                        <strong class="risk-high">High</strong>
+
+                    </div>
+
+                    <div class="investment-info">
+
+                        <span>Category</span>
+
+                        <strong>Cryptocurrency</strong>
+
+                    </div>
+
+                    <a class="details-link"
+
+                       href="crypto-trading.html#crypto-trading">
+
+                        Explore Crypto Trading →
+
+                    </a>
+
+                </div>
+
+            </article>
+
+            <!-- DIGITAL ASSETS -->
+
+            <article class="investment-option">
+
+                <div class="investment-image digital-image">
+
+                    <span class="image-category">Digital Innovation</span>
+
+                </div>
+
+                <div class="investment-content">
+
+                    <h3>Digital Assets</h3>
+
+                    <p>
+
+                        Learn about digital assets, emerging technologies
+
+                        and the opportunities and uncertainties found
+
+                        across digital markets.
+
+                    </p>
+
+                    <div class="investment-info">
+
+                        <span>Risk Consideration</span>
+
+                        <strong class="risk-high">High</strong>
+
+                    </div>
+
+                    <div class="investment-info">
+
+                        <span>Category</span>
+
+                        <strong>Digital Assets</strong>
+
+                    </div>
+
+                    <a class="details-link"
+
+                       href="digital-assets.html#digital-assets">
+
+                        Explore Digital Assets →
+
+                    </a>
+
+                </div>
+
+            </article>
+
+            <!-- REAL ESTATE -->
+
+            <article class="investment-option">
+
+                <div class="investment-image real-estate-image">
+
+                    <span class="image-category">Property Markets</span>
+
+                </div>
+
+                <div class="investment-content">
+
+                    <h3>Real Estate</h3>
+
+                    <p>
+
+                        Explore property-related investment concepts,
+
+                        including property markets, valuation factors
+
+                        and the importance of due diligence.
+
+                    </p>
+
+                    <div class="investment-info">
+
+                        <span>Risk Consideration</span>
+
+                        <strong class="risk-varies">Varies</strong>
+
+                    </div>
+
+                    <div class="investment-info">
+
+                        <span>Category</span>
+
+                        <strong>Real Estate</strong>
+
+                    </div>
+
+                    <a class="details-link"
+
+                       href="real-estate.html#real-estate">
+
+                        Explore Real Estate →
+
+                    </a>
+
+                </div>
+
+            </article>
+
+            <!-- EQUITIES -->
+
+            <article class="investment-option">
+
+                <div class="investment-image equities-image">
+
+                    <span class="image-category">Equity Markets</span>
+
+                </div>
+
+                <div class="investment-content">
+
+                    <h3>Equities</h3>
+
+                    <p>
+
+                        Learn about shares, publicly traded companies
+
+                        and equity-market risks, including price changes
+
+                        and possible loss of capital.
+
+                    </p>
+
+                    <div class="investment-info">
+
+                        <span>Risk Consideration</span>
+
+                        <strong class="risk-varies">Varies</strong>
+
+                    </div>
+
+                    <div class="investment-info">
+
+                        <span>Category</span>
+
+                        <strong>Stocks and Shares</strong>
+
+                    </div>
+
+                    <a class="details-link"
+
+                       href="equities.html#equities">
+
+                        Explore Equities →
+
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- ACCOUNT BANNER -->
+
+    <section class="information-banner">
+
+        <div>
+
+            <h2>Your Next Step Starts With Information</h2>
+
+            <p>
+
+                Create an account to access the platform's account
+
+                features. Review the terms and disclosures for any
+
+                specific product before making a financial commitment.
+
+            </p>
+
+        </div>
+
+        <a class="button button-gold" href="create-account.html">
+
+            Create an Account
+
+        </a>
+
+    </section>
+
+    <!-- IMPORTANT INFORMATION -->
+
+    <section class="investment-disclaimer" id="important-information">
+
+        <h2>Important Investment Information</h2>
 
         <p>
-            Investment performance can vary and returns are not
-            guaranteed. Investors should review the terms, risks
-            and relevant disclosures associated with each opportunity
-            before making an investment decision.
+
+            All investments involve risk, and you may lose some or all
+
+            of the money invested. Returns are not guaranteed.
+
+            Cryptocurrency and other digital assets can be especially
+
+            volatile. Real estate and equities also carry risks.
+
+            Information on this page is general in nature and is not
+
+            personalized financial, legal or tax advice. Review all
+
+            applicable terms, fees, disclosures and regulatory information
+
+            before making an investment decision. The categories displayed
+
+            do not by themselves confirm that a specific investment product,
+
+            transaction or payment service is currently available.
+
         </p>
 
     </section>
 
+    <!-- FOOTER -->
 
-    <!-- Footer -->
     <footer>
 
         <div class="footer-content">
 
             <div class="footer-company">
 
-                <h2>Nor Ellab Capital</h2>
+                <h2>NOR ELLAB CAPITAL</h2>
 
                 <p>
-                    A modern investment platform providing access to
-                    investment opportunities and secure account management.
+
+                    Explore investment categories and financial-market
+
+                    information. Make informed decisions by understanding
+
+                    the relevant risks and terms.
+
                 </p>
 
             </div>
-
 
             <div class="footer-links">
 
                 <h3>Quick Links</h3>
 
                 <a href="index.html">Home</a>
+
                 <a href="investments.html">Investments</a>
-                <a href="#">About</a>
-                <a href="#">How It Works</a>
-                <a href="#">FAQ</a>
-                <a href="#">Contact</a>
+
+                <a href="about.html">About</a>
+
+                <a href="#opportunities">Opportunities</a>
+
+                <a href="#important-information">Important Information</a>
+
+                <a href="login.html">Login</a>
+
+                <a href="create-account.html">Create Account</a>
 
             </div>
 
-
             <div class="footer-contact">
 
-                <h3>Contact</h3>
+                <h3>Contact Us</h3>
 
-                <p>+1 (267) 981-5103</p>
-                <p>capitalnorellab@gmail.com</p>
+                <p>
+
+                    <a href="tel:+12679815103">+1 (267) 981-5103</a>
+
+                </p>
+
+                <p>
+
+                    <a href="mailto:capitalnorellab@gmail.com">
+
+                        capitalnorellab@gmail.com
+
+                    </a>
+
+                </p>
 
             </div>
 
         </div>
-
 
         <div class="footer-bottom">
 
