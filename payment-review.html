@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment Review | Nor Ellab Capital</title><link rel="stylesheet" href="investor-dashboard.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="investor-dashboard.js" defer></script></head>
+<body data-page="payment-review"><header><div><h1>Nor Ellab Capital</h1><p>Investor Dashboard</p></div><div><span id="userEmail">Checking account...</span> <button id="logoutButton" type="button">Log Out</button></div></header>
+<nav aria-label="Investor navigation"><a href="dashboard.html">Overview</a>
+<a href="invest-now.html">Invest Now</a>
+<a href="my-investments.html">My Investments</a>
+<a href="payment-review.html">Payment Review</a>
+<a href="crypto-payment-history.html">Crypto Payment History</a>
+<a href="deposit-history.html">Deposit History</a>
+<a href="transactions.html">Transactions</a>
+<a href="support.html">Support</a></nav><main class="container"><div class="heading"><h2>Payment Review</h2><p>Your Nor Ellab Capital account</p></div><section class="section"><p class="muted">Submit a transaction reference after making a payment.</p><form id="paymentReviewForm"><label for="paymentCurrency">Payment Currency</label><select id="paymentCurrency"><option value="USDT">USDT (TRC20)</option><option value="BTC">Bitcoin (BTC)</option></select><label for="paymentAmount">Amount Sent (USD equivalent)</label><input id="paymentAmount" type="number" min=".01" step=".01" required><label for="transactionReference">Transaction Reference / TXID</label><input id="transactionReference" maxlength="200" required><label for="paymentNotes">Additional Notes (Optional)</label><textarea id="paymentNotes" maxlength="1000"></textarea><div class="notice">A submitted reference is not proof that a payment has been received or verified.</div><button id="paymentButton" class="gold" type="submit">Submit for Review</button><p id="formMessage" class="message" aria-live="polite"></p></form></section></main>
+<footer>&copy; 2026 Nor Ellab Capital. All rights reserved.</footer></body></html>

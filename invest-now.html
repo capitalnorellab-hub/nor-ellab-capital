@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invest Now | Nor Ellab Capital</title><link rel="stylesheet" href="investor-dashboard.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="investor-dashboard.js" defer></script></head>
+<body data-page="invest"><header><div><h1>Nor Ellab Capital</h1><p>Investor Dashboard</p></div><div><span id="userEmail">Checking account...</span> <button id="logoutButton" type="button">Log Out</button></div></header>
+<nav aria-label="Investor navigation"><a href="dashboard.html">Overview</a>
+<a href="invest-now.html">Invest Now</a>
+<a href="my-investments.html">My Investments</a>
+<a href="payment-review.html">Payment Review</a>
+<a href="crypto-payment-history.html">Crypto Payment History</a>
+<a href="deposit-history.html">Deposit History</a>
+<a href="transactions.html">Transactions</a>
+<a href="support.html">Support</a></nav><main class="container"><div class="heading"><h2>Invest Now</h2><p>Your Nor Ellab Capital account</p></div><section class="section"><p class="muted">Choose a category, amount and wallet.</p><form id="investmentForm"><label for="investmentCategory">Investment Category</label><select id="investmentCategory" required><option value="">Select a category</option><option>Digital Assets</option><option>Crypto Trading</option><option>Real Estate</option><option>Equities</option><option>Tokenized Assets</option></select><label for="investmentAmount">Investment Amount (USD)</label><input id="investmentAmount" type="number" min="1" step=".01" required placeholder="Enter amount in USD"><label for="walletCurrency">Deposit Wallet Address</label><select id="walletCurrency"><option value="USDT">USDT (TRC20)</option><option value="BTC">Bitcoin (BTC)</option></select><div class="wallet"><p id="walletLabel">USDT (TRC20) wallet address</p><div id="walletAddress" class="address">TFx5QpQQFJuEYJsGcC7v19W8Lafi64iqdf</div><button id="copyWalletButton" type="button">Copy Wallet Address</button></div><div class="notice">This submits an investment request only. It does not send funds or verify payment. Check the address and network carefully before sending cryptocurrency.</div><button id="investButton" class="gold" type="submit">Invest Now</button><p id="formMessage" class="message" aria-live="polite"></p></form></section></main>
+<footer>&copy; 2026 Nor Ellab Capital. All rights reserved.</footer></body></html>
