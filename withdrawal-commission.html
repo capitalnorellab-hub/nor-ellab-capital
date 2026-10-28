@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Withdrawal Commission | Nor Ellab Capital</title>
+
+  <style>
+
+    * {
+
+      box-sizing: border-box;
+
+    }
+
+    body {
+
+      margin: 0;
+
+      padding: 20px;
+
+      background: #07130f;
+
+      color: #ffffff;
+
+      font-family: Arial, sans-serif;
+
+    }
+
+    .container {
+
+      max-width: 520px;
+
+      margin: 45px auto;
+
+      padding: 28px;
+
+      background: #102019;
+
+      border: 1px solid #354c3e;
+
+      border-radius: 14px;
+
+    }
+
+    h1, h2 {
+
+      color: #d4af37;
+
+      text-align: center;
+
+    }
+
+    p {
+
+      color: #c8d2cb;
+
+      line-height: 1.6;
+
+    }
+
+    label {
+
+      display: block;
+
+      margin: 20px 0 8px;
+
+    }
+
+    input {
+
+      width: 100%;
+
+      padding: 13px;
+
+      border: 1px solid #53665a;
+
+      border-radius: 7px;
+
+      background: #07130f;
+
+      color: #ffffff;
+
+      font-size: 16px;
+
+    }
+
+    button {
+
+      width: 100%;
+
+      padding: 14px;
+
+      margin-top: 20px;
+
+      border: none;
+
+      border-radius: 7px;
+
+      background: #d4af37;
+
+      color: #07130f;
+
+      font-size: 16px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+    .summary {
+
+      margin-top: 24px;
+
+      padding: 18px;
+
+      background: #192c21;
+
+      border-radius: 10px;
+
+    }
+
+    .line {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 15px;
+
+      padding: 12px 0;
+
+      border-bottom: 1px solid #354c3e;
+
+    }
+
+    .line:last-child {
+
+      border-bottom: none;
+
+    }
+
+    .value {
+
+      text-align: right;
+
+      overflow-wrap: anywhere;
+
+    }
+
+    .total {
+
+      color: #d4af37;
+
+      font-weight: bold;
+
+    }
+
+    .note {
+
+      margin-top: 20px;
+
+      padding: 14px;
+
+      background: #192c21;
+
+      border-radius: 8px;
+
+      font-size: 14px;
+
+    }
+
+    .hidden {
+
+      display: none;
+
+    }
+
+    a {
+
+      color: #d4af37;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <main class="container">
+
+    <h1>Withdrawal Commission</h1>
+
+    <p>
+
+      Review the commission calculation associated with your investment.
+
+      The commission rate displayed below is 5% of profit, not 5% of
+
+      your original investment.
+
+    </p>
+
+    <label for="profit">Recorded Investment Profit (USD)</label>
+
+    <input
+
+      id="profit"
+
+      type="number"
+
+      min="0"
+
+      step="0.01"
+
+      placeholder="Enter profit for calculation"
+
+      required
+
+    >
+
+    <button id="calculateButton" type="button">
+
+      Calculate Commission
+
+    </button>
+
+    <section id="summary" class="summary hidden">
+
+      <h2>Calculation Summary</h2>
+
+      <div class="line">
+
+        <span>Investment profit</span>
+
+        <strong id="profitValue" class="value">$0.00</strong>
+
+      </div>
+
+      <div class="line">
+
+        <span>Commission rate</span>
+
+        <strong class="value">5%</strong>
+
+      </div>
+
+      <div class="line">
+
+        <span>Commission amount</span>
+
+        <strong id="feeValue" class="value">$0.00</strong>
+
+      </div>
+
+      <div class="line total">
+
+        <span>Profit after commission</span>
+
+        <strong id="netValue" class="value">$0.00</strong>
+
+      </div>
+
+      <p>
+
+        This is an estimate based on the amount entered. Your final
+
+        calculation must be confirmed against your investment record.
+
+      </p>
+
+    </section>
+
+    <div class="note">
+
+      <strong>Important</strong>
+
+      <p>
+
+        This page calculates a fee; it does not collect payment or
+
+        approve a withdrawal. Any commission must be disclosed clearly
+
+        in the investment terms, and the investor should receive a
+
+        written breakdown of all charges.
+
+      </p>
+
+    </div>
+
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <p style="text-align:center;margin-top:24px">
+
+      <a href="dashboard.html">Return to Investor Dashboard</a>
+
+    </p>
+
+  </main>
+
+  <script>
+
+    const profitInput = document.getElementById("profit");
+
+    const calculateButton = document.getElementById("calculateButton");
+
+    const summary = document.getElementById("summary");
+
+    const message = document.getElementById("message");
+
+    function formatUSD(amount) {
+
+      return new Intl.NumberFormat("en-US", {
+
+        style: "currency",
+
+        currency: "USD"
+
+      }).format(amount);
+
+    }
+
+    calculateButton.addEventListener("click", function() {
+
+      const profit = Number(profitInput.value);
+
+      if (
+
+        profitInput.value.trim() === "" ||
+
+        !Number.isFinite(profit) ||
+
+        profit < 0
+
+      ) {
+
+        summary.classList.add("hidden");
+
+        message.textContent = "Enter a valid profit amount.";
+
+        return;
+
+      }
+
+      const commission = Math.round(profit * 0.05 * 100) / 100;
+
+      const remainingProfit =
+
+        Math.round((profit - commission) * 100) / 100;
+
+      document.getElementById("profitValue").textContent =
+
+        formatUSD(profit);
+
+      document.getElementById("feeValue").textContent =
+
+        formatUSD(commission);
+
+      document.getElementById("netValue").textContent =
+
+        formatUSD(remainingProfit);
+
+      summary.classList.remove("hidden");
+
+      message.textContent =
+
+        "Calculation complete. This is not a payment request or withdrawal approval.";
+
+    });
+
+  </script>
+
+</body>
+
+</html>
