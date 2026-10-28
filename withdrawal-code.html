@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Withdrawal Verification | Nor Ellab Capital</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #07130f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      max-width: 480px;
+      margin: 60px auto;
+      padding: 28px;
+      background: #102019;
+      border: 1px solid #354c3e;
+      border-radius: 14px;
+    }
+
+    h1 { color: #d4af37; text-align: center; }
+
+    p { color: #c8d2cb; line-height: 1.6; }
+
+    label {
+      display: block;
+      margin: 20px 0 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      background: #07130f;
+      color: white;
+      border: 1px solid #53665a;
+      border-radius: 7px;
+      font-size: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      background: #d4af37;
+      color: #07130f;
+      border: none;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    button:disabled { opacity: 0.6; }
+
+    #message {
+      margin-top: 18px;
+      overflow-wrap: anywhere;
+    }
+
+    .note {
+      padding: 12px;
+      background: #192c21;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Email Verification</h1>
+
+    <p>
+      Your withdrawal request is pending verification. Contact the
+      administrator privately to request your six-digit verification
+      code. Enter the code here after you receive it.
+    </p>
+
+    <p class="note">
+      The verification code expires after 15 minutes. Never share
+      your account password or sign-in credentials.
+    </p>
+
+    <form id="verifyForm">
+      <label for="code">Six-digit verification code</label>
+      <input
+        id="code"
+        type="text"
+        inputmode="numeric"
+        pattern="[0-9]{6}"
+        maxlength="6"
+        placeholder="000000"
+        autocomplete="one-time-code"
+        required
+      >
+
+      <button id="verifyButton" type="submit">
+        Verify Code
+      </button>
+    </form>
+
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL =
+      "https://grgmsezyxxceheofmsoj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get("request_id");
+    const form = document.getElementById("verifyForm");
+    const button = document.getElementById("verifyButton");
+    const message = document.getElementById("message");
+
+    if (!requestId) {
+      form.hidden = true;
+      message.textContent =
+        "Withdrawal request ID is missing. Return to the withdrawal page and submit your request again.";
+    }
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const code = document.getElementById("code").value.trim();
+
+      if (!/^\d{6}$/.test(code)) {
+        message.textContent = "Enter the six-digit code.";
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = "Verifying...";
+      message.textContent = "";
+
+      try {
+        const { data: sessionData, error: sessionError } =
+          await client.auth.getSession();
+
+        if (sessionError || !sessionData.session) {
+          throw new Error("Please sign in to your investor account again.");
+        }
+
+        const { data, error } = await client.functions.invoke(
+          "withdrawal-workflow",
+          {
+            body: {
+              action: "verify_code",
+              request_id: requestId,
+              stage: 1,
+              code: code
+            }
+          }
+        );
+
+        if (error) {
+          let detail = "";
+          try {
+            if (error.context) {
+              const response = await error.context.json();
+              detail = response.error || response.message || "";
+            }
+          } catch (_) {}
+
+          throw new Error(
+            detail || error.message || "Verification failed."
+          );
+        }
+
+        if (!data || data.error) {
+          throw new Error(data?.error || "Verification failed.");
+        }
+
+        message.textContent = "Code accepted. Continuing...";
+
+        const nextPage = new URL(
+          "withdrawal-authenticator.html",
+          window.location.href
+        );
+
+        nextPage.searchParams.set("request_id", requestId);
+        window.location.assign(nextPage.toString());
+
+      } catch (error) {
+        message.textContent =
+          error.message || "Unable to verify the code.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "Verify Code";
+      }
+    });
+  </script>
+</body>
+</html>
