@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Withdraw Funds | Nor Ellab Capital</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * { box-sizing: border-box; }
@@ -26,11 +27,12 @@
       border-radius: 14px;
     }
 
-    h1 {
+    h1, h2 {
       color: #d4af37;
       text-align: center;
-      font-size: 27px;
     }
+
+    h1 { font-size: 27px; }
 
     p {
       color: #c8d2cb;
@@ -55,17 +57,19 @@
     button {
       width: 100%;
       padding: 14px;
-      margin-top: 24px;
+      margin-top: 20px;
       border: none;
       border-radius: 7px;
       background: #d4af37;
       color: #07130f;
       font-weight: bold;
       font-size: 16px;
+      cursor: pointer;
     }
 
     button:disabled {
-      opacity: 0.6;
+      opacity: .6;
+      cursor: not-allowed;
     }
 
     #message {
@@ -74,9 +78,7 @@
       overflow-wrap: anywhere;
     }
 
-    a {
-      color: #d4af37;
-    }
+    a { color: #d4af37; }
 
     .note {
       margin-top: 20px;
@@ -84,6 +86,19 @@
       background: #192c21;
       border-radius: 7px;
       font-size: 14px;
+    }
+
+    .hidden { display: none; }
+
+    .request-id {
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    #verificationCode {
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 8px;
     }
   </style>
 </head>
@@ -93,8 +108,8 @@
     <h1>Withdraw Funds</h1>
 
     <p>
-      Submit your withdrawal request below. Your request will remain
-      pending while you complete the required verification process.
+      Submit a withdrawal request and complete the required
+      verification process.
     </p>
 
     <form id="withdrawForm">
@@ -133,12 +148,44 @@
       </button>
     </form>
 
-    <div class="note">
-      <strong>Verification required</strong>
+    <section id="verificationSection" class="note hidden">
+      <h2>Verify Withdrawal</h2>
+
       <p>
-        After submitting your request, contact the administrator
-        privately to request your verification code. Never share
-        your account password.
+        Enter the six-digit code supplied privately by the administrator.
+        The code expires after 10 minutes and allows up to five incorrect
+        attempts.
+      </p>
+
+      <p class="request-id">
+        Request ID: <span id="requestIdDisplay"></span>
+      </p>
+
+      <form id="verificationForm">
+        <label for="verificationCode">Six-Digit Verification Code</label>
+        <input
+          id="verificationCode"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]{6}"
+          minlength="6"
+          maxlength="6"
+          placeholder="000000"
+          required
+        >
+
+        <button type="submit" id="verifyButton">
+          Verify Code
+        </button>
+      </form>
+    </section>
+
+    <div class="note">
+      <strong>Security reminder</strong>
+      <p>
+        Never share your account password or verification code with
+        anyone other than the intended verification process.
       </p>
     </div>
 
@@ -148,8 +195,6 @@
       <a href="dashboard.html">Return to Investor Dashboard</a>
     </p>
   </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
     const SUPABASE_URL =
@@ -166,31 +211,75 @@
     const form = document.getElementById("withdrawForm");
     const button = document.getElementById("submitButton");
     const message = document.getElementById("message");
+    const verificationSection =
+      document.getElementById("verificationSection");
+    const verificationForm =
+      document.getElementById("verificationForm");
+    const verifyButton = document.getElementById("verifyButton");
+    const verificationCode =
+      document.getElementById("verificationCode");
+
+    let activeRequestId = null;
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    async function getSignedInUser() {
+      const { data, error } = await supabaseClient.auth.getUser();
+
+      if (error || !data.user) {
+        throw new Error(
+          "Please sign in to your investor account first."
+        );
+      }
+
+      return data.user;
+    }
+
+    function showVerification(requestId) {
+      activeRequestId = requestId;
+      document.getElementById("requestIdDisplay").textContent =
+        requestId;
+
+      verificationSection.classList.remove("hidden");
+      form.classList.add("hidden");
+      verificationCode.value = "";
+
+      showMessage(
+        "Withdrawal request found. Obtain your code from the administrator, then enter it below."
+      );
+    }
+
+    async function loadExistingRequestFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const requestId = params.get("request_id");
+
+      if (!requestId) return;
+
+      try {
+        await getSignedInUser();
+        showVerification(requestId);
+      } catch (error) {
+        showMessage(error.message);
+      }
+    }
 
     form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
       button.disabled = true;
       button.textContent = "Submitting...";
-      message.textContent = "";
+      showMessage("");
 
       try {
-        const { data: sessionData, error: sessionError } =
-          await supabaseClient.auth.getSession();
-
-        if (sessionError || !sessionData.session) {
-          throw new Error(
-            "Please sign in to your investor account before withdrawing."
-          );
-        }
+        await getSignedInUser();
 
         const amount = Number(
           document.getElementById("amount").value
         );
 
-        const method =
-          document.getElementById("method").value;
-
+        const method = document.getElementById("method").value;
         const destination =
           document.getElementById("destination").value.trim();
 
@@ -208,7 +297,7 @@
             {
               body: {
                 action: "create_request",
-                amount: amount,
+                amount,
                 withdrawal_method: method,
                 withdrawal_destination: destination
               }
@@ -239,30 +328,72 @@
           );
         }
 
-        message.textContent =
-          "Request submitted. Opening verification...";
+        const nextPage = new URL(window.location.href);
+        nextPage.searchParams.set("request_id", data.request.id);
+        window.history.replaceState({}, "", nextPage.toString());
 
-        const nextPage = new URL(
-          "withdrawal-code.html",
-          window.location.href
-        );
-
-        nextPage.searchParams.set(
-          "request_id",
-          data.request.id
-        );
-
-        window.location.assign(nextPage.toString());
-
+        showVerification(data.request.id);
       } catch (error) {
-        message.textContent =
-          error.message || "Something went wrong.";
-
+        showMessage(error.message || "Something went wrong.");
       } finally {
         button.disabled = false;
         button.textContent = "Request Withdrawal";
       }
     });
+
+    verificationForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      verifyButton.disabled = true;
+      verifyButton.textContent = "Verifying...";
+      showMessage("");
+
+      try {
+        await getSignedInUser();
+
+        const code = verificationCode.value.trim();
+
+        if (!activeRequestId) {
+          throw new Error("No withdrawal request is selected.");
+        }
+
+        if (!/^[0-9]{6}$/.test(code)) {
+          throw new Error("Enter a valid six-digit code.");
+        }
+
+        const { data, error } = await supabaseClient.rpc(
+          "verify_withdrawal_code",
+          {
+            p_withdrawal_id: activeRequestId,
+            p_code: code
+          }
+        );
+
+        if (error) throw error;
+
+        if (data !== true) {
+          throw new Error(
+            "The code is incorrect, expired, already used, or the request cannot be verified."
+          );
+        }
+
+        verificationCode.value = "";
+
+        showMessage(
+          "Verification successful. Your code has been accepted. " +
+          "This does not mean your withdrawal has been approved or paid."
+        );
+      } catch (error) {
+        showMessage(
+          error.message || "Verification could not be completed."
+        );
+      } finally {
+        verifyButton.disabled = false;
+        verifyButton.textContent = "Verify Code";
+      }
+    });
+
+    loadExistingRequestFromUrl();
   </script>
 </body>
 </html>
