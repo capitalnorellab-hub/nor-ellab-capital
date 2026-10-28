@@ -1,114 +1,51 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        Admin Dashboard | Nor Ellab Capital
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Nor Ellab Capital</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-
-        /* ADMIN DASHBOARD */
-
-        .admin-page {
-            background: #f5f7fa;
-            min-height: 100vh;
-        }
-
-        .admin-container {
-            width: min(1180px, 92%);
-            margin: 0 auto;
-        }
-
-        .admin-welcome {
-            margin-bottom: 30px;
-        }
-
-        .admin-welcome h2 {
-            margin-bottom: 8px;
-            color: #111827;
-        }
-
-        .admin-welcome p {
-            color: #6b7280;
-            margin: 0;
-        }
-
-        /* STAT CARDS */
+        .admin-page { background: #f5f7fa; min-height: 100vh; }
+        .admin-container { width: min(1180px, 92%); margin: 0 auto; }
+        .admin-welcome { margin-bottom: 30px; }
+        .admin-welcome h2 { margin-bottom: 8px; color: #111827; }
+        .admin-welcome p { color: #6b7280; margin: 0; }
 
         .admin-stats {
             display: grid;
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
         .admin-stat {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 24px;
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
         }
 
-        .admin-stat-label {
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .admin-stat-number {
-            color: #111827;
-            font-size: 32px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        /* SECTION CARDS */
+        .admin-stat-label { color: #6b7280; font-size: 14px; margin-bottom: 10px; }
+        .admin-stat-number { color: #111827; font-size: 32px; font-weight: 700; margin: 0; }
 
         .admin-card {
-            background: #ffffff;
+            background: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 26px;
             margin-bottom: 24px;
-            box-shadow:
-                0 4px 15px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
         }
 
-        .admin-card h2 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            color: #111827;
-        }
-
-        .admin-card-description {
-            color: #6b7280;
-            margin-top: 0;
-            margin-bottom: 22px;
-        }
-
-        /* MANAGEMENT */
+        .admin-card h2 { margin-top: 0; margin-bottom: 8px; color: #111827; }
+        .admin-card-description { color: #6b7280; margin-top: 0; margin-bottom: 22px; }
 
         .admin-management {
             display: grid;
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 14px;
         }
 
@@ -119,21 +56,15 @@
             min-height: 54px;
             padding: 14px 18px;
             background: #111827;
-            color: #ffffff;
+            color: #fff;
+            text-align: center;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
-            transition:
-                transform 0.2s ease,
-                background 0.2s ease;
+            transition: transform 0.2s ease, background 0.2s ease;
         }
 
-        .admin-management a:hover {
-            background: #1f2937;
-            transform: translateY(-2px);
-        }
-
-        /* PENDING ACTIONS */
+        .admin-management a:hover { background: #1f2937; transform: translateY(-2px); }
 
         .pending-action {
             display: flex;
@@ -144,65 +75,29 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-        .pending-action:last-child {
-            border-bottom: none;
-        }
-
-        .pending-action-title {
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 5px;
-        }
-
-        .pending-action-description {
-            color: #6b7280;
-            margin: 0;
-            line-height: 1.5;
-        }
+        .pending-action:last-child { border-bottom: none; }
+        .pending-action-title { font-weight: 700; color: #111827; margin-bottom: 5px; }
+        .pending-action-description { color: #6b7280; margin: 0; line-height: 1.5; }
 
         .pending-action-button {
             display: inline-block;
             white-space: nowrap;
             padding: 10px 16px;
             background: #111827;
-            color: #ffffff;
+            color: #fff;
             text-decoration: none;
             border-radius: 7px;
             font-size: 14px;
             font-weight: 600;
         }
 
-        .pending-action-button:hover {
-            background: #1f2937;
-        }
+        .pending-action-button:hover { background: #1f2937; }
+        .no-pending { padding: 10px 0; color: #6b7280; }
 
-        .no-pending {
-            padding: 10px 0;
-            color: #6b7280;
-        }
-
-        /* TRANSACTIONS */
-
-        .admin-transaction {
-            padding: 18px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .admin-transaction:last-child {
-            border-bottom: none;
-        }
-
-        .admin-transaction-title {
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .admin-transaction p {
-            color: #6b7280;
-            margin: 5px 0;
-            line-height: 1.5;
-        }
+        .admin-transaction { padding: 18px 0; border-bottom: 1px solid #e5e7eb; }
+        .admin-transaction:last-child { border-bottom: none; }
+        .admin-transaction-title { font-weight: 700; color: #111827; margin-bottom: 8px; }
+        .admin-transaction p { color: #6b7280; margin: 5px 0; line-height: 1.5; }
 
         .status-badge {
             display: inline-block;
@@ -214,76 +109,17 @@
             color: #374151;
         }
 
-        /* ACTIVITY TIMELINE */
-
-        .activity-timeline {
-            position: relative;
-            margin-top: 10px;
-        }
-
-        .activity-item {
-            position: relative;
-            display: flex;
-            gap: 16px;
-            padding: 0 0 24px 0;
-        }
-
-        .activity-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .activity-marker-area {
-            position: relative;
-            width: 18px;
-            min-width: 18px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .activity-marker {
-            width: 12px;
-            height: 12px;
-            margin-top: 5px;
-            border-radius: 50%;
-            background: #111827;
-            position: relative;
-            z-index: 2;
-        }
-
-        .activity-line {
-            position: absolute;
-            top: 17px;
-            bottom: -8px;
-            width: 1px;
-            background: #e5e7eb;
-        }
-
-        .activity-item:last-child .activity-line {
-            display: none;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            color: #111827;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .activity-description {
-            color: #6b7280;
-            margin: 0 0 5px 0;
-            line-height: 1.5;
-        }
-
-        .activity-date {
-            color: #9ca3af;
-            font-size: 13px;
-        }
-
-        /* ERROR MESSAGE */
+        .activity-timeline { position: relative; margin-top: 10px; }
+        .activity-item { position: relative; display: flex; gap: 16px; padding: 0 0 24px; }
+        .activity-item:last-child { padding-bottom: 0; }
+        .activity-marker-area { position: relative; width: 18px; min-width: 18px; display: flex; justify-content: center; }
+        .activity-marker { width: 12px; height: 12px; margin-top: 5px; border-radius: 50%; background: #111827; position: relative; z-index: 2; }
+        .activity-line { position: absolute; top: 17px; bottom: -8px; width: 1px; background: #e5e7eb; }
+        .activity-item:last-child .activity-line { display: none; }
+        .activity-content { flex: 1; }
+        .activity-title { color: #111827; font-weight: 700; margin-bottom: 5px; }
+        .activity-description { color: #6b7280; margin: 0 0 5px; line-height: 1.5; }
+        .activity-date { color: #9ca3af; font-size: 13px; }
 
         .dashboard-error {
             display: none;
@@ -295,1663 +131,552 @@
             margin-bottom: 20px;
         }
 
-        /* MOBILE */
-
         @media (max-width: 800px) {
-
-            .admin-stats {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-            .admin-management {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
+            .admin-stats, .admin-management { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 560px) {
-
-            .admin-container {
-                width: 94%;
-            }
-
-            .admin-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-management {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-card {
-                padding: 20px;
-            }
-
-            .admin-stat {
-                padding: 20px;
-            }
-
-            .admin-stat-number {
-                font-size: 28px;
-            }
-
-            .pending-action {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .pending-action-button {
-                width: 100%;
-                text-align: center;
-            }
-
-            .activity-item {
-                gap: 12px;
-            }
-
+            .admin-container { width: 94%; }
+            .admin-stats, .admin-management { grid-template-columns: 1fr; }
+            .admin-card { padding: 20px; }
+            .admin-stat { padding: 20px; }
+            .admin-stat-number { font-size: 28px; }
+            .pending-action { align-items: flex-start; flex-direction: column; }
+            .pending-action-button { width: 100%; box-sizing: border-box; text-align: center; }
+            .activity-item { gap: 12px; }
         }
-
     </style>
-
 </head>
-
 
 <body class="admin-page">
 
-
 <header class="site-header">
-
-    <div class="logo">
-        Nor Ellab Capital
-    </div>
-
+    <div class="logo">Nor Ellab Capital</div>
     <nav>
-
-        <a href="dashboard.html">
-            Investor Dashboard
-        </a>
-
-        <a href="admin-deposits.html">
-            Deposits
-        </a>
-
-        <a href="admin-investments.html">
-            Investments
-        </a>
-
-        <a href="admin-transactions.html">
-            Transactions
-        </a>
-
-        <a href="admin-crypto-payments.html">
-            Crypto Payments
-        </a>
-
-        <a href="admin-support.html">
-            Support
-        </a>
-
+        <a href="dashboard.html">Investor Dashboard</a>
+        <a href="admin-deposits.html">Deposits</a>
+        <a href="admin-investments.html">Investments</a>
+        <a href="admin-transactions.html">Transactions</a>
+        <a href="admin-crypto-payments.html">Crypto Payments</a>
+        <a href="admin-withdrawals.html">Withdrawal Requests</a>
+        <a href="admin-support.html">Support</a>
     </nav>
-
 </header>
 
-
 <section class="dashboard-hero">
-
     <div class="admin-container">
-
-        <h1>
-            Admin Dashboard
-        </h1>
-
-        <p>
-            Manage Nor Ellab Capital
-            from one central workspace.
-        </p>
-
+        <h1>Admin Dashboard</h1>
+        <p>Manage Nor Ellab Capital from one central workspace.</p>
     </div>
-
 </section>
 
-
 <section class="dashboard-section">
-
     <div class="admin-container">
 
-
-        <!-- DASHBOARD ERROR -->
-
-        <div
-            id="dashboard-error"
-            class="dashboard-error"
-        >
+        <div id="dashboard-error" class="dashboard-error">
             Some dashboard information could not be loaded.
         </div>
 
-
-        <!-- WELCOME -->
-
         <div class="admin-welcome">
-
-            <h2>
-                Overview
-            </h2>
-
-            <p>
-                Here's what's happening across
-                your investment platform.
-            </p>
-
+            <h2>Overview</h2>
+            <p>Here's what's happening across your investment platform.</p>
         </div>
-
-
-        <!-- STATISTICS -->
 
         <div class="admin-stats">
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Total Investors
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="total-investors"
-                >
-                    0
-                </p>
-
+                <div class="admin-stat-label">Total Investors</div>
+                <p class="admin-stat-number" id="total-investors">0</p>
             </div>
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Total Investments
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="total-investments"
-                >
-                    0
-                </p>
-
+                <div class="admin-stat-label">Total Investments</div>
+                <p class="admin-stat-number" id="total-investments">0</p>
             </div>
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Total Invested
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="total-invested"
-                >
-                    $0.00
-                </p>
-
+                <div class="admin-stat-label">Total Invested</div>
+                <p class="admin-stat-number" id="total-invested">$0.00</p>
             </div>
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Pending Deposits
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="pending-deposits"
-                >
-                    0
-                </p>
-
+                <div class="admin-stat-label">Pending Deposits</div>
+                <p class="admin-stat-number" id="pending-deposits">0</p>
             </div>
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Crypto Payments
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="crypto-payments"
-                >
-                    0
-                </p>
-
+                <div class="admin-stat-label">Crypto Payments</div>
+                <p class="admin-stat-number" id="crypto-payments">0</p>
             </div>
-
-
             <div class="admin-stat">
-
-                <div class="admin-stat-label">
-                    Open Support
-                </div>
-
-                <p
-                    class="admin-stat-number"
-                    id="open-support"
-                >
-                    0
-                </p>
-
+                <div class="admin-stat-label">Open Support</div>
+                <p class="admin-stat-number" id="open-support">0</p>
             </div>
-
+            <div class="admin-stat">
+                <div class="admin-stat-label">Pending Withdrawals</div>
+                <p class="admin-stat-number" id="pending-withdrawals">0</p>
+            </div>
         </div>
 
-
-        <!-- MANAGEMENT -->
-
         <div class="admin-card">
-
-            <h2>
-                Management
-            </h2>
-
+            <h2>Management</h2>
             <p class="admin-card-description">
-                Quickly access the main administration
-                areas of Nor Ellab Capital.
+                Quickly access the main administration areas of Nor Ellab Capital.
             </p>
-
             <div class="admin-management">
-
-                <a href="admin-deposits.html">
-                    Manage Deposits
-                </a>
-
-                <a href="admin-investments.html">
-                    Manage Investments
-                </a>
-
-                <a href="admin-transactions.html">
-                    Manage Transactions
-                </a>
-
-                <a href="admin-crypto-payments.html">
-                    Crypto Payments
-                </a>
-
-                <a href="admin-support.html">
-                    Investor Support
-                </a>
-
+                <a href="admin-deposits.html">Manage Deposits</a>
+                <a href="admin-investments.html">Manage Investments</a>
+                <a href="admin-transactions.html">Manage Transactions</a>
+                <a href="admin-crypto-payments.html">Crypto Payments</a>
+                <a href="admin-withdrawals.html">Withdrawal Requests</a>
+                <a href="admin-support.html">Investor Support</a>
             </div>
-
         </div>
 
-
-        <!-- PENDING ACTIONS -->
-
         <div class="admin-card">
-
-            <h2>
-                Pending Actions
-            </h2>
-
-            <p class="admin-card-description">
-                Items that may require your attention.
-            </p>
-
+            <h2>Pending Actions</h2>
+            <p class="admin-card-description">Items that may require your attention.</p>
             <div id="pending-actions">
-
-                <p class="no-pending">
-                    Checking for pending actions...
-                </p>
-
+                <p class="no-pending">Checking for pending actions...</p>
             </div>
-
         </div>
 
-
-        <!-- RECENT TRANSACTIONS -->
-
         <div class="admin-card">
-
-            <h2>
-                Recent Transactions
-            </h2>
-
-            <p class="admin-card-description">
-                The latest activity across the platform.
-            </p>
-
+            <h2>Recent Transactions</h2>
+            <p class="admin-card-description">The latest activity across the platform.</p>
             <div id="recent-transactions">
-
-                <p class="no-pending">
-                    Loading transactions...
-                </p>
-
+                <p class="no-pending">Loading transactions...</p>
             </div>
-
         </div>
-
-
-        <!-- ACTIVITY TIMELINE -->
 
         <div class="admin-card">
-
-            <h2>
-                Activity Timeline
-            </h2>
-
-            <p class="admin-card-description">
-                Recent activity across your investment platform.
-            </p>
-
+            <h2>Activity Timeline</h2>
+            <p class="admin-card-description">Recent activity across your investment platform.</p>
             <div id="activity-timeline">
-
-                <p class="no-pending">
-                    Loading activity...
-                </p>
-
+                <p class="no-pending">Loading activity...</p>
             </div>
-
         </div>
-
 
     </div>
-
 </section>
 
-
 <footer>
-
-    <p>
-        © 2026 Nor Ellab Capital.
-        All rights reserved.
-    </p>
-
+    <p>© 2026 Nor Ellab Capital. All rights reserved.</p>
 </footer>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
+const supabaseUrl = "https://grgmsezyxxceheofmsoj.supabase.co";
+const supabaseKey = "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+const totalInvestors = document.getElementById("total-investors");
+const totalInvestments = document.getElementById("total-investments");
+const totalInvested = document.getElementById("total-invested");
+const pendingDeposits = document.getElementById("pending-deposits");
+const cryptoPayments = document.getElementById("crypto-payments");
+const openSupport = document.getElementById("open-support");
+const pendingWithdrawals = document.getElementById("pending-withdrawals");
+const recentTransactions = document.getElementById("recent-transactions");
+const pendingActions = document.getElementById("pending-actions");
+const activityTimeline = document.getElementById("activity-timeline");
+const dashboardError = document.getElementById("dashboard-error");
 
-const supabaseUrl =
-    "https://grgmsezyxxceheofmsoj.supabase.co";
-
-
-const supabaseKey =
-    "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
-
-
-const supabaseClient =
-    supabase.createClient(
-        supabaseUrl,
-        supabaseKey
-    );
-
-
-/* ELEMENTS */
-
-const totalInvestors =
-    document.getElementById(
-        "total-investors"
-    );
-
-
-const totalInvestments =
-    document.getElementById(
-        "total-investments"
-    );
-
-
-const totalInvested =
-    document.getElementById(
-        "total-invested"
-    );
-
-
-const pendingDeposits =
-    document.getElementById(
-        "pending-deposits"
-    );
-
-
-const cryptoPayments =
-    document.getElementById(
-        "crypto-payments"
-    );
-
-
-const openSupport =
-    document.getElementById(
-        "open-support"
-    );
-
-
-const recentTransactions =
-    document.getElementById(
-        "recent-transactions"
-    );
-
-
-const pendingActions =
-    document.getElementById(
-        "pending-actions"
-    );
-
-
-const activityTimeline =
-    document.getElementById(
-        "activity-timeline"
-    );
-
-
-const dashboardError =
-    document.getElementById(
-        "dashboard-error"
-    );
-
-
-/* CHECK ADMIN */
+function showDashboardError() {
+    dashboardError.style.display = "block";
+}
 
 async function checkAdmin() {
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
 
-    const {
-        data: {
-            user
-        },
-        error: userError
-    } =
-        await supabaseClient.auth.getUser();
-
-
-    if (
-        userError ||
-        !user
-    ) {
-
-        window.location.href =
-            "login.html";
-
+    if (userError || !user) {
+        window.location.href = "login.html";
         return false;
     }
 
+    const { data: isAdmin, error: adminError } =
+        await supabaseClient.rpc("is_admin");
 
-    const {
-        data: isAdmin,
-        error: adminError
-    } =
-        await supabaseClient
-            .rpc("is_admin");
-
-
-    if (
-        adminError ||
-        isAdmin !== true
-    ) {
-
+    if (adminError || isAdmin !== true) {
         document.body.innerHTML = `
-
-            <section
-                style="
-                    padding:60px 20px;
-                    text-align:center;
-                "
-            >
-
-                <h1>
-                    Access Denied
-                </h1>
-
-                <p>
-                    You do not have permission
-                    to access the administration area.
-                </p>
-
-            </section>
-
-        `;
-
+            <section style="padding:60px 20px;text-align:center">
+                <h1>Access Denied</h1>
+                <p>You do not have permission to access the administration area.</p>
+            </section>`;
         return false;
     }
-
 
     return true;
 }
 
+async function getRows(table, columns, filterColumn = null, filterValue = null) {
+    let query = supabaseClient.from(table).select(columns);
 
-/* SAFE QUERY */
-
-async function getRows(
-    table,
-    columns,
-    filterColumn = null,
-    filterValue = null
-) {
-
-    let query =
-        supabaseClient
-            .from(table)
-            .select(columns);
-
-
-    if (
-        filterColumn !== null
-    ) {
-
-        query =
-            query.eq(
-                filterColumn,
-                filterValue
-            );
-
+    if (filterColumn !== null) {
+        query = query.eq(filterColumn, filterValue);
     }
 
-
-    const {
-        data,
-        error
-    } =
-        await query;
-
+    const { data, error } = await query;
 
     if (error) {
-
-        console.log(
-            table +
-            " error:",
-            error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
+        console.error(table + " error:", error.message);
+        showDashboardError();
         return [];
-
     }
-
 
     return data || [];
 }
 
+function money(value) {
+    return "$" + Number(value || 0).toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
 
-/* LOAD DASHBOARD */
+function addPendingAction(title, description, href, buttonText) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "pending-action";
+
+    const content = document.createElement("div");
+    const heading = document.createElement("div");
+    heading.className = "pending-action-title";
+    heading.textContent = title;
+
+    const detail = document.createElement("p");
+    detail.className = "pending-action-description";
+    detail.textContent = description;
+
+    content.append(heading, detail);
+
+    const link = document.createElement("a");
+    link.href = href;
+    link.className = "pending-action-button";
+    link.textContent = buttonText;
+
+    wrapper.append(content, link);
+    pendingActions.appendChild(wrapper);
+}
+
+function addTransaction(transaction) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "admin-transaction";
+
+    const title = document.createElement("div");
+    title.className = "admin-transaction-title";
+    title.textContent = transaction.transaction_type || "Transaction";
+
+    wrapper.appendChild(title);
+
+    const fields = [
+        ["Amount", money(transaction.amount)],
+        ["Asset", transaction.asset || "—"],
+        ["Status", transaction.status || "Pending"],
+        ["Reference", transaction.reference || "—"],
+        ["Date", transaction.created_at
+            ? new Date(transaction.created_at).toLocaleString()
+            : "—"]
+    ];
+
+    fields.forEach(([label, value]) => {
+        const p = document.createElement("p");
+        const strong = document.createElement("strong");
+        strong.textContent = label + ": ";
+        p.append(strong, document.createTextNode(value));
+        wrapper.appendChild(p);
+    });
+
+    recentTransactions.appendChild(wrapper);
+}
 
 async function loadDashboard() {
+    const investors = await getRows("profiles", "user_id");
+    totalInvestors.textContent = investors.length;
 
+    const investments = await getRows("investments", "id, amount");
+    totalInvestments.textContent = investments.length;
 
-    /* INVESTORS */
+    const investmentTotal = investments.reduce(
+        (total, item) => total + Number(item.amount || 0), 0
+    );
+    totalInvested.textContent = money(investmentTotal);
 
-    const investors =
-        await getRows(
-            "profiles",
-            "user_id"
-        );
+    const deposits = await getRows("deposits", "id", "status", "Pending");
+    pendingDeposits.textContent = deposits.length;
 
+    const crypto = await getRows("crypto_payment_requests", "id");
+    cryptoPayments.textContent = crypto.length;
 
-    totalInvestors.textContent =
-        investors.length;
+    const support = await getRows("support_conversations", "id", "status", "Open");
+    openSupport.textContent = support.length;
 
-
-    /* INVESTMENTS */
-
-    const investments =
-        await getRows(
-            "investments",
-            "id, amount"
-        );
-
-
-    totalInvestments.textContent =
-        investments.length;
-
-
-    /* TOTAL INVESTED */
-
-    const totalInvestmentValue =
-        investments.reduce(
-            function(
-                total,
-                investment
-            ) {
-
-                return total +
-                    Number(
-                        investment.amount || 0
-                    );
-
-            },
-            0
-        );
-
-
-    totalInvested.textContent =
-        "$" +
-        totalInvestmentValue.toLocaleString(
-            undefined,
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
-        );
-
-
-    /* PENDING DEPOSITS */
-
-    const deposits =
-        await getRows(
-            "deposits",
-            "id",
-            "status",
-            "Pending"
-        );
-
-
-    pendingDeposits.textContent =
-        deposits.length;
-
-
-    /* CRYPTO PAYMENTS */
-
-    const crypto =
-        await getRows(
-            "crypto_payment_requests",
-            "id"
-        );
-
-
-    cryptoPayments.textContent =
-        crypto.length;
-
-
-    /* OPEN SUPPORT */
-
-    const support =
-        await getRows(
-            "support_conversations",
-            "id",
-            "status",
-            "Open"
-        );
-
-
-    openSupport.textContent =
-        support.length;
-
+    /* WITHDRAWAL COUNT */
+    const withdrawals = await getRows(
+        "withdrawal_requests",
+        "id",
+        "status",
+        "Pending"
+    );
+    pendingWithdrawals.textContent = withdrawals.length;
 
     /* RECENT TRANSACTIONS */
+    recentTransactions.replaceChildren();
 
-    const {
-        data: transactions,
-        error: transactionError
-    } =
+    const { data: transactions, error: transactionError } =
         await supabaseClient
             .from("transactions")
             .select("*")
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
+            .order("created_at", { ascending: false })
             .limit(5);
 
-
-    if (
-        transactionError
-    ) {
-
-        console.log(
-            "transactions error:",
-            transactionError.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-
-        recentTransactions.innerHTML = `
-
-            <p class="no-pending">
-                Unable to load transactions.
-            </p>
-
-        `;
-
+    if (transactionError) {
+        console.error("transactions error:", transactionError.message);
+        showDashboardError();
+        const p = document.createElement("p");
+        p.className = "no-pending";
+        p.textContent = "Unable to load transactions.";
+        recentTransactions.appendChild(p);
+    } else if (!transactions || transactions.length === 0) {
+        const p = document.createElement("p");
+        p.className = "no-pending";
+        p.textContent = "No transactions yet.";
+        recentTransactions.appendChild(p);
     } else {
-
-        const transactionList =
-            transactions || [];
-
-
-        if (
-            transactionList.length === 0
-        ) {
-
-            recentTransactions.innerHTML = `
-
-                <p class="no-pending">
-                    No transactions yet.
-                </p>
-
-            `;
-
-        } else {
-
-            let transactionHTML =
-                "";
-
-
-            transactionList.forEach(
-                function(transaction) {
-
-
-                    const date =
-                        transaction.created_at
-                        ? new Date(
-                            transaction.created_at
-                        ).toLocaleString()
-                        : "—";
-
-
-                    transactionHTML += `
-
-                        <div
-                            class="admin-transaction"
-                        >
-
-                            <div
-                                class="admin-transaction-title"
-                            >
-
-                                ${
-                                    transaction.transaction_type
-                                    ||
-                                    "Transaction"
-                                }
-
-                            </div>
-
-
-                            <p>
-
-                                <strong>
-                                    Amount:
-                                </strong>
-
-                                $${Number(
-                                    transaction.amount || 0
-                                ).toLocaleString(
-                                    undefined,
-                                    {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    }
-                                )}
-
-                            </p>
-
-
-                            <p>
-
-                                <strong>
-                                    Asset:
-                                </strong>
-
-                                ${
-                                    transaction.asset
-                                    ||
-                                    "—"
-                                }
-
-                            </p>
-
-
-                            <p>
-
-                                <strong>
-                                    Status:
-                                </strong>
-
-                                <span
-                                    class="status-badge"
-                                >
-
-                                    ${
-                                        transaction.status
-                                        ||
-                                        "Pending"
-                                    }
-
-                                </span>
-
-                            </p>
-
-
-                            <p>
-
-                                <strong>
-                                    Reference:
-                                </strong>
-
-                                ${
-                                    transaction.reference
-                                    ||
-                                    "—"
-                                }
-
-                            </p>
-
-
-                            <p>
-
-                                <strong>
-                                    Date:
-                                </strong>
-
-                                ${date}
-
-                            </p>
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-
-            recentTransactions.innerHTML =
-                transactionHTML;
-
-        }
-
+        transactions.forEach(addTransaction);
     }
-
 
     /* PENDING ACTIONS */
-
-    const pendingDepositData =
-        await getRows(
-            "deposits",
-            "id",
-            "status",
-            "Pending"
-        );
-
-
-    const pendingCryptoData =
-        await getRows(
-            "crypto_payment_requests",
-            "id",
-            "status",
-            "Pending"
-        );
-
-
-    const openSupportData =
-        await getRows(
-            "support_conversations",
-            "id",
-            "status",
-            "Open"
-        );
-
-
-    let pendingHTML =
-        "";
-
-
-    /* PENDING DEPOSITS */
-
-    if (
-        pendingDepositData.length > 0
-    ) {
-
-        pendingHTML += `
-
-            <div class="pending-action">
-
-                <div>
-
-                    <div
-                        class="pending-action-title"
-                    >
-
-                        ${pendingDepositData.length}
-
-                        Pending Deposit
-                        ${
-                            pendingDepositData.length === 1
-                            ? ""
-                            : "s"
-                        }
-
-                    </div>
-
-
-                    <p
-                        class="pending-action-description"
-                    >
-
-                        Deposit requests are waiting
-                        for review.
-
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="admin-deposits.html"
-                    class="pending-action-button"
-                >
-                    View Deposits
-                </a>
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* PENDING CRYPTO PAYMENTS */
-
-    if (
-        pendingCryptoData.length > 0
-    ) {
-
-        pendingHTML += `
-
-            <div class="pending-action">
-
-                <div>
-
-                    <div
-                        class="pending-action-title"
-                    >
-
-                        ${pendingCryptoData.length}
-
-                        Pending Crypto Payment
-                        ${
-                            pendingCryptoData.length === 1
-                            ? ""
-                            : "s"
-                        }
-
-                    </div>
-
-
-                    <p
-                        class="pending-action-description"
-                    >
-
-                        Cryptocurrency payment requests
-                        are waiting for review.
-
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="admin-crypto-payments.html"
-                    class="pending-action-button"
-                >
-                    View Crypto Payments
-                </a>
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* OPEN SUPPORT */
-
-    if (
-        openSupportData.length > 0
-    ) {
-
-        pendingHTML += `
-
-            <div class="pending-action">
-
-                <div>
-
-                    <div
-                        class="pending-action-title"
-                    >
-
-                        ${openSupportData.length}
-
-                        Open Support Conversation
-                        ${
-                            openSupportData.length === 1
-                            ? ""
-                            : "s"
-                        }
-
-                    </div>
-
-
-                    <p
-                        class="pending-action-description"
-                    >
-
-                        Investors are waiting for
-                        support.
-
-                    </p>
-
-                </div>
-
-
-                <a
-                    href="admin-support.html"
-                    class="pending-action-button"
-                >
-                    View Support
-                </a>
-
-            </div>
-
-        `;
-
-    }
-
-
-    /* NO PENDING ACTIONS */
-
-    if (
-        pendingHTML === ""
-    ) {
-
-        pendingHTML = `
-
-            <p class="no-pending">
-
-                No pending actions right now.
-
-            </p>
-
-        `;
-
-    }
-
-
-    pendingActions.innerHTML =
-        pendingHTML;
-
-
-    /* ACTIVITY TIMELINE */
-
-    const activityItems = [];
-
-
-    /* INVESTMENT ACTIVITY */
-
-    const recentInvestments =
-        await supabaseClient
-            .from("investments")
-            .select(
-                "id, investment_name, investment_type, amount, status, created_at"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(5);
-
-
-    if (
-        recentInvestments.error
-    ) {
-
-        console.log(
-            "investments activity error:",
-            recentInvestments.error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-    } else {
-
-        (
-            recentInvestments.data || []
-        ).forEach(
-            function(investment) {
-
-                activityItems.push({
-
-                    title:
-                        "Investment Created",
-
-                    description:
-                        (
-                            investment.investment_name
-                            ||
-                            investment.investment_type
-                            ||
-                            "Investment"
-                        ) +
-                        " — $" +
-                        Number(
-                            investment.amount || 0
-                        ).toLocaleString(
-                            undefined,
-                            {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }
-                        ) +
-                        " (" +
-                        (
-                            investment.status
-                            ||
-                            "Pending"
-                        ) +
-                        ")",
-
-                    date:
-                        investment.created_at
-
-                });
-
-            }
-        );
-
-    }
-
-
-    /* DEPOSIT ACTIVITY */
-
-    const recentDeposits =
-        await supabaseClient
-            .from("deposits")
-            .select(
-                "id, amount, asset, network, status, created_at"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(5);
-
-
-    if (
-        recentDeposits.error
-    ) {
-
-        console.log(
-            "deposits activity error:",
-            recentDeposits.error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-    } else {
-
-        (
-            recentDeposits.data || []
-        ).forEach(
-            function(deposit) {
-
-                activityItems.push({
-
-                    title:
-                        "Deposit Request",
-
-                    description:
-                        (
-                            deposit.asset
-                            ||
-                            "Asset"
-                        ) +
-                        " deposit" +
-                        (
-                            deposit.network
-                            ? " (" +
-                                deposit.network +
-                                ")"
-                            : ""
-                        ) +
-                        " — $" +
-                        Number(
-                            deposit.amount || 0
-                        ).toLocaleString(
-                            undefined,
-                            {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }
-                        ) +
-                        " (" +
-                        (
-                            deposit.status
-                            ||
-                            "Pending"
-                        ) +
-                        ")",
-
-                    date:
-                        deposit.created_at
-
-                });
-
-            }
-        );
-
-    }
-
-
-    /* CRYPTO PAYMENT ACTIVITY */
-
-    const recentCrypto =
-        await supabaseClient
-            .from("crypto_payment_requests")
-            .select(
-                "id, asset, amount, total, payment_method, status, created_at"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(5);
-
-
-    if (
-        recentCrypto.error
-    ) {
-
-        console.log(
-            "crypto activity error:",
-            recentCrypto.error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-    } else {
-
-        (
-            recentCrypto.data || []
-        ).forEach(
-            function(payment) {
-
-                activityItems.push({
-
-                    title:
-                        "Crypto Payment Request",
-
-                    description:
-                        (
-                            payment.asset
-                            ||
-                            "Crypto"
-                        ) +
-                        " — " +
-                        (
-                            payment.payment_method
-                            ||
-                            "Payment"
-                        ) +
-                        " — $" +
-                        Number(
-                            payment.total || 0
-                        ).toLocaleString(
-                            undefined,
-                            {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }
-                        ) +
-                        " (" +
-                        (
-                            payment.status
-                            ||
-                            "Pending"
-                        ) +
-                        ")",
-
-                    date:
-                        payment.created_at
-
-                });
-
-            }
-        );
-
-    }
-
-
-    /* TRANSACTION ACTIVITY */
-
-    const recentTransactionActivity =
-        await supabaseClient
-            .from("transactions")
-            .select(
-                "id, transaction_type, amount, asset, status, reference, created_at"
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(5);
-
-
-    if (
-        recentTransactionActivity.error
-    ) {
-
-        console.log(
-            "transaction activity error:",
-            recentTransactionActivity.error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-    } else {
-
-        (
-            recentTransactionActivity.data || []
-        ).forEach(
-            function(transaction) {
-
-                activityItems.push({
-
-                    title:
-                        transaction.transaction_type
-                        ||
-                        "Transaction",
-
-                    description:
-                        (
-                            transaction.asset
-                            ? transaction.asset +
-                                " — "
-                            : ""
-                        ) +
-                        "$" +
-                        Number(
-                            transaction.amount || 0
-                        ).toLocaleString(
-                            undefined,
-                            {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }
-                        ) +
-                        " (" +
-                        (
-                            transaction.status
-                            ||
-                            "Pending"
-                        ) +
-                        ")" +
-                        (
-                            transaction.reference
-                            ? " — " +
-                                transaction.reference
-                            : ""
-                        ),
-
-                    date:
-                        transaction.created_at
-
-                });
-
-            }
-        );
-
-    }
-
-
-    /* SUPPORT ACTIVITY */
-
-    const recentSupport =
-        await supabaseClient
-            .from("support_conversations")
-            .select(
-                "id, subject, status, created_at, updated_at"
-            )
-            .order(
-                "updated_at",
-                {
-                    ascending: false
-                }
-            )
-            .limit(5);
-
-
-    if (
-        recentSupport.error
-    ) {
-
-        console.log(
-            "support activity error:",
-            recentSupport.error.message
-        );
-
-        dashboardError.style.display =
-            "block";
-
-    } else {
-
-        (
-            recentSupport.data || []
-        ).forEach(
-            function(conversation) {
-
-                activityItems.push({
-
-                    title:
-                        "Support Conversation",
-
-                    description:
-                        (
-                            conversation.subject
-                            ||
-                            "General Support"
-                        ) +
-                        " (" +
-                        (
-                            conversation.status
-                            ||
-                            "Open"
-                        ) +
-                        ")",
-
-                    date:
-                        conversation.updated_at
-                        ||
-                        conversation.created_at
-
-                });
-
-            }
-        );
-
-    }
-
-
-    /* SORT ACTIVITY */
-
-    activityItems.sort(
-        function(a, b) {
-
-            return new Date(
-                b.date || 0
-            ) -
-            new Date(
-                a.date || 0
-            );
-
-        }
+    pendingActions.replaceChildren();
+
+    const pendingDepositData = await getRows("deposits", "id", "status", "Pending");
+    const pendingCryptoData = await getRows(
+        "crypto_payment_requests", "id", "status", "Pending"
+    );
+    const openSupportData = await getRows(
+        "support_conversations", "id", "status", "Open"
+    );
+    const pendingWithdrawalData = await getRows(
+        "withdrawal_requests", "id", "status", "Pending"
     );
 
-
-    /* LIMIT TIMELINE */
-
-    const timelineItems =
-        activityItems.slice(
-            0,
-            10
+    if (pendingDepositData.length) {
+        addPendingAction(
+            pendingDepositData.length + " Pending Deposit" +
+                (pendingDepositData.length === 1 ? "" : "s"),
+            "Deposit requests are waiting for review.",
+            "admin-deposits.html",
+            "View Deposits"
         );
+    }
 
+    if (pendingCryptoData.length) {
+        addPendingAction(
+            pendingCryptoData.length + " Pending Crypto Payment" +
+                (pendingCryptoData.length === 1 ? "" : "s"),
+            "Cryptocurrency payment requests are waiting for review.",
+            "admin-crypto-payments.html",
+            "View Crypto Payments"
+        );
+    }
 
-    /* EMPTY TIMELINE */
+    if (openSupportData.length) {
+        addPendingAction(
+            openSupportData.length + " Open Support Conversation" +
+                (openSupportData.length === 1 ? "" : "s"),
+            "Investors may be waiting for support.",
+            "admin-support.html",
+            "View Support"
+        );
+    }
+
+    if (pendingWithdrawalData.length) {
+        addPendingAction(
+            pendingWithdrawalData.length + " Pending Withdrawal" +
+                (pendingWithdrawalData.length === 1 ? "" : "s"),
+            "Withdrawal requests need review.",
+            "admin-withdrawals.html",
+            "Review Withdrawals"
+        );
+    }
 
     if (
-        timelineItems.length === 0
+        !pendingDepositData.length &&
+        !pendingCryptoData.length &&
+        !openSupportData.length &&
+        !pendingWithdrawalData.length
     ) {
-
-        activityTimeline.innerHTML = `
-
-            <p class="no-pending">
-                No recent activity yet.
-            </p>
-
-        `;
-
-    } else {
-
-        let timelineHTML =
-            `
-            <div class="activity-timeline">
-            `;
-
-
-        timelineItems.forEach(
-            function(activity) {
-
-                const activityDate =
-                    activity.date
-                    ? new Date(
-                        activity.date
-                    ).toLocaleString()
-                    : "—";
-
-
-                timelineHTML += `
-
-                    <div
-                        class="activity-item"
-                    >
-
-                        <div
-                            class="activity-marker-area"
-                        >
-
-                            <div
-                                class="activity-marker"
-                            ></div>
-
-                            <div
-                                class="activity-line"
-                            ></div>
-
-                        </div>
-
-
-                        <div
-                            class="activity-content"
-                        >
-
-                            <div
-                                class="activity-title"
-                            >
-                                ${
-                                    activity.title
-                                }
-                            </div>
-
-
-                            <p
-                                class="activity-description"
-                            >
-                                ${
-                                    activity.description
-                                }
-                            </p>
-
-
-                            <div
-                                class="activity-date"
-                            >
-                                ${
-                                    activityDate
-                                }
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                `;
-
-            }
-        );
-
-
-        timelineHTML += `
-            </div>
-        `;
-
-
-        activityTimeline.innerHTML =
-            timelineHTML;
-
+        const p = document.createElement("p");
+        p.className = "no-pending";
+        p.textContent = "No pending actions right now.";
+        pendingActions.appendChild(p);
     }
 
+    /* ACTIVITY TIMELINE */
+    const activityItems = [];
+
+    async function addActivity(table, columns, title, describe) {
+        const { data, error } = await supabaseClient
+            .from(table)
+            .select(columns)
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+        if (error) {
+            console.error(table + " activity error:", error.message);
+            showDashboardError();
+            return;
+        }
+
+        (data || []).forEach(item => {
+            activityItems.push({
+                title,
+                description: describe(item),
+                date: item.created_at
+            });
+        });
+    }
+
+    await addActivity(
+        "investments",
+        "id, investment_name, investment_type, amount, status, created_at",
+        "Investment Created",
+        item => (item.investment_name || item.investment_type || "Investment") +
+            " — " + money(item.amount) + " (" + (item.status || "Pending") + ")"
+    );
+
+    await addActivity(
+        "deposits",
+        "id, amount, asset, network, status, created_at",
+        "Deposit Request",
+        item => (item.asset || "Asset") + " deposit" +
+            (item.network ? " (" + item.network + ")" : "") +
+            " — " + money(item.amount) + " (" + (item.status || "Pending") + ")"
+    );
+
+    await addActivity(
+        "crypto_payment_requests",
+        "id, asset, amount, total, payment_method, status, created_at",
+        "Crypto Payment Request",
+        item => (item.asset || "Crypto") + " — " +
+            (item.payment_method || "Payment") + " — " +
+            money(item.total ?? item.amount) + " (" + (item.status || "Pending") + ")"
+    );
+
+    await addActivity(
+        "transactions",
+        "id, transaction_type, amount, asset, status, reference, created_at",
+        "Transaction",
+        item => (item.transaction_type || "Transaction") + " — " +
+            money(item.amount) + " (" + (item.status || "Pending") + ")"
+    );
+
+    const { data: supportItems, error: supportError } = await supabaseClient
+        .from("support_conversations")
+        .select("id, subject, status, created_at, updated_at")
+        .order("updated_at", { ascending: false })
+        .limit(5);
+
+    if (supportError) {
+        console.error("support activity error:", supportError.message);
+        showDashboardError();
+    } else {
+        (supportItems || []).forEach(item => {
+            activityItems.push({
+                title: "Support Conversation",
+                description: (item.subject || "General Support") +
+                    " (" + (item.status || "Open") + ")",
+                date: item.updated_at || item.created_at
+            });
+        });
+    }
+
+    /* WITHDRAWAL ACTIVITY */
+    const { data: withdrawalItems, error: withdrawalError } =
+        await supabaseClient
+            .from("withdrawal_requests")
+            .select("id, amount, status, created_at")
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+    if (withdrawalError) {
+        console.error("withdrawal activity error:", withdrawalError.message);
+        showDashboardError();
+    } else {
+        (withdrawalItems || []).forEach(item => {
+            activityItems.push({
+                title: "Withdrawal Request",
+                description: money(item.amount) + " — " +
+                    (item.status || "Pending"),
+                date: item.created_at
+            });
+        });
+    }
+
+    activityItems.sort((a, b) =>
+        new Date(b.date || 0) - new Date(a.date || 0)
+    );
+
+    activityTimeline.replaceChildren();
+
+    const timelineItems = activityItems.slice(0, 10);
+
+    if (!timelineItems.length) {
+        const p = document.createElement("p");
+        p.className = "no-pending";
+        p.textContent = "No recent activity yet.";
+        activityTimeline.appendChild(p);
+        return;
+    }
+
+    const timeline = document.createElement("div");
+    timeline.className = "activity-timeline";
+
+    timelineItems.forEach(activity => {
+        const item = document.createElement("div");
+        item.className = "activity-item";
+
+        const markerArea = document.createElement("div");
+        markerArea.className = "activity-marker-area";
+
+        const marker = document.createElement("div");
+        marker.className = "activity-marker";
+
+        const line = document.createElement("div");
+        line.className = "activity-line";
+
+        markerArea.append(marker, line);
+
+        const content = document.createElement("div");
+        content.className = "activity-content";
+
+        const title = document.createElement("div");
+        title.className = "activity-title";
+        title.textContent = activity.title;
+
+        const description = document.createElement("p");
+        description.className = "activity-description";
+        description.textContent = activity.description;
+
+        const date = document.createElement("div");
+        date.className = "activity-date";
+        date.textContent = activity.date
+            ? new Date(activity.date).toLocaleString()
+            : "—";
+
+        content.append(title, description, date);
+        item.append(markerArea, content);
+        timeline.appendChild(item);
+    });
+
+    activityTimeline.appendChild(timeline);
 }
-
-
-/* START */
 
 async function startPage() {
-
-    const isAdmin =
-        await checkAdmin();
-
-
-    if (!isAdmin) {
-
-        return;
-
+    try {
+        const isAdmin = await checkAdmin();
+        if (isAdmin) await loadDashboard();
+    } catch (error) {
+        console.error("Dashboard startup error:", error);
+        showDashboardError();
     }
-
-
-    await loadDashboard();
-
 }
 
-
 startPage();
-
-
 </script>
 
-
 </body>
-
 </html>
