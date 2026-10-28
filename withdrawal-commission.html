@@ -1,385 +1,321 @@
 
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>Withdrawal Commission | Nor Ellab Capital</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Funds | Nor Ellab Capital</title>
   <style>
-
     * {
-
       box-sizing: border-box;
-
     }
 
     body {
-
       margin: 0;
-
       padding: 20px;
-
       background: #07130f;
-
-      color: #ffffff;
-
+      color: #f5f1e6;
       font-family: Arial, sans-serif;
-
     }
 
     .container {
-
-      max-width: 520px;
-
-      margin: 45px auto;
-
-      padding: 28px;
-
-      background: #102019;
-
-      border: 1px solid #354c3e;
-
-      border-radius: 14px;
-
+      max-width: 480px;
+      margin: 35px auto;
+      padding: 25px;
+      background: #10221a;
+      border: 1px solid #d4af37;
+      border-radius: 12px;
     }
 
-    h1, h2 {
-
+    h1 {
       color: #d4af37;
-
       text-align: center;
-
+      font-size: 25px;
     }
 
     p {
-
-      color: #c8d2cb;
-
       line-height: 1.6;
-
+      color: #d6ddd8;
     }
 
     label {
-
       display: block;
-
-      margin: 20px 0 8px;
-
+      margin-top: 17px;
+      margin-bottom: 7px;
     }
 
-    input {
-
+    input, select, button {
       width: 100%;
-
       padding: 13px;
-
-      border: 1px solid #53665a;
-
-      border-radius: 7px;
-
-      background: #07130f;
-
-      color: #ffffff;
-
+      border-radius: 6px;
       font-size: 16px;
+    }
 
+    input, select {
+      background: #07130f;
+      border: 1px solid #52665a;
+      color: white;
     }
 
     button {
-
-      width: 100%;
-
-      padding: 14px;
-
       margin-top: 20px;
-
       border: none;
-
-      border-radius: 7px;
-
       background: #d4af37;
-
       color: #07130f;
-
-      font-size: 16px;
-
       font-weight: bold;
-
       cursor: pointer;
-
     }
 
-    .summary {
-
-      margin-top: 24px;
-
-      padding: 18px;
-
-      background: #192c21;
-
-      border-radius: 10px;
-
-    }
-
-    .line {
-
-      display: flex;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      padding: 12px 0;
-
-      border-bottom: 1px solid #354c3e;
-
-    }
-
-    .line:last-child {
-
-      border-bottom: none;
-
-    }
-
-    .value {
-
-      text-align: right;
-
-      overflow-wrap: anywhere;
-
-    }
-
-    .total {
-
-      color: #d4af37;
-
-      font-weight: bold;
-
-    }
-
-    .note {
-
-      margin-top: 20px;
-
-      padding: 14px;
-
-      background: #192c21;
-
-      border-radius: 8px;
-
-      font-size: 14px;
-
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .hidden {
-
       display: none;
+    }
 
+    .message {
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 12px;
+      border-left: 3px solid #d4af37;
+      background: #172c21;
+      font-size: 14px;
     }
 
     a {
-
       color: #d4af37;
-
     }
-
   </style>
-
 </head>
-
 <body>
-
   <main class="container">
+    <h1>Withdraw Funds</h1>
+    <p>Submit your withdrawal request and complete the required verification steps.</p>
 
-    <h1>Withdrawal Commission</h1>
+    <form id="withdrawalForm">
+      <label for="amount">Withdrawal Amount (USD)</label>
+      <input id="amount" type="number" min="0.01" step="0.01"
+             placeholder="Enter amount" required>
 
-    <p>
+      <label for="method">Withdrawal Method</label>
+      <select id="method" required>
+        <option value="">Select a method</option>
+        <option value="Bitcoin">Bitcoin</option>
+        <option value="USDT">USDT</option>
+      </select>
 
-      Review the commission calculation associated with your investment.
+      <label for="destination">Wallet Address</label>
+      <input id="destination" type="text"
+             placeholder="Enter your wallet address" required>
 
-      The commission rate displayed below is 5% of profit, not 5% of
+      <button id="submitWithdrawal" type="submit">
+        Submit Withdrawal Request
+      </button>
+    </form>
 
-      your original investment.
+    <section id="verificationSection" class="hidden">
+      <h2>Stage 1: Code Verification</h2>
+      <p>Enter the six-digit verification code issued by the administrator.</p>
 
-    </p>
+      <form id="verificationForm">
+        <label for="verificationCode">Verification Code</label>
+        <input id="verificationCode" type="text"
+               inputmode="numeric" autocomplete="one-time-code"
+               maxlength="6" pattern="[0-9]{6}"
+               placeholder="Enter 6-digit code" required>
 
-    <label for="profit">Recorded Investment Profit (USD)</label>
-
-    <input
-
-      id="profit"
-
-      type="number"
-
-      min="0"
-
-      step="0.01"
-
-      placeholder="Enter profit for calculation"
-
-      required
-
-    >
-
-    <button id="calculateButton" type="button">
-
-      Calculate Commission
-
-    </button>
-
-    <section id="summary" class="summary hidden">
-
-      <h2>Calculation Summary</h2>
-
-      <div class="line">
-
-        <span>Investment profit</span>
-
-        <strong id="profitValue" class="value">$0.00</strong>
-
-      </div>
-
-      <div class="line">
-
-        <span>Commission rate</span>
-
-        <strong class="value">5%</strong>
-
-      </div>
-
-      <div class="line">
-
-        <span>Commission amount</span>
-
-        <strong id="feeValue" class="value">$0.00</strong>
-
-      </div>
-
-      <div class="line total">
-
-        <span>Profit after commission</span>
-
-        <strong id="netValue" class="value">$0.00</strong>
-
-      </div>
-
-      <p>
-
-        This is an estimate based on the amount entered. Your final
-
-        calculation must be confirmed against your investment record.
-
-      </p>
-
+        <button id="verifyButton" type="submit">
+          Verify Code
+        </button>
+      </form>
     </section>
 
-    <div class="note">
+    <p id="message" class="message" role="status" aria-live="polite"></p>
 
-      <strong>Important</strong>
-
-      <p>
-
-        This page calculates a fee; it does not collect payment or
-
-        approve a withdrawal. Any commission must be disclosed clearly
-
-        in the investment terms, and the investor should receive a
-
-        written breakdown of all charges.
-
-      </p>
-
+    <div class="notice">
+      Verification does not itself approve or pay a withdrawal.
+      Review all fees and withdrawal terms before making any payment.
     </div>
-
-    <p id="message" role="status" aria-live="polite"></p>
-
-    <p style="text-align:center;margin-top:24px">
-
-      <a href="dashboard.html">Return to Investor Dashboard</a>
-
-    </p>
-
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    const SUPABASE_URL = "https://grgmsezyxxceheofmsoj.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
 
-    const profitInput = document.getElementById("profit");
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-    const calculateButton = document.getElementById("calculateButton");
-
-    const summary = document.getElementById("summary");
-
+    const withdrawalForm = document.getElementById("withdrawalForm");
+    const verificationForm = document.getElementById("verificationForm");
+    const verificationSection = document.getElementById("verificationSection");
     const message = document.getElementById("message");
 
-    function formatUSD(amount) {
+    let activeRequestId = null;
+    let busy = false;
 
-      return new Intl.NumberFormat("en-US", {
-
-        style: "currency",
-
-        currency: "USD"
-
-      }).format(amount);
-
+    function showMessage(text) {
+      message.textContent = text;
     }
 
-    calculateButton.addEventListener("click", function() {
+    async function getSignedInUser() {
+      const { data, error } = await client.auth.getUser();
 
-      const profit = Number(profitInput.value);
-
-      if (
-
-        profitInput.value.trim() === "" ||
-
-        !Number.isFinite(profit) ||
-
-        profit < 0
-
-      ) {
-
-        summary.classList.add("hidden");
-
-        message.textContent = "Enter a valid profit amount.";
-
-        return;
-
+      if (error || !data.user) {
+        throw new Error("Please log in before continuing.");
       }
 
-      const commission = Math.round(profit * 0.05 * 100) / 100;
+      return data.user;
+    }
 
-      const remainingProfit =
+    function showVerification(requestId) {
+      activeRequestId = requestId;
+      withdrawalForm.classList.add("hidden");
+      verificationSection.classList.remove("hidden");
+      showMessage("Withdrawal request created. Enter your verification code.");
+    }
 
-        Math.round((profit - commission) * 100) / 100;
+    async function loadExistingRequest() {
+      const params = new URLSearchParams(window.location.search);
+      const requestId = params.get("request_id");
 
-      document.getElementById("profitValue").textContent =
+      if (!requestId) return;
 
-        formatUSD(profit);
+      try {
+        await getSignedInUser();
+        showVerification(requestId);
+      } catch (error) {
+        showMessage(error.message);
+      }
+    }
 
-      document.getElementById("feeValue").textContent =
+    withdrawalForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-        formatUSD(commission);
+      if (busy) return;
+      busy = true;
 
-      document.getElementById("netValue").textContent =
+      const button = document.getElementById("submitWithdrawal");
+      button.disabled = true;
+      showMessage("Submitting your request...");
 
-        formatUSD(remainingProfit);
+      try {
+        await getSignedInUser();
 
-      summary.classList.remove("hidden");
+        const amount = Number(document.getElementById("amount").value);
+        const withdrawal_method = document.getElementById("method").value;
+        const withdrawal_destination =
+          document.getElementById("destination").value.trim();
 
-      message.textContent =
+        if (!Number.isFinite(amount) || amount <= 0) {
+          throw new Error("Enter a valid withdrawal amount.");
+        }
 
-        "Calculation complete. This is not a payment request or withdrawal approval.";
+        if (!withdrawal_method || !withdrawal_destination) {
+          throw new Error("Complete all withdrawal fields.");
+        }
 
+        const { data, error } = await client.functions.invoke(
+          "withdrawal-workflow",
+          {
+            body: {
+              action: "create_request",
+              amount,
+              withdrawal_method,
+              withdrawal_destination
+            }
+          }
+        );
+
+        if (error) throw error;
+
+        const requestId =
+          data?.request_id ||
+          data?.withdrawal_id ||
+          data?.request?.id ||
+          data?.withdrawal?.id;
+
+        if (!requestId) {
+          throw new Error(
+            "The request response did not contain a withdrawal ID. " +
+            "Check the withdrawal-workflow response before retrying."
+          );
+        }
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("request_id", requestId);
+        window.history.replaceState({}, "", url);
+
+        showVerification(requestId);
+
+      } catch (error) {
+        showMessage(error.message || "Could not submit the request.");
+      } finally {
+        busy = false;
+        button.disabled = false;
+      }
     });
 
+    verificationForm.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      if (busy || !activeRequestId) return;
+      busy = true;
+
+      const button = document.getElementById("verifyButton");
+      button.disabled = true;
+      showMessage("Checking your verification code...");
+
+      try {
+        await getSignedInUser();
+
+        const code = document.getElementById("verificationCode").value.trim();
+
+        if (!/^[0-9]{6}$/.test(code)) {
+          throw new Error("Enter the complete six-digit code.");
+        }
+
+        const { data, error } = await client.rpc(
+          "verify_withdrawal_code",
+          {
+            p_withdrawal_id: activeRequestId,
+            p_code: code
+          }
+        );
+
+        if (error) throw error;
+
+        if (data !== true) {
+          throw new Error("The code was not accepted. Check it and try again.");
+        }
+
+        showMessage("Code verified. Opening the commission details...");
+
+        const nextPage = new URL(
+          "withdrawal-commission.html",
+          window.location.href
+        );
+        nextPage.searchParams.set("request_id", activeRequestId);
+
+        window.location.assign(nextPage.toString());
+
+      } catch (error) {
+        showMessage(error.message || "Verification failed.");
+        button.disabled = false;
+      } finally {
+        busy = false;
+      }
+    });
+
+    loadExistingRequest();
   </script>
-
 </body>
-
 </html>
