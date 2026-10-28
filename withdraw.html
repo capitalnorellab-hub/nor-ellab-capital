@@ -1,210 +1,268 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Funds | Nor Ellab Capital</title>
 
-    <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; }
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #07130f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
 
-    <title>Withdraw Funds | Nor Ellab Capital</title>
+    .container {
+      max-width: 520px;
+      margin: 50px auto;
+      padding: 28px;
+      background: #102019;
+      border: 1px solid #354c3e;
+      border-radius: 14px;
+    }
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    h1 {
+      color: #d4af37;
+      text-align: center;
+      font-size: 27px;
+    }
 
+    p {
+      color: #c8d2cb;
+      line-height: 1.6;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #53665a;
+      border-radius: 7px;
+      background: #07130f;
+      color: white;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 24px;
+      border: none;
+      border-radius: 7px;
+      background: #d4af37;
+      color: #07130f;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    #message {
+      margin-top: 18px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    a {
+      color: #d4af37;
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 12px;
+      background: #192c21;
+      border-radius: 7px;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
-
 <body>
-
-
-    <!-- Header -->
-
-    <header class="site-header">
-
-        <div class="logo">
-            Nor Ellab Capital
-        </div>
-
-        <nav>
-
-            <a href="index.html">
-                Home
-            </a>
-
-            <a href="investments.html">
-                Investments
-            </a>
-
-            <a href="dashboard.html">
-                Dashboard
-            </a>
-
-        </nav>
-
-    </header>
-
-
-
-    <!-- Withdrawal Hero -->
-
-    <section class="dashboard-hero">
-
-        <h1>
-            Withdraw Funds
-        </h1>
-
-        <p>
-            Request a withdrawal from your Nor Ellab Capital account.
-        </p>
-
-    </section>
-
-
-
-    <!-- Withdrawal Section -->
-
-    <section class="dashboard-section">
-
-        <div class="dashboard-container">
-
-
-            <div class="dashboard-card">
-
-                <h2>
-                    Withdrawal Request
-                </h2>
-
-                <p>
-                    Enter the amount you would like to withdraw
-                    from your available balance.
-                </p>
-
-
-                <div class="form-group">
-
-                    <label for="withdraw-amount">
-                        Withdrawal Amount
-                    </label>
-
-                    <input
-                        type="number"
-                        id="withdraw-amount"
-                        placeholder="Enter amount"
-                        min="1"
-                    >
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="dashboard-button"
-                    id="withdraw-button"
-                >
-                    Submit Request
-                </button>
-
-
-                <p id="withdraw-message"></p>
-
-            </div>
-
-
-
-            <div class="dashboard-card">
-
-                <h2>
-                    Withdrawal Information
-                </h2>
-
-                <p>
-                    Withdrawal requests will be reviewed and
-                    processed through the appropriate payment
-                    system once withdrawal integration is connected.
-                </p>
-
-                <p>
-                    Funds will only be released after the request
-                    has been successfully verified.
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </section>
-
-
-
-    <!-- Footer -->
-
-    <footer>
-
-        <p>
-            © 2026 Nor Ellab Capital.
-            All rights reserved.
-        </p>
-
-    </footer>
-
-
-
-    <script>
-
-        const withdrawButton =
-            document.getElementById(
-                "withdraw-button"
-            );
-
-
-        const withdrawAmount =
-            document.getElementById(
-                "withdraw-amount"
-            );
-
-
-        const withdrawMessage =
-            document.getElementById(
-                "withdraw-message"
-            );
-
-
-        withdrawButton.addEventListener(
-            "click",
-            function() {
-
-                const amount =
-                    Number(
-                        withdrawAmount.value
-                    );
-
-
-                if (!amount || amount <= 0) {
-
-                    withdrawMessage.textContent =
-                        "Please enter a valid withdrawal amount.";
-
-                    return;
-
-                }
-
-
-                withdrawMessage.textContent =
-                    "Withdrawal request received. Processing will be connected here.";
-
-            }
+  <main class="container">
+    <h1>Withdraw Funds</h1>
+
+    <p>
+      Submit your withdrawal request below. Your request will remain
+      pending while you complete the required verification process.
+    </p>
+
+    <form id="withdrawForm">
+      <label for="amount">Withdrawal Amount (USD)</label>
+      <input
+        id="amount"
+        type="number"
+        min="0.01"
+        step="0.01"
+        placeholder="Enter amount"
+        required
+      >
+
+      <label for="method">Withdrawal Method</label>
+      <select id="method" required>
+        <option value="">Select a method</option>
+        <option value="Bitcoin">Bitcoin</option>
+        <option value="USDT">USDT</option>
+        <option value="PayPal">PayPal</option>
+        <option value="Cash App">Cash App</option>
+        <option value="Zelle">Zelle</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label for="destination">Wallet Address or Payment Details</label>
+      <input
+        id="destination"
+        type="text"
+        maxlength="300"
+        placeholder="Enter withdrawal destination"
+        required
+      >
+
+      <button type="submit" id="submitButton">
+        Request Withdrawal
+      </button>
+    </form>
+
+    <div class="note">
+      <strong>Verification required</strong>
+      <p>
+        After submitting your request, contact the administrator
+        privately to request your verification code. Never share
+        your account password.
+      </p>
+    </div>
+
+    <p id="message" role="status" aria-live="polite"></p>
+
+    <p style="text-align:center;margin-top:25px">
+      <a href="dashboard.html">Return to Investor Dashboard</a>
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL =
+      "https://grgmsezyxxceheofmsoj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_wQ7jOyAqk1nAm_rQAapqog_Q5z_wTbc";
+
+    const supabaseClient = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    const form = document.getElementById("withdrawForm");
+    const button = document.getElementById("submitButton");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      button.disabled = true;
+      button.textContent = "Submitting...";
+      message.textContent = "";
+
+      try {
+        const { data: sessionData, error: sessionError } =
+          await supabaseClient.auth.getSession();
+
+        if (sessionError || !sessionData.session) {
+          throw new Error(
+            "Please sign in to your investor account before withdrawing."
+          );
+        }
+
+        const amount = Number(
+          document.getElementById("amount").value
         );
 
-    </script>
+        const method =
+          document.getElementById("method").value;
 
+        const destination =
+          document.getElementById("destination").value.trim();
 
+        if (!Number.isFinite(amount) || amount <= 0) {
+          throw new Error("Enter a valid withdrawal amount.");
+        }
+
+        if (!method || !destination) {
+          throw new Error("Complete all withdrawal fields.");
+        }
+
+        const { data, error } =
+          await supabaseClient.functions.invoke(
+            "withdrawal-workflow",
+            {
+              body: {
+                action: "create_request",
+                amount: amount,
+                withdrawal_method: method,
+                withdrawal_destination: destination
+              }
+            }
+          );
+
+        if (error) {
+          let detail = "";
+
+          try {
+            if (error.context) {
+              const response = await error.context.json();
+              detail = response.error || response.message || "";
+            }
+          } catch (_) {}
+
+          throw new Error(
+            detail || error.message ||
+            "Unable to submit your withdrawal request."
+          );
+        }
+
+        if (!data || data.error || !data.request || !data.request.id) {
+          throw new Error(
+            data && data.error
+              ? data.error
+              : "The server did not return a withdrawal request ID."
+          );
+        }
+
+        message.textContent =
+          "Request submitted. Opening verification...";
+
+        const nextPage = new URL(
+          "withdrawal-code.html",
+          window.location.href
+        );
+
+        nextPage.searchParams.set(
+          "request_id",
+          data.request.id
+        );
+
+        window.location.assign(nextPage.toString());
+
+      } catch (error) {
+        message.textContent =
+          error.message || "Something went wrong.";
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Request Withdrawal";
+      }
+    });
+  </script>
 </body>
-
 </html>
