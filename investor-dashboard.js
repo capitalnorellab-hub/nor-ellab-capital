@@ -55,6 +55,7 @@
 
   function cell(tr, value) {
     const td = document.createElement("td");
+
     td.textContent =
       value === null || value === undefined || value === ""
         ? "—"
@@ -424,12 +425,12 @@
     if (page === "deposit-history") {
       const result = await C
         .from("deposits")
-        .select("currency,amount,status,created_at")
+        .select("asset,amount,status,created_at")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
       if (result.error) {
-        empty("historyTable", 4, "No connected deposit records");
+        empty("historyTable", 4, "Could not load deposit records");
         msg(
           "pageMessage",
           "Deposit history could not be loaded: " + result.error.message,
@@ -442,11 +443,17 @@
           result.data,
           (tr, record) => {
             cell(tr, date(record.created_at));
-            cell(tr, record.currency);
+            cell(tr, record.asset);
             cell(tr, usd(record.amount));
             cell(tr, record.status || "Pending");
           },
           "No deposit records found"
+        );
+
+        msg(
+          "pageMessage",
+          (result.data || []).length + " deposit record(s) found",
+          "success"
         );
       }
     }
