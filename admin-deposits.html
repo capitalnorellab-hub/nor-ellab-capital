@@ -1,19 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Admin Deposit Review | Nor Ellab Capital</title>
 
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <style>
         * {
             box-sizing: border-box;
         }
@@ -65,6 +62,7 @@
             border-radius: 8px;
             margin-bottom: 20px;
             border: 1px solid #e5e7eb;
+            line-height: 1.6;
         }
 
         .deposit-card {
@@ -81,6 +79,7 @@
 
         .deposit-row {
             margin: 10px 0;
+            overflow-wrap: anywhere;
         }
 
         .deposit-row strong {
@@ -139,7 +138,8 @@
             font-family: Arial, sans-serif;
         }
 
-        .action-button {
+        .action-button,
+        .refresh-button {
             margin-top: 12px;
             padding: 12px 20px;
             border: none;
@@ -150,11 +150,13 @@
             cursor: pointer;
         }
 
-        .action-button:hover {
+        .action-button:hover,
+        .refresh-button:hover {
             background-color: #1f2937;
         }
 
-        .action-button:disabled {
+        .action-button:disabled,
+        .refresh-button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
@@ -180,7 +182,6 @@
         }
 
         @media (max-width: 600px) {
-
             .container {
                 margin: 20px auto;
                 padding: 15px;
@@ -190,9 +191,7 @@
                 display: block;
                 margin-bottom: 4px;
             }
-
         }
-
     </style>
 
 </head>
@@ -200,52 +199,38 @@
 <body>
 
     <header>
-
-        <h1>
-            Nor Ellab Capital
-        </h1>
-
-        <p>
-            Admin Deposit Review
-        </p>
-
+        <h1>Nor Ellab Capital</h1>
+        <p>Admin Deposit Review</p>
     </header>
-
 
     <main class="container">
 
         <div class="page-title">
-
-            <h2>
-                Deposit Requests
-            </h2>
-
+            <h2>Deposit Requests</h2>
             <p>
                 Review investor deposit requests and their verification status.
             </p>
-
         </div>
-
 
         <div
             id="admin-message"
             class="admin-message"
+            aria-live="polite"
         >
             Checking administrator access...
         </div>
 
+        <button
+            id="refresh-button"
+            class="refresh-button"
+            type="button"
+        >
+            Refresh Deposits
+        </button>
 
-        <div id="deposit-list">
-
-        </div>
+        <div id="deposit-list"></div>
 
     </main>
-
-
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
-
 
     <script>
 
@@ -261,537 +246,450 @@
                 supabaseKey
             );
 
-
         const adminMessage =
-            document.getElementById(
-                "admin-message"
-            );
+            document.getElementById("admin-message");
 
         const depositList =
-            document.getElementById(
-                "deposit-list"
-            );
+            document.getElementById("deposit-list");
+
+        const refreshButton =
+            document.getElementById("refresh-button");
+
+
+        function showMessage(message, isError = false) {
+            adminMessage.textContent = message;
+            adminMessage.style.color =
+                isError ? "#b91c1c" : "#166534";
+        }
 
 
         async function loadAdminDeposits() {
 
-            const {
-                data: {
-                    user
+            refreshButton.disabled = true;
+            depositList.replaceChildren();
+
+            showMessage("Checking administrator access...");
+
+            try {
+
+                // STEP 1: Check logged-in user
+
+                const {
+                    data: { user },
+                    error: userError
+                } = await supabaseClient.auth.getUser();
+
+                if (userError) {
+                    throw new Error(
+                        "Login verification failed: " +
+                        userError.message
+                    );
                 }
-            } =
-                await supabaseClient.auth.getUser();
 
-
-            if (!user) {
-
-                adminMessage.textContent =
-                    "You must be logged in to access this page.";
-
-                return;
-
-            }
-
-
-            const {
-                data: admin,
-                error: adminError
-            } =
-                await supabaseClient
-                    .from("admin_users")
-                    .select("user_id")
-                    .eq("user_id", user.id)
-                    .maybeSingle();
-
-
-            if (adminError) {
-
-                console.log(adminError);
-
-                adminMessage.textContent =
-                    "Unable to verify administrator access.";
-
-                return;
-
-            }
-
-
-            if (!admin) {
-
-                adminMessage.textContent =
-                    "Administrator access required.";
-
-                return;
-
-            }
-
-
-            adminMessage.textContent =
-                "Administrator access confirmed.";
-
-
-            const {
-                data: deposits,
-                error
-            } =
-                await supabaseClient
-                    .from("deposits")
-                    .select("*")
-                    .order(
-                        "created_at",
-                        {
-                            ascending: false
-                        }
+                if (!user) {
+                    showMessage(
+                        "You must be logged in to access this page.",
+                        true
                     );
 
+                    return;
+                }
 
-            if (error) {
 
-                console.log(error);
+                // STEP 2: Verify administrator access
+                // Uses the same function as admin-dashboard.html
 
-                depositList.innerHTML =
-                    `
-                    <div class="empty">
-                        Unable to load deposit requests.
-                    </div>
+                const {
+                    data: adminResult,
+                    error: adminError
+                } = await supabaseClient.rpc("is_admin");
+
+                if (adminError) {
+                    throw new Error(
+                        "Unable to verify administrator access: " +
+                        adminError.message
+                    );
+                }
+
+                const allowed =
+                    adminResult === true ||
+                    adminResult === "true";
+
+                if (!allowed) {
+                    showMessage(
+                        "Administrator access required. Your account is not authorized.",
+                        true
+                    );
+
+                    return;
+                }
+
+                showMessage(
+                    "Administrator access confirmed for " +
+                    user.email
+                );
+
+
+                // STEP 3: Load deposit requests
+
+                const {
+                    data: deposits,
+                    error
+                } = await supabaseClient
+                    .from("deposits")
+                    .select("*")
+                    .order("created_at", {
+                        ascending: false
+                    });
+
+                if (error) {
+                    throw new Error(
+                        "Unable to load deposit requests: " +
+                        error.message
+                    );
+                }
+
+
+                // STEP 4: Check if deposits exist
+
+                if (!deposits || deposits.length === 0) {
+
+                    depositList.innerHTML = `
+                        <div class="empty">
+                            No deposit requests found.
+                        </div>
                     `;
 
-                return;
-
-            }
-
-
-            if (!deposits || deposits.length === 0) {
-
-                depositList.innerHTML =
-                    `
-                    <div class="empty">
-                        No deposit requests found.
-                    </div>
-                    `;
-
-                return;
-
-            }
+                    return;
+                }
 
 
-            depositList.innerHTML = "";
+                // STEP 5: Display deposits
 
-
-            deposits.forEach(
-                function(deposit) {
-
-                    let statusClass =
-                        "pending";
-
-
-                    if (
-                        deposit.status ===
-                        "Verified"
-                    ) {
-
-                        statusClass =
-                            "verified";
-
-                    }
-
-
-                    if (
-                        deposit.status ===
-                        "Completed"
-                    ) {
-
-                        statusClass =
-                            "completed";
-
-                    }
-
+                deposits.forEach(function(deposit) {
 
                     const card =
-                        document.createElement(
-                            "div"
+                        document.createElement("div");
+
+                    card.className = "deposit-card";
+
+                    const status =
+                        String(deposit.status || "Pending");
+
+                    let statusClass = "pending";
+
+                    if (status.toLowerCase() === "verified") {
+                        statusClass = "verified";
+                    }
+
+                    if (status.toLowerCase() === "completed") {
+                        statusClass = "completed";
+                    }
+
+
+                    const formattedAmount =
+                        Number(deposit.amount || 0).toLocaleString(
+                            "en-US",
+                            {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }
                         );
 
-                    card.className =
-                        "deposit-card";
+                    const createdAt = deposit.created_at
+                        ? new Date(deposit.created_at).toLocaleString()
+                        : "Unknown";
+
+                    const verifiedAt = deposit.verified_at
+                        ? new Date(deposit.verified_at).toLocaleString()
+                        : "Not verified";
 
 
-                    card.innerHTML = `
-
-                        <h3>
-                            Deposit #${deposit.id}
-                        </h3>
-
-                        <div class="deposit-row">
-                            <strong>Asset:</strong>
-                            ${deposit.asset || "Not provided"}
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Network:</strong>
-                            ${deposit.network || "Not provided"}
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Amount:</strong>
-                            $${Number(
-                                deposit.amount || 0
-                            ).toLocaleString(
-                                undefined,
-                                {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2
-                                }
-                            )}
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Status:</strong>
-
-                            <span class="status ${statusClass}">
-                                ${deposit.status}
-                            </span>
-
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>TXID:</strong>
-
-                            <span class="txid">
-                                ${
-                                    deposit.transaction_hash ||
-                                    "Not provided"
-                                }
-                            </span>
-
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Verification Note:</strong>
-
-                            ${
-                                deposit.verification_note ||
-                                "None"
-                            }
-
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Verified At:</strong>
-
-                            ${
-                                deposit.verified_at
-                                    ? new Date(
-                                        deposit.verified_at
-                                    ).toLocaleString()
-                                    : "Not verified"
-                            }
-
-                        </div>
-
-                        <div class="deposit-row">
-                            <strong>Submitted:</strong>
-
-                            ${
-                                deposit.created_at
-                                    ? new Date(
-                                        deposit.created_at
-                                    ).toLocaleString()
-                                    : "Unknown"
-                            }
-
-                        </div>
-
-                    `;
+                    const fields = [
+                        ["Asset", deposit.asset || "Not provided"],
+                        ["Network", deposit.network || "Not provided"],
+                        ["Amount", "$" + formattedAmount],
+                        ["Status", status],
+                        ["TXID", deposit.transaction_hash || "Not provided"],
+                        ["Verification Note", deposit.verification_note || "None"],
+                        ["Verified At", verifiedAt],
+                        ["Submitted", createdAt]
+                    ];
 
 
-                    if (
-                        deposit.status ===
-                        "Pending"
-                    ) {
+                    const heading =
+                        document.createElement("h3");
+
+                    heading.textContent =
+                        "Deposit #" + deposit.id;
+
+                    card.appendChild(heading);
+
+
+                    fields.forEach(function(field) {
+
+                        const row =
+                            document.createElement("div");
+
+                        row.className = "deposit-row";
+
+                        const label =
+                            document.createElement("strong");
+
+                        label.textContent = field[0] + ":";
+
+                        const value =
+                            document.createElement("span");
+
+                        value.textContent = field[1];
+
+                        if (field[0] === "Status") {
+                            value.className =
+                                "status " + statusClass;
+                        }
+
+                        if (field[0] === "TXID") {
+                            value.className = "txid";
+                        }
+
+                        row.append(label, value);
+
+                        card.appendChild(row);
+
+                    });
+
+
+                    // STEP 6: Pending deposit verification
+
+                    if (status.toLowerCase() === "pending") {
 
                         const verificationBox =
-                            document.createElement(
-                                "div"
-                            );
+                            document.createElement("div");
 
                         verificationBox.className =
                             "verification-box";
 
+                        const label =
+                            document.createElement("label");
 
-                        verificationBox.innerHTML = `
-
-                            <label>
-                                Verification Note
-                            </label>
-
-                            <textarea
-                                placeholder="Enter the reason or evidence for approving this deposit."
-                            ></textarea>
-
-                            <button
-                                class="action-button"
-                            >
-                                Verify Deposit
-                            </button>
-
-                            <div></div>
-
-                        `;
-
+                        label.textContent =
+                            "Verification Note";
 
                         const textarea =
-                            verificationBox.querySelector(
-                                "textarea"
-                            );
+                            document.createElement("textarea");
+
+                        textarea.placeholder =
+                            "Enter the reason or evidence for approving this deposit.";
 
                         const button =
-                            verificationBox.querySelector(
-                                ".action-button"
-                            );
+                            document.createElement("button");
+
+                        button.className = "action-button";
+
+                        button.textContent = "Verify Deposit";
 
                         const message =
-                            verificationBox.querySelector(
-                                "div"
+                            document.createElement("div");
+
+
+                        button.addEventListener("click", async function() {
+
+                            const note = textarea.value.trim();
+
+                            if (!deposit.transaction_hash) {
+                                message.className = "error-message";
+                                message.textContent =
+                                    "A TXID is required before verification.";
+                                return;
+                            }
+
+                            if (!note) {
+                                message.className = "error-message";
+                                message.textContent =
+                                    "Please enter a verification note.";
+                                return;
+                            }
+
+                            const confirmed = confirm(
+                                "Have you independently verified that this payment was genuinely received?"
                             );
 
+                            if (!confirmed) return;
 
-                        button.addEventListener(
-                            "click",
-                            async function() {
+                            button.disabled = true;
+                            button.textContent = "Updating...";
 
-                                const note =
-                                    textarea.value.trim();
+                            try {
 
-
-                                if (!deposit.transaction_hash) {
-
-                                    message.className =
-                                        "error-message";
-
-                                    message.textContent =
-                                        "A TXID is required before verification.";
-
-                                    return;
-
-                                }
-
-
-                                if (!note) {
-
-                                    message.className =
-                                        "error-message";
-
-                                    message.textContent =
-                                        "Please enter a verification note.";
-
-                                    return;
-
-                                }
-
-
-                                button.disabled =
-                                    true;
-
-                                button.textContent =
-                                    "Updating...";
-
-
-                                const {
-                                    error
-                                } =
+                                const { error } =
                                     await supabaseClient
                                         .from("deposits")
                                         .update({
                                             status: "Verified",
                                             verification_note: note,
-                                            verified_at:
-                                                new Date().toISOString()
+                                            verified_at: new Date().toISOString()
                                         })
-                                        .eq(
-                                            "id",
-                                            deposit.id
-                                        );
+                                        .eq("id", deposit.id);
 
+                                if (error) throw error;
 
-                                if (error) {
-
-                                    console.log(error);
-
-                                    message.className =
-                                        "error-message";
-
-                                    message.textContent =
-                                        "Unable to update this deposit.";
-
-                                    button.disabled =
-                                        false;
-
-                                    button.textContent =
-                                        "Verify Deposit";
-
-                                    return;
-
-                                }
-
-
-                                message.className =
-                                    "success-message";
+                                message.className = "success-message";
 
                                 message.textContent =
                                     "Deposit marked as Verified.";
 
-                                setTimeout(
-                                    function() {
-                                        loadAdminDeposits();
-                                    },
-                                    800
-                                );
+                                setTimeout(loadAdminDeposits, 800);
+
+                            } catch (error) {
+
+                                console.error(error);
+
+                                message.className = "error-message";
+
+                                message.textContent =
+                                    "Unable to update deposit: " +
+                                    error.message;
+
+                                button.disabled = false;
+                                button.textContent = "Verify Deposit";
 
                             }
-                        );
+
+                        });
 
 
-                        card.appendChild(
-                            verificationBox
+                        verificationBox.append(
+                            label,
+                            textarea,
+                            button,
+                            message
                         );
+
+                        card.appendChild(verificationBox);
 
                     }
 
 
-                    if (
-                        deposit.status ===
-                        "Verified"
-                    ) {
+                    // STEP 7: Complete verified deposits
+
+                    if (status.toLowerCase() === "verified") {
 
                         const completionBox =
-                            document.createElement(
-                                "div"
-                            );
+                            document.createElement("div");
 
                         completionBox.className =
                             "verification-box";
 
-
-                        completionBox.innerHTML = `
-
-                            <button
-                                class="action-button"
-                            >
-                                Complete Deposit
-                            </button>
-
-                            <div></div>
-
-                        `;
-
-
                         const button =
-                            completionBox.querySelector(
-                                ".action-button"
-                            );
+                            document.createElement("button");
+
+                        button.className = "action-button";
+
+                        button.textContent = "Complete Deposit";
 
                         const message =
-                            completionBox.querySelector(
-                                "div"
+                            document.createElement("div");
+
+
+                        button.addEventListener("click", async function() {
+
+                            const confirmed = confirm(
+                                "Only continue if this payment has genuinely been received and verified. Completing this record does not itself credit an investor balance."
                             );
 
+                            if (!confirmed) return;
 
-                        button.addEventListener(
-                            "click",
-                            async function() {
+                            button.disabled = true;
+                            button.textContent = "Completing...";
 
-                                const confirmed =
-                                    confirm(
-                                        "Only continue if this deposit has been genuinely verified and is ready to be completed."
-                                    );
+                            try {
 
-
-                                if (!confirmed) {
-                                    return;
-                                }
-
-
-                                button.disabled =
-                                    true;
-
-                                button.textContent =
-                                    "Completing...";
-
-
-                                const {
-                                    error
-                                } =
+                                const { error } =
                                     await supabaseClient
                                         .from("deposits")
                                         .update({
                                             status: "Completed"
                                         })
-                                        .eq(
-                                            "id",
-                                            deposit.id
-                                        );
+                                        .eq("id", deposit.id);
 
+                                if (error) throw error;
 
-                                if (error) {
-
-                                    console.log(error);
-
-                                    message.className =
-                                        "error-message";
-
-                                    message.textContent =
-                                        "Unable to complete this deposit.";
-
-                                    button.disabled =
-                                        false;
-
-                                    button.textContent =
-                                        "Complete Deposit";
-
-                                    return;
-
-                                }
-
-
-                                message.className =
-                                    "success-message";
+                                message.className = "success-message";
 
                                 message.textContent =
                                     "Deposit marked as Completed.";
 
-                                setTimeout(
-                                    function() {
-                                        loadAdminDeposits();
-                                    },
-                                    800
-                                );
+                                setTimeout(loadAdminDeposits, 800);
+
+                            } catch (error) {
+
+                                console.error(error);
+
+                                message.className = "error-message";
+
+                                message.textContent =
+                                    "Unable to complete deposit: " +
+                                    error.message;
+
+                                button.disabled = false;
+                                button.textContent = "Complete Deposit";
 
                             }
-                        );
+
+                        });
 
 
-                        card.appendChild(
-                            completionBox
+                        completionBox.append(
+                            button,
+                            message
                         );
+
+                        card.appendChild(completionBox);
 
                     }
 
 
-                    depositList.appendChild(
-                        card
-                    );
+                    depositList.appendChild(card);
 
-                }
-            );
+                });
+
+
+                showMessage(
+                    "Administrator access confirmed. " +
+                    deposits.length +
+                    " deposit request(s) loaded."
+                );
+
+            } catch (error) {
+
+                console.error("Admin deposit error:", error);
+
+                showMessage(error.message, true);
+
+                depositList.innerHTML = `
+                    <div class="empty">
+                        Unable to load deposit requests.
+                        Check the administrator permissions and database access.
+                    </div>
+                `;
+
+            } finally {
+
+                refreshButton.disabled = false;
+
+            }
 
         }
 
+
+        refreshButton.addEventListener(
+            "click",
+            loadAdminDeposits
+        );
 
         loadAdminDeposits();
 
     </script>
 
 </body>
-
 </html>
