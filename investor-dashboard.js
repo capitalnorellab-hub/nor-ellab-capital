@@ -407,6 +407,69 @@
       };
     }
 
+    if (page === "payment-review") {
+      const form = $("paymentReviewForm");
+
+      if (form) {
+        form.onsubmit = async event => {
+          event.preventDefault();
+
+          const currency = $("paymentCurrency")?.value || "USDT";
+          const amountUSD = Number($("paymentAmount")?.value);
+          const reference = $("transactionReference")?.value.trim();
+          const notes = $("paymentNotes")?.value.trim() || "";
+
+          if (!Number.isFinite(amountUSD) || amountUSD <= 0 || !reference) {
+            msg("formMessage", "Enter a valid amount and transaction reference.", "error");
+            return;
+          }
+
+          const button = $("paymentButton");
+          if (button) {
+            button.disabled = true;
+            button.textContent = "Submitting...";
+          }
+
+          try {
+            const { error: insertError } = await C
+              .from("crypto_payment_requests")
+              .insert({
+                user_id: user.id,
+                asset: currency,
+                amount: amountUSD,
+                price: 1,
+                total: amountUSD,
+                payment_method: currency === "BTC" ? "Bitcoin (BTC)" : "USDT (TRC20)",
+                payment_reference: reference,
+                status: "Pending"
+              });
+
+            if (insertError) {
+              throw new Error(insertError.message);
+            }
+
+            form.reset();
+            msg(
+              "formMessage",
+              "Your payment reference was submitted for review. It is pending verification; this does not confirm that payment was received.",
+              "success"
+            );
+          } catch (err) {
+            msg(
+              "formMessage",
+              "Payment review could not be submitted: " + (err.message || "Please try again."),
+              "error"
+            );
+          } finally {
+            if (button) {
+              button.disabled = false;
+              button.textContent = "Submit for Review";
+            }
+          }
+        };
+      }
+    }
+
     if (page === "crypto-history") {
       const result = await C
         .from("crypto_payment_requests")
