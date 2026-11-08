@@ -212,7 +212,9 @@
       totalByStatus(records, "Active");
 
     const approvedInvestment =
-      totalByStatus(records, "Approved");
+      totalByStatus(records, "Approved") +
+      totalByStatus(records, "Active") +
+      totalByStatus(records, "Completed");
 
     // Verified and Completed admin-created deposits.
     const verifiedDepositAmount =
