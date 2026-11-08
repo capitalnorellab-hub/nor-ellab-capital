@@ -148,10 +148,28 @@
     }, 0);
   }
 
+  // NEW DEPOSIT CALCULATION
+  // Only Verified and Completed deposits count as active capital.
+  // A deposit is counted once, regardless of whether its status
+  // changes from Verified to Completed.
+  function totalVerifiedDeposits(records) {
+    return records.reduce((sum, record) => {
+      const status = String(record.status || "")
+        .trim()
+        .toLowerCase();
+
+      if (status === "verified" || status === "completed") {
+        return sum + (Number(record.amount) || 0);
+      }
+
+      return sum;
+    }, 0);
+  }
+
   async function loadOverview() {
     msg("pageMessage", "Loading your account information...");
 
-    // Load investments belonging to the signed-in investor.
+    // Load existing investment records.
     const result = await C
       .from("investments")
       .select("investment_name,investment_type,amount,status,created_at")
@@ -169,22 +187,66 @@
 
     const records = result.data || [];
 
-    // Calculate investment totals separately.
+    // Load deposits belonging to this investor.
+    const deposits = await C
+      .from("deposits")
+      .select("amount,status")
+      .eq("user_id", user.id);
+
+    if (deposits.error) {
+      msg(
+        "pageMessage",
+        "Deposit records could not load: " + deposits.error.message,
+        "error"
+      );
+      return;
+    }
+
+    const depositRecords = deposits.data || [];
+
+    // Existing investment amounts.
+    const pendingInvestment =
+      totalByStatus(records, "Pending");
+
+    const existingActiveInvestment =
+      totalByStatus(records, "Active");
+
+    const approvedInvestment =
+      totalByStatus(records, "Approved");
+
+    // Verified and Completed admin-created deposits.
+    const verifiedDepositAmount =
+      totalVerifiedDeposits(depositRecords);
+
+    // Combine existing Active investments with verified deposits.
+    const combinedActiveInvestment =
+      existingActiveInvestment + verifiedDepositAmount;
+
+    // Update Pending Investment Amount.
     if ($("pendingInvestmentTotal")) {
       $("pendingInvestmentTotal").textContent =
-        usd(totalByStatus(records, "Pending"));
+        usd(pendingInvestment);
     }
 
+    // Update Active Investment Amount.
     if ($("activeInvestmentTotal")) {
       $("activeInvestmentTotal").textContent =
-        usd(totalByStatus(records, "Active"));
+        usd(combinedActiveInvestment);
     }
 
+    // Keep Approved Investment Amount unchanged.
     if ($("approvedInvestmentTotal")) {
       $("approvedInvestmentTotal").textContent =
-        usd(totalByStatus(records, "Approved"));
+        usd(approvedInvestment);
     }
 
+    // Keep the separate deposit figure visible.
+    if ($("approvedDepositTotal")) {
+      $("approvedDepositTotal").textContent =
+        usd(verifiedDepositAmount);
+    }
+
+    // Existing investment record count remains unchanged.
     if ($("investmentCount")) {
       $("investmentCount").textContent = records.length;
     }
@@ -202,43 +264,6 @@
       },
       "No investment requests yet"
     );
-
-    // Load the investor's deposits separately.
-    const deposits = await C
-      .from("deposits")
-      .select("amount,status")
-      .eq("user_id", user.id);
-
-    if (deposits.error) {
-      if ($("approvedDepositTotal")) {
-        $("approvedDepositTotal").textContent = "—";
-      }
-
-      msg(
-        "pageMessage",
-        "Investments loaded, but deposits could not load: " +
-          deposits.error.message,
-        "error"
-      );
-    } else {
-      // Count Verified and Completed deposits.
-      // Each deposit row is counted once, whatever its current status.
-      const depositTotal = (deposits.data || []).reduce((sum, record) => {
-        const status = String(record.status || "")
-          .trim()
-          .toLowerCase();
-
-        if (status === "verified" || status === "completed") {
-          return sum + (Number(record.amount) || 0);
-        }
-
-        return sum;
-      }, 0);
-
-      if ($("approvedDepositTotal")) {
-        $("approvedDepositTotal").textContent = usd(depositTotal);
-      }
-    }
 
     // Load pending crypto payment reviews.
     const payments = await C
