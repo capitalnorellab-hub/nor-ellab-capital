@@ -156,50 +156,48 @@
   async function loadOverview() {
     msg("pageMessage", "Loading your account information...");
 
-    const result = await C
+    const investments = await C
       .from("investments")
       .select("amount,status")
       .eq("user_id", user.id);
 
-    if (result.error) {
+    if (investments.error) {
       msg(
         "pageMessage",
-        "Investment records could not load: " + result.error.message,
+        "Investment records could not load: " + investments.error.message,
         "error"
       );
       return;
     }
 
-    const records = result.data || [];
+    const investmentRecords = investments.data || [];
 
-    const deposits = await C
-      .from("deposits")
-      .select("amount,status")
+    const paymentReviews = await C
+      .from("crypto_payment_requests")
+      .select("status")
       .eq("user_id", user.id);
 
-    if (deposits.error) {
+    if (paymentReviews.error) {
       msg(
         "pageMessage",
-        "Deposit records could not load: " + deposits.error.message,
+        "Payment review records could not load: " + paymentReviews.error.message,
         "error"
       );
       return;
     }
 
-    const depositRecords = deposits.data || [];
+    // Active and Completed investments are investments that have been approved.
+    const approvedInvestmentAmount =
+      totalByStatus(investmentRecords, "Active") +
+      totalByStatus(investmentRecords, "Completed");
 
-    const pendingInvestment = totalByStatus(records, "Pending");
-    const activeInvestment = totalByStatus(records, "Active");
+    const pendingReviewCount = (paymentReviews.data || []).filter(record =>
+      String(record.status || "Pending").trim().toLowerCase() === "pending"
+    ).length;
 
-    // Deposited Amount includes deposits marked Verified or Completed.
-    const depositedAmount =
-      totalDepositStatus(depositRecords, "Verified") +
-      totalDepositStatus(depositRecords, "Completed");
-
-    $("pendingInvestmentTotal").textContent = usd(pendingInvestment);
-    $("activeInvestmentTotal").textContent = usd(activeInvestment);
-    $("depositedTotal").textContent = usd(depositedAmount);
-    $("investmentCount").textContent = records.length;
+    $("approvedInvestmentTotal").textContent = usd(approvedInvestmentAmount);
+    $("investmentCount").textContent = investmentRecords.length;
+    $("pendingPaymentReviews").textContent = pendingReviewCount;
 
     msg(
       "pageMessage",
