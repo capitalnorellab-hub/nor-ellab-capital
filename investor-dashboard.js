@@ -172,6 +172,20 @@
 
     const investmentRecords = investments.data || [];
 
+    const deposits = await C
+      .from("deposits")
+      .select("amount,status")
+      .eq("user_id", user.id);
+
+    if (deposits.error) {
+      msg(
+        "pageMessage",
+        "Deposit records could not load: " + deposits.error.message,
+        "error"
+      );
+      return;
+    }
+
     const paymentReviews = await C
       .from("crypto_payment_requests")
       .select("status")
@@ -186,16 +200,23 @@
       return;
     }
 
-    // Active and Completed investments are investments that have been approved.
+    // Include only Active/Completed investments and Completed deposits.
+    // Pending or rejected records are never counted as approved funds.
     const approvedInvestmentAmount =
       totalByStatus(investmentRecords, "Active") +
       totalByStatus(investmentRecords, "Completed");
+
+    const completedDepositAmount =
+      totalDepositStatus(deposits.data || [], "Completed");
+
+    const approvedFundsAmount =
+      approvedInvestmentAmount + completedDepositAmount;
 
     const pendingReviewCount = (paymentReviews.data || []).filter(record =>
       String(record.status || "Pending").trim().toLowerCase() === "pending"
     ).length;
 
-    $("approvedInvestmentTotal").textContent = usd(approvedInvestmentAmount);
+    $("approvedInvestmentTotal").textContent = usd(approvedFundsAmount);
     $("investmentCount").textContent = investmentRecords.length;
     $("pendingPaymentReviews").textContent = pendingReviewCount;
 
