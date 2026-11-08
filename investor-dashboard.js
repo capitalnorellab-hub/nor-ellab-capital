@@ -148,22 +148,9 @@
     }, 0);
   }
 
-  // NEW DEPOSIT CALCULATION
-  // Only Verified and Completed deposits count as active capital.
-  // A deposit is counted once, regardless of whether its status
-  // changes from Verified to Completed.
-  function totalVerifiedDeposits(records) {
-    return records.reduce((sum, record) => {
-      const status = String(record.status || "")
-        .trim()
-        .toLowerCase();
-
-      if (status === "verified" || status === "completed") {
-        return sum + (Number(record.amount) || 0);
-      }
-
-      return sum;
-    }, 0);
+  // Deposit totals remain separate from investment totals.
+  function totalDepositStatus(records, status) {
+    return totalByStatus(records, status);
   }
 
   async function loadOverview() {
@@ -216,13 +203,12 @@
       totalByStatus(records, "Active") +
       totalByStatus(records, "Completed");
 
-    // Verified and Completed admin-created deposits.
+    // Keep deposit statuses separate. A deposit is not an investment.
     const verifiedDepositAmount =
-      totalVerifiedDeposits(depositRecords);
+      totalDepositStatus(depositRecords, "Verified");
 
-    // Combine existing Active investments with verified deposits.
-    const combinedActiveInvestment =
-      existingActiveInvestment + verifiedDepositAmount;
+    const completedDepositAmount =
+      totalDepositStatus(depositRecords, "Completed");
 
     // Update Pending Investment Amount.
     if ($("pendingInvestmentTotal")) {
@@ -233,7 +219,7 @@
     // Update Active Investment Amount.
     if ($("activeInvestmentTotal")) {
       $("activeInvestmentTotal").textContent =
-        usd(combinedActiveInvestment);
+        usd(existingActiveInvestment);
     }
 
     // Keep Approved Investment Amount unchanged.
@@ -242,10 +228,15 @@
         usd(approvedInvestment);
     }
 
-    // Keep the separate deposit figure visible.
+    // Display verified and completed deposits separately.
     if ($("approvedDepositTotal")) {
       $("approvedDepositTotal").textContent =
         usd(verifiedDepositAmount);
+    }
+
+    if ($("completedDepositTotal")) {
+      $("completedDepositTotal").textContent =
+        usd(completedDepositAmount);
     }
 
     // Existing investment record count remains unchanged.
