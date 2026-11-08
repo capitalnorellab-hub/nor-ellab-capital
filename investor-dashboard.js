@@ -156,12 +156,10 @@
   async function loadOverview() {
     msg("pageMessage", "Loading your account information...");
 
-    // Load existing investment records.
     const result = await C
       .from("investments")
-      .select("investment_name,investment_type,amount,status,created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false });
+      .select("amount,status")
+      .eq("user_id", user.id);
 
     if (result.error) {
       msg(
@@ -174,7 +172,6 @@
 
     const records = result.data || [];
 
-    // Load deposits belonging to this investor.
     const deposits = await C
       .from("deposits")
       .select("amount,status")
@@ -191,101 +188,18 @@
 
     const depositRecords = deposits.data || [];
 
-    // Existing investment amounts.
-    const pendingInvestment =
-      totalByStatus(records, "Pending");
+    const pendingInvestment = totalByStatus(records, "Pending");
+    const activeInvestment = totalByStatus(records, "Active");
 
-    const existingActiveInvestment =
-      totalByStatus(records, "Active");
-
-    const approvedInvestment =
-      totalByStatus(records, "Approved") +
-      totalByStatus(records, "Active") +
-      totalByStatus(records, "Completed");
-
-    // Keep deposit statuses separate. A deposit is not an investment.
-    const verifiedDepositAmount =
-      totalDepositStatus(depositRecords, "Verified");
-
-    const completedDepositAmount =
+    // Deposited Amount includes deposits marked Verified or Completed.
+    const depositedAmount =
+      totalDepositStatus(depositRecords, "Verified") +
       totalDepositStatus(depositRecords, "Completed");
 
-    // Update Pending Investment Amount.
-    if ($("pendingInvestmentTotal")) {
-      $("pendingInvestmentTotal").textContent =
-        usd(pendingInvestment);
-    }
-
-    // Update Active Investment Amount.
-    if ($("activeInvestmentTotal")) {
-      $("activeInvestmentTotal").textContent =
-        usd(existingActiveInvestment);
-    }
-
-    // Keep Approved Investment Amount unchanged.
-    if ($("approvedInvestmentTotal")) {
-      $("approvedInvestmentTotal").textContent =
-        usd(approvedInvestment);
-    }
-
-    // Display verified and completed deposits separately.
-    if ($("approvedDepositTotal")) {
-      $("approvedDepositTotal").textContent =
-        usd(verifiedDepositAmount);
-    }
-
-    if ($("completedDepositTotal")) {
-      $("completedDepositTotal").textContent =
-        usd(completedDepositAmount);
-    }
-
-    // Existing investment record count remains unchanged.
-    if ($("investmentCount")) {
-      $("investmentCount").textContent = records.length;
-    }
-
-    // Display recent investments.
-    rows(
-      "recentInvestments",
-      4,
-      records.slice(0, 5),
-      (tr, record) => {
-        cell(tr, record.investment_type || record.investment_name);
-        cell(tr, usd(record.amount));
-        cell(tr, record.status || "Pending");
-        cell(tr, date(record.created_at));
-      },
-      "No investment requests yet"
-    );
-
-    // Load pending crypto payment reviews.
-    const payments = await C
-      .from("crypto_payment_requests")
-      .select("status")
-      .eq("user_id", user.id);
-
-    if (payments.error) {
-      if ($("pendingPayments")) {
-        $("pendingPayments").textContent = "—";
-      }
-
-      msg(
-        "pageMessage",
-        "Account records loaded, but payment reviews could not load: " +
-          payments.error.message,
-        "error"
-      );
-      return;
-    }
-
-    const pendingPaymentCount = (payments.data || []).filter(
-      record =>
-        String(record.status || "").trim().toLowerCase() === "pending"
-    ).length;
-
-    if ($("pendingPayments")) {
-      $("pendingPayments").textContent = pendingPaymentCount;
-    }
+    $("pendingInvestmentTotal").textContent = usd(pendingInvestment);
+    $("activeInvestmentTotal").textContent = usd(activeInvestment);
+    $("depositedTotal").textContent = usd(depositedAmount);
+    $("investmentCount").textContent = records.length;
 
     msg(
       "pageMessage",
