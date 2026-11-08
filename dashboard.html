@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="investor-dashboard.css">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="investor-dashboard.js" defer></script>
+  <script src="investor-dashboard.js?v=3" defer></script>
 </head>
 
 <body data-page="overview">
@@ -47,9 +47,20 @@
     </div>
 
     <section class="grid">
+
       <div class="stat">
-        <p>Approved Investments</p>
-        <h3 id="portfolioTotal">$0.00</h3>
+        <p>Pending Investment Amount</p>
+        <h3 id="pendingInvestmentTotal">$0.00</h3>
+      </div>
+
+      <div class="stat">
+        <p>Active Investment Amount</p>
+        <h3 id="activeInvestmentTotal">$0.00</h3>
+      </div>
+
+      <div class="stat">
+        <p>Approved Investment Amount</p>
+        <h3 id="approvedInvestmentTotal">$0.00</h3>
       </div>
 
       <div class="stat">
@@ -61,9 +72,11 @@
         <p>Pending Payment Reviews</p>
         <h3 id="pendingPayments">0</h3>
       </div>
+
     </section>
 
     <section class="section">
+
       <h2>Recent Investments</h2>
 
       <div class="tablewrap">
@@ -82,10 +95,12 @@
       </div>
 
       <p class="muted">
-        Totals include only records marked approved; they are not a live asset valuation.
+        Investment amounts are grouped by their recorded status.
+        Pending, Active and Approved amounts are shown separately.
       </p>
 
       <p id="pageMessage" class="message" aria-live="polite"></p>
+
     </section>
 
   </main>
