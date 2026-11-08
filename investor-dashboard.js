@@ -206,11 +206,12 @@
       totalByStatus(investmentRecords, "Active") +
       totalByStatus(investmentRecords, "Completed");
 
-    const completedDepositAmount =
+    const approvedDepositAmount =
+      totalDepositStatus(deposits.data || [], "Verified") +
       totalDepositStatus(deposits.data || [], "Completed");
 
     const approvedFundsAmount =
-      approvedInvestmentAmount + completedDepositAmount;
+      approvedInvestmentAmount + approvedDepositAmount;
 
     const pendingReviewCount = (paymentReviews.data || []).filter(record =>
       String(record.status || "Pending").trim().toLowerCase() === "pending"
