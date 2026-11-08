@@ -134,6 +134,148 @@
     return path;
   }
 
+  function totalByStatus(records, status) {
+    return records.reduce((sum, record) => {
+      const recordStatus = String(record.status || "")
+        .trim()
+        .toLowerCase();
+
+      if (recordStatus === status.toLowerCase()) {
+        return sum + (Number(record.amount) || 0);
+      }
+
+      return sum;
+    }, 0);
+  }
+
+  async function loadOverview() {
+    msg("pageMessage", "Loading your account information...");
+
+    // Load investments belonging to the signed-in investor.
+    const result = await C
+      .from("investments")
+      .select("investment_name,investment_type,amount,status,created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (result.error) {
+      msg(
+        "pageMessage",
+        "Investment records could not load: " + result.error.message,
+        "error"
+      );
+      return;
+    }
+
+    const records = result.data || [];
+
+    // Calculate investment totals separately.
+    if ($("pendingInvestmentTotal")) {
+      $("pendingInvestmentTotal").textContent =
+        usd(totalByStatus(records, "Pending"));
+    }
+
+    if ($("activeInvestmentTotal")) {
+      $("activeInvestmentTotal").textContent =
+        usd(totalByStatus(records, "Active"));
+    }
+
+    if ($("approvedInvestmentTotal")) {
+      $("approvedInvestmentTotal").textContent =
+        usd(totalByStatus(records, "Approved"));
+    }
+
+    if ($("investmentCount")) {
+      $("investmentCount").textContent = records.length;
+    }
+
+    // Display recent investments.
+    rows(
+      "recentInvestments",
+      4,
+      records.slice(0, 5),
+      (tr, record) => {
+        cell(tr, record.investment_type || record.investment_name);
+        cell(tr, usd(record.amount));
+        cell(tr, record.status || "Pending");
+        cell(tr, date(record.created_at));
+      },
+      "No investment requests yet"
+    );
+
+    // Load the investor's deposits separately.
+    const deposits = await C
+      .from("deposits")
+      .select("amount,status")
+      .eq("user_id", user.id);
+
+    if (deposits.error) {
+      if ($("approvedDepositTotal")) {
+        $("approvedDepositTotal").textContent = "—";
+      }
+
+      msg(
+        "pageMessage",
+        "Investments loaded, but deposits could not load: " +
+          deposits.error.message,
+        "error"
+      );
+    } else {
+      // Count Verified and Completed deposits.
+      // Each deposit row is counted once, whatever its current status.
+      const depositTotal = (deposits.data || []).reduce((sum, record) => {
+        const status = String(record.status || "")
+          .trim()
+          .toLowerCase();
+
+        if (status === "verified" || status === "completed") {
+          return sum + (Number(record.amount) || 0);
+        }
+
+        return sum;
+      }, 0);
+
+      if ($("approvedDepositTotal")) {
+        $("approvedDepositTotal").textContent = usd(depositTotal);
+      }
+    }
+
+    // Load pending crypto payment reviews.
+    const payments = await C
+      .from("crypto_payment_requests")
+      .select("status")
+      .eq("user_id", user.id);
+
+    if (payments.error) {
+      if ($("pendingPayments")) {
+        $("pendingPayments").textContent = "—";
+      }
+
+      msg(
+        "pageMessage",
+        "Account records loaded, but payment reviews could not load: " +
+          payments.error.message,
+        "error"
+      );
+      return;
+    }
+
+    const pendingPaymentCount = (payments.data || []).filter(
+      record =>
+        String(record.status || "").trim().toLowerCase() === "pending"
+    ).length;
+
+    if ($("pendingPayments")) {
+      $("pendingPayments").textContent = pendingPaymentCount;
+    }
+
+    msg(
+      "pageMessage",
+      "Your account overview has been updated.",
+      "success"
+    );
+  }
+
   async function start() {
     const currentFile =
       location.pathname.split("/").pop() || "dashboard.html";
@@ -180,61 +322,7 @@
     const page = document.body.dataset.page;
 
     if (page === "overview") {
-      const result = await C
-        .from("investments")
-        .select("investment_name,investment_type,amount,status,created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      if (result.error) {
-        msg("pageMessage", result.error.message, "error");
-        return;
-      }
-
-      const records = result.data || [];
-
-      if ($("investmentCount")) {
-        $("investmentCount").textContent = records.length;
-      }
-
-      if ($("portfolioTotal")) {
-        const total = records.reduce((sum, record) => {
-          return String(record.status).toLowerCase() === "approved"
-            ? sum + (Number(record.amount) || 0)
-            : sum;
-        }, 0);
-
-        $("portfolioTotal").textContent = usd(total);
-      }
-
-      if ($("pendingPayments")) {
-        const payments = await C
-          .from("crypto_payment_requests")
-          .select("status")
-          .eq("user_id", user.id);
-
-        $("pendingPayments").textContent = payments.error
-          ? "—"
-          : (payments.data || []).filter(
-              record =>
-                String(record.status).toLowerCase() === "pending"
-            ).length;
-      }
-
-      rows(
-        "recentInvestments",
-        4,
-        records.slice(0, 5),
-        (tr, record) => {
-          cell(tr, record.investment_type || record.investment_name);
-          cell(tr, usd(record.amount));
-          cell(tr, record.status || "Pending");
-          cell(tr, date(record.created_at));
-        },
-        "No investment requests yet"
-      );
-
-      msg("pageMessage", "Overview updated.", "success");
+      await loadOverview();
     }
 
     if (page === "investments") {
@@ -502,11 +590,13 @@
   document.addEventListener("DOMContentLoaded", () => {
     start().catch(error => {
       console.error("Dashboard error:", error);
+
       msg(
         "pageMessage",
-        "The page could not finish loading. Please refresh and try again.",
+        "The page could not finish loading: " + error.message,
         "error"
       );
+
       msg(
         "formMessage",
         "The page could not finish loading. Please refresh and try again.",
