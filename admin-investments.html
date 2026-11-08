@@ -309,18 +309,64 @@ function addTextRow(card, label, value) {
 }
 
 async function updateInvestmentStatus(investment, select, button, message) {
+    if (!administratorVerified) {
+        message.textContent = "Administrator access is not verified.";
+        return;
+    }
+
+    const allowedStatuses = ["Active", "Pending", "Completed", "Cancelled"];
+    const nextStatus = select.value;
+
+    if (!allowedStatuses.includes(nextStatus)) {
+        message.textContent = "Invalid investment status.";
+        return;
+    }
+
+    if (nextStatus === investment.status) {
+        message.textContent = "No status change was made.";
+        return;
+    }
+
+    const confirmed = window.confirm(
+        "Change this investment from " + investment.status +
+        " to " + nextStatus + "? This will update the investor's account."
+    );
+
+    if (!confirmed) {
+        select.value = investment.status;
+        message.textContent = "Status change cancelled.";
+        return;
+    }
+
     button.disabled = true;
     message.textContent = "Updating status...";
 
     try {
-        const { error } = await client
+        const { data, error } = await client
             .from("investments")
-            .update({ status: select.value })
-            .eq("id", investment.id);
+            .update({ status: nextStatus })
+            .eq("id", investment.id)
+            .select("id, user_id, status")
+            .maybeSingle();
 
         if (error) throw error;
 
-        message.textContent = "Status updated.";
+        if (!data) {
+            throw new Error(
+                "No investment row was updated. Check administrator permissions and the investment record."
+            );
+        }
+
+        if (data.user_id !== investment.user_id || data.status !== nextStatus) {
+            throw new Error(
+                "The database response did not match the requested investment update."
+            );
+        }
+
+        message.textContent =
+            "Status updated to " + data.status +
+            ". Refreshing the investor records...";
+
         await loadInvestments();
 
     } catch (error) {
