@@ -362,6 +362,29 @@
         <div class="stat-label">Pending Withdrawals</div>
         <div class="stat-value gold" id="pending-withdrawals">—</div>
       </div>
+      <div class="stat">
+        <div class="stat-label">Active Credit-Eligible Investors</div>
+        <div class="stat-value" id="active-credit-investors">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Daily Company Credit Requirement</div>
+        <div class="stat-value gold" id="daily-credit-requirement">—</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Company Daily Credit</h2>
+      <p class="muted">Planned amount: $65 per eligible investor for each 24-hour cycle.</p>
+      <p><strong>System status:</strong> <span class="status">Not activated</span></p>
+      <p id="daily-credit-summary" class="notice" aria-live="polite">
+        Loading active investor count...
+      </p>
+      <p class="muted small">
+        This is a planning estimate only. No investor is being credited by this panel.
+        Activation requires verified company funds, a secure credit ledger, duplicate-credit
+        protection, and scheduled processing. Company credits must be identified as credits,
+        not represented as trading returns.
+      </p>
     </section>
 
     <section class="panel">
@@ -833,6 +856,35 @@
         setText("total-investors", String(profiles.length));
         setText("total-investments", String(investments.length));
         setText("total-deposits", String(deposits.length));
+
+        const eligibleInvestorIds = new Set(
+          investments
+            .filter((row) => String(row.status || "").toLowerCase() === "active")
+            .map((row) => row.user_id)
+            .filter(Boolean)
+        );
+        const eligibleInvestorCount = eligibleInvestorIds.size;
+        const dailyCreditRequirement = eligibleInvestorCount * 65;
+
+        setText("active-credit-investors", String(eligibleInvestorCount));
+        setText(
+          "daily-credit-requirement",
+          "$" + dailyCreditRequirement.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })
+        );
+        setText(
+          "daily-credit-summary",
+          eligibleInvestorCount +
+            " distinct investor(s) currently have at least one Active investment. " +
+            "At $65 each, the estimated company funding requirement is $" +
+            dailyCreditRequirement.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }) +
+            " per 24-hour cycle. This is not a payment or balance update."
+        );
         setText("pending-deposits", String(countPending(deposits)));
         setText("total-crypto-payments", String(crypto.length));
 
