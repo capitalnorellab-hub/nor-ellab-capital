@@ -156,76 +156,62 @@
   async function loadOverview() {
     msg("pageMessage", "Loading your account information...");
 
-    const investments = await C
-      .from("investments")
-      .select("amount,status")
-      .eq("user_id", user.id);
+    const [accountResult, investmentResult, depositResult, withdrawalResult, transactionResult] = await Promise.all([
+      C.from("investor_accounts").select("available_balance").eq("user_id", user.id).maybeSingle(),
+      C.from("investments").select("amount,status").eq("user_id", user.id),
+      C.from("deposits").select("amount,status").eq("user_id", user.id),
+      C.from("withdrawal_requests").select("amount,status").eq("user_id", user.id),
+      C.from("transactions").select("amount,status,transaction_type,description").eq("user_id", user.id)
+    ]);
 
-    if (investments.error) {
-      msg(
-        "pageMessage",
-        "Investment records could not load: " + investments.error.message,
-        "error"
-      );
+    const failed = [
+      ["Account balance", accountResult],
+      ["Investments", investmentResult],
+      ["Deposits", depositResult],
+      ["Withdrawals", withdrawalResult],
+      ["Transactions", transactionResult]
+    ].filter(([, result]) => result.error);
+
+    if (failed.length) {
+      msg("pageMessage", "Some account figures could not be loaded: " +
+        failed.map(([name, result]) => name + " — " + result.error.message).join("; "),
+        "error");
       return;
     }
 
-    const investmentRecords = investments.data || [];
+    const investments = investmentResult.data || [];
+    const deposits = depositResult.data || [];
+    const withdrawals = withdrawalResult.data || [];
+    const transactions = transactionResult.data || [];
 
-    const deposits = await C
-      .from("deposits")
-      .select("amount,status")
-      .eq("user_id", user.id);
+    const activeInvestment = totalByStatus(investments, "Active");
+    const pendingInvestment = totalByStatus(investments, "Pending");
+    const pendingDeposits = totalByStatus(deposits, "Pending");
+    const pendingWithdrawal = totalByStatus(withdrawals, "Pending");
+    const approvedWithdrawal = withdrawals.reduce((sum, item) => {
+      const s = String(item.status || "").toLowerCase();
+      return ["approved", "completed", "paid"].includes(s) ? sum + (Number(item.amount) || 0) : sum;
+    }, 0);
 
-    if (deposits.error) {
-      msg(
-        "pageMessage",
-        "Deposit records could not load: " + deposits.error.message,
-        "error"
-      );
-      return;
-    }
+    // Only completed entries explicitly identified as profit/credit are counted.
+    // Investment principal and deposits are never treated as profit.
+    const profit = transactions.reduce((sum, item) => {
+      const type = String(item.transaction_type || "").toLowerCase();
+      const description = String(item.description || "").toLowerCase();
+      const isProfit = type.includes("profit") || type.includes("credit");
+      return isProfit && String(item.status || "").toLowerCase() === "completed"
+        ? sum + (Number(item.amount) || 0) : sum;
+    }, 0);
 
-    const paymentReviews = await C
-      .from("crypto_payment_requests")
-      .select("status")
-      .eq("user_id", user.id);
+    $("accountBalance").textContent = usd(accountResult.data?.available_balance || 0);
+    $("investmentProfit").textContent = usd(profit);
+    $("activeInvestmentAmount").textContent = usd(activeInvestment);
+    $("pendingAmount").textContent = usd(pendingInvestment + pendingDeposits);
+    $("approvedWithdrawals").textContent = usd(approvedWithdrawal);
+    $("pendingWithdrawals").textContent = usd(pendingWithdrawal);
+    $("dailyCreditAmount").textContent = usd(0);
 
-    if (paymentReviews.error) {
-      msg(
-        "pageMessage",
-        "Payment review records could not load: " + paymentReviews.error.message,
-        "error"
-      );
-      return;
-    }
-
-    // Include only Active/Completed investments and Completed deposits.
-    // Pending or rejected records are never counted as approved funds.
-    const approvedInvestmentAmount =
-      totalByStatus(investmentRecords, "Active") +
-      totalByStatus(investmentRecords, "Completed");
-
-    const approvedDepositAmount =
-      totalDepositStatus(deposits.data || [], "Verified") +
-      totalDepositStatus(deposits.data || [], "Completed");
-
-    const approvedFundsAmount =
-      approvedInvestmentAmount + approvedDepositAmount;
-
-    const pendingReviewCount = (paymentReviews.data || []).filter(record =>
-      String(record.status || "Pending").trim().toLowerCase() === "pending"
-    ).length;
-
-    $("approvedInvestmentTotal").textContent = usd(approvedFundsAmount);
-    $("investmentCount").textContent = investmentRecords.length;
-    $("pendingPaymentReviews").textContent = pendingReviewCount;
-
-    msg(
-      "pageMessage",
-      "Your account overview has been updated.",
-      "success"
-    );
+    msg("pageMessage", "Your account overview has been updated.", "success");
   }
 
   async function start() {
