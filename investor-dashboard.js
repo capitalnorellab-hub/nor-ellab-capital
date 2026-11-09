@@ -184,17 +184,14 @@
     const withdrawals = withdrawalResult.data || [];
     const transactions = transactionResult.data || [];
 
-    const activeInvestment = totalByStatus(investments, "Active");
-    const approvedInvestment = investments.reduce((sum, item) => {
-      const status = String(item.status || "").trim().toLowerCase();
-      return ["active", "completed"].includes(status)
-        ? sum + (Number(item.amount) || 0) : sum;
-    }, 0);
+    // Verified/completed deposits represent the investor's funded amount.
+    // Use this single source for both account balance principal and active investment.
     const approvedDeposit = deposits.reduce((sum, item) => {
       const status = String(item.status || "").trim().toLowerCase();
       return ["verified", "completed"].includes(status)
         ? sum + (Number(item.amount) || 0) : sum;
     }, 0);
+    const activeInvestment = approvedDeposit;
     const pendingInvestment = totalByStatus(investments, "Pending");
     const pendingDeposits = totalByStatus(deposits, "Pending");
     const pendingWithdrawal = totalByStatus(withdrawals, "Pending");
@@ -213,10 +210,8 @@
         ? sum + (Number(item.amount) || 0) : sum;
     }, 0);
 
-    $("accountBalance").textContent = usd(accountResult.data?.available_balance || 0);
+    $("accountBalance").textContent = usd(approvedDeposit + profit);
     $("investmentProfit").textContent = usd(profit);
-    $("approvedInvestments").textContent = usd(approvedInvestment);
-    $("approvedDeposits").textContent = usd(approvedDeposit);
     $("activeInvestmentAmount").textContent = usd(activeInvestment);
     $("pendingAmount").textContent = usd(pendingInvestment + pendingDeposits);
     $("approvedWithdrawals").textContent = usd(approvedWithdrawal);
