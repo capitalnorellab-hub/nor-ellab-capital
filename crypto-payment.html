@@ -115,8 +115,8 @@
             Pay with USDT (TRC-20)
         </button>
 
-        <button id="paypal-test" style="display:none">
-            PayPal (Test Display Only)
+        <button id="paypal-manual">
+            PayPal — Manual Request
         </button>
 
     </div>
@@ -142,10 +142,7 @@ const price =
 const total =
     params.get("total") || "";
 
-/* Show the PayPal test option only when explicitly enabled in the URL */
-if (params.get("paypalTest") === "1") {
-    document.getElementById("paypal-test").style.display = "block";
-}
+
 
 
 /* DISPLAY */
@@ -252,10 +249,10 @@ document.getElementById(
 );
 
 
-/* PAYPAL TEST DISPLAY ONLY — no payment processing */
-document.getElementById("paypal-test").addEventListener("click", function () {
+/* PAYPAL MANUAL REQUEST */
+document.getElementById("paypal-manual").addEventListener("click", function () {
     const url = new URL("crypto-payment-details.html", window.location.href);
-    url.searchParams.set("method", "PAYPAL_TEST");
+    url.searchParams.set("method", "PAYPAL_MANUAL");
     url.searchParams.set("asset", asset);
     url.searchParams.set("amount", amount);
     url.searchParams.set("price", price);
