@@ -375,15 +375,15 @@ else if (
 }
 
 
-/* PAYPAL TEST DISPLAY ONLY — display email, do not process payments */
-else if (normalizedMethod === "PAYPALTEST") {
-    paymentMethod = "PayPal (Test Display Only)";
-    walletAddress = "Bbyann864@gmail.com";
-    networkWarning = "TEST DISPLAY ONLY — this page does not process or verify PayPal payments.";
-    document.querySelector(".dashboard-card h3").textContent = "PayPal Email";
-    document.getElementById("copy-wallet").textContent = "Copy PayPal Email";
+/* PAYPAL MANUAL REQUEST — request approved payment instructions through support */
+else if (normalizedMethod === "PAYPALMANUAL") {
+    paymentMethod = "PayPal — Manual Request";
+    walletAddress = "Please contact Nor Ellab Capital support to request payment instructions.";
+    networkWarning = "Manual request only. No PayPal payment is processed or confirmed on this page.";
+    document.querySelector(".dashboard-card h3").textContent = "How to Request";
+    document.getElementById("copy-wallet").style.display = "none";
     document.getElementById("transaction-card").style.display = "none";
-    document.querySelector(".dashboard-card p[style]").textContent = "For display testing only. No payment is processed on this page.";
+    document.querySelector(".dashboard-card p[style]").textContent = "Contact support before sending any funds. Do not send payment until you receive and independently verify approved payment instructions.";
 }
 
 
