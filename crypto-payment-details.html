@@ -201,7 +201,7 @@
 
         <!-- Transaction Hash -->
 
-        <div class="dashboard-card">
+        <div class="dashboard-card" id="transaction-card">
 
             <h2>
                 Submit Transaction Hash
@@ -372,6 +372,18 @@ else if (
     networkWarning =
         "TRON Network (TRC-20) — Send USDT using TRC-20 only.";
 
+}
+
+
+/* PAYPAL TEST DISPLAY ONLY — display email, do not process payments */
+else if (normalizedMethod === "PAYPALTEST") {
+    paymentMethod = "PayPal (Test Display Only)";
+    walletAddress = "Bbyann864@gmail.com";
+    networkWarning = "TEST DISPLAY ONLY — this page does not process or verify PayPal payments.";
+    document.querySelector(".dashboard-card h3").textContent = "PayPal Email";
+    document.getElementById("copy-wallet").textContent = "Copy PayPal Email";
+    document.getElementById("transaction-card").style.display = "none";
+    document.querySelector(".dashboard-card p[style]").textContent = "For display testing only. No payment is processed on this page.";
 }
 
 
