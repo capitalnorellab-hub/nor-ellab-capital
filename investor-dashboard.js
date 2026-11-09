@@ -325,7 +325,10 @@
         }
 
         if ($("copyWalletButton")) {
-          $("copyWalletButton").style.display = isPayPalManual ? "none" : "";
+          $("copyWalletButton").style.display = "";
+          $("copyWalletButton").textContent = isPayPalManual
+            ? "Copy PayPal Email"
+            : "Copy Wallet Address";
         }
 
         const screenshotInput = $("paymentScreenshot");
@@ -355,7 +358,12 @@
               $("walletAddress").textContent
             );
 
-            msg("formMessage", "Wallet address copied.", "success");
+            const isPayPalManual = $("walletCurrency")?.value === "PAYPAL_MANUAL";
+            msg(
+              "formMessage",
+              isPayPalManual ? "PayPal email copied." : "Wallet address copied.",
+              "success"
+            );
           } catch {
             msg(
               "formMessage",
