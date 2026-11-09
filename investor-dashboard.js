@@ -320,7 +320,7 @@
 
         if ($("walletAddress")) {
           $("walletAddress").textContent = isPayPalManual
-            ? "Manual request selected. Contact Nor Ellab Capital support for payment instructions. Do not send funds until instructions are provided and verified."
+            ? "Bbyann864@gmail.com"
             : WALLETS[currency] || WALLETS.USDT;
         }
 
