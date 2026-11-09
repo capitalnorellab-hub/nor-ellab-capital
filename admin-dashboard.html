@@ -332,6 +332,34 @@
       </button>
     </section>
 
+
+    <section class="panel">
+      <h2>Record Verified Profit</h2>
+      <p class="muted">
+        Enter profit only when it has actually been earned and verified.
+        This creates a completed USD profit transaction for the selected investor
+        and updates the profit and total balance figures on their dashboard.
+        Do not use this form for deposits, investment principal, or company funding.
+      </p>
+      <form id="profit-form">
+        <label for="profit-investor">Investor</label>
+        <select id="profit-investor" required disabled>
+          <option value="">Loading investors...</option>
+        </select>
+        <label for="profit-amount">Verified profit amount (USD)</label>
+        <input id="profit-amount" type="number" min="0.01" step="0.01"
+          placeholder="e.g. 25.00" required
+          style="box-sizing:border-box;width:100%;padding:12px;margin:6px 0 16px;border:1px solid #ccc;border-radius:6px;">
+        <label for="profit-description">Profit description</label>
+        <input id="profit-description" type="text" maxlength="240"
+          placeholder="e.g. Verified trading profit for 9 November"
+          required
+          style="box-sizing:border-box;width:100%;padding:12px;margin:6px 0 16px;border:1px solid #ccc;border-radius:6px;">
+        <button id="profit-submit" type="submit" disabled>Record Profit</button>
+        <p id="profit-message" class="notice" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
     <section class="stats">
       <div class="stat">
         <div class="stat-label">Investor Accounts</div>
@@ -816,6 +844,102 @@
         box.appendChild(row);
       });
     }
+
+
+    async function loadProfitInvestors() {
+      const select = $("profit-investor");
+      select.disabled = true;
+      select.innerHTML = '<option value="">Loading investors...</option>';
+
+      const { data, error } = await client
+        .from("profiles")
+        .select("user_id, full_name, email")
+        .order("full_name", { ascending: true });
+
+      if (error) {
+        select.innerHTML = '<option value="">Could not load investors</option>';
+        $("profit-message").textContent = "Could not load investors: " + error.message;
+        return;
+      }
+
+      select.innerHTML = '<option value="">Select investor</option>';
+      (data || []).forEach((profile) => {
+        if (!profile.user_id) return;
+        const option = document.createElement("option");
+        option.value = profile.user_id;
+        option.textContent =
+          (profile.full_name || "Unnamed investor") + " — " +
+          (profile.email || "No email");
+        select.appendChild(option);
+      });
+      select.disabled = !isAuthorized;
+      $("profit-submit").disabled = !isAuthorized;
+    }
+
+    $("profit-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!isAuthorized || !currentUser) {
+        $("profit-message").textContent = "Administrator access is not verified.";
+        return;
+      }
+
+      const userId = $("profit-investor").value;
+      const amount = Number($("profit-amount").value);
+      const description = $("profit-description").value.trim();
+
+      if (!userId || !Number.isFinite(amount) || amount <= 0 || !description) {
+        $("profit-message").textContent = "Select an investor and enter a valid amount and description.";
+        return;
+      }
+
+      const selectedName = $("profit-investor").selectedOptions[0]?.textContent || "this investor";
+      const confirmed = window.confirm(
+        "Record $" + amount.toFixed(2) + " as verified profit for " +
+        selectedName + "? This will immediately update the investor's dashboard."
+      );
+      if (!confirmed) return;
+
+      $("profit-submit").disabled = true;
+      $("profit-message").textContent = "Recording profit...";
+
+      try {
+        const { data, error } = await client
+          .from("transactions")
+          .insert({
+            user_id: userId,
+            transaction_type: "profit",
+            amount: amount,
+            status: "Completed",
+            asset: "USD",
+            description: description
+          })
+          .select("id, user_id, transaction_type, amount, status")
+          .single();
+
+        if (error) throw error;
+        if (!data || data.user_id !== userId ||
+            data.transaction_type !== "profit" ||
+            data.status !== "Completed" ||
+            Number(data.amount) !== amount) {
+          throw new Error("The saved transaction could not be verified.");
+        }
+
+        $("profit-message").textContent =
+          "Profit recorded successfully. Transaction ID: " + data.id +
+          ". The investor dashboard will include $" + amount.toFixed(2) +
+          " in Investment Profit and Total Account Balance.";
+        $("profit-form").reset();
+        await loadDashboard();
+        await loadProfitInvestors();
+      } catch (error) {
+        console.error("Profit recording failed:", error);
+        $("profit-message").textContent =
+          "Could not record profit: " + (error.message || "Unknown error");
+      } finally {
+        $("profit-submit").disabled = !isAuthorized;
+      }
+    });
 
     async function loadDashboard() {
       $("refresh-button").disabled = true;
