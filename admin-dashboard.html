@@ -959,6 +959,9 @@
           return;
         }
 
+        // Populate the verified-profit investor selector after admin access is confirmed.
+        await loadProfitInvestors();
+
         const [
           profiles,
           investments,
