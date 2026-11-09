@@ -308,17 +308,33 @@
 
       function updateWallet() {
         const currency = $("walletCurrency")?.value || "USDT";
+        const isPayPalManual = currency === "PAYPAL_MANUAL";
 
         if ($("walletLabel")) {
-          $("walletLabel").textContent =
-            currency === "BTC"
+          $("walletLabel").textContent = isPayPalManual
+            ? "PayPal — Manual Request"
+            : currency === "BTC"
               ? "Bitcoin (BTC) wallet address"
               : "USDT (TRC20) wallet address";
         }
 
         if ($("walletAddress")) {
-          $("walletAddress").textContent =
-            WALLETS[currency] || WALLETS.USDT;
+          $("walletAddress").textContent = isPayPalManual
+            ? "Manual request selected. Contact Nor Ellab Capital support for payment instructions. Do not send funds until instructions are provided and verified."
+            : WALLETS[currency] || WALLETS.USDT;
+        }
+
+        if ($("copyWalletButton")) {
+          $("copyWalletButton").style.display = isPayPalManual ? "none" : "";
+        }
+
+        const screenshotInput = $("paymentScreenshot");
+        if (screenshotInput) {
+          screenshotInput.required = !isPayPalManual;
+          const screenshotLabel = document.querySelector('label[for="paymentScreenshot"]');
+          if (screenshotLabel) screenshotLabel.textContent = isPayPalManual
+            ? "Payment Screenshot (Optional for manual request)"
+            : "Upload Payment Screenshot (Required)";
         }
 
         if ($("paymentCurrency")) {
@@ -366,7 +382,10 @@
           return;
         }
 
-        const screenshotError = validateScreenshot(screenshot);
+        const isPayPalManual = $("walletCurrency")?.value === "PAYPAL_MANUAL";
+        const screenshotError = screenshot || !isPayPalManual
+          ? validateScreenshot(screenshot)
+          : "";
 
         if (screenshotError) {
           msg("formMessage", screenshotError, "error");
@@ -379,7 +398,7 @@
         }
 
         try {
-          const screenshotPath = await uploadScreenshot(screenshot);
+          const screenshotPath = screenshot ? await uploadScreenshot(screenshot) : null;
 
           const { error: insertError } = await C
             .from("investments")
