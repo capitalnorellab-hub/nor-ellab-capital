@@ -191,7 +191,14 @@
       return ["verified", "completed"].includes(status)
         ? sum + (Number(item.amount) || 0) : sum;
     }, 0);
-    const activeInvestment = approvedDeposit;
+    // Approved investments submitted through Invest Now (including manual
+    // PayPal requests approved by an administrator) must appear in the overview.
+    const approvedInvestment = investments.reduce((sum, item) => {
+      const status = String(item.status || "").trim().toLowerCase();
+      return status === "active"
+        ? sum + (Number(item.amount) || 0) : sum;
+    }, 0);
+    const activeInvestment = approvedDeposit + approvedInvestment;
     const pendingInvestment = totalByStatus(investments, "Pending");
     const pendingDeposits = totalByStatus(deposits, "Pending");
     const pendingWithdrawal = totalByStatus(withdrawals, "Pending");
@@ -210,7 +217,7 @@
         ? sum + (Number(item.amount) || 0) : sum;
     }, 0);
 
-    $("accountBalance").textContent = usd(approvedDeposit + profit);
+    $("accountBalance").textContent = usd(activeInvestment + profit);
     $("investmentProfit").textContent = usd(profit);
     $("activeInvestmentAmount").textContent = usd(activeInvestment);
     $("pendingAmount").textContent = usd(pendingInvestment + pendingDeposits);
