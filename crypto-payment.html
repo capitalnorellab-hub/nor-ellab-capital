@@ -115,6 +115,10 @@
             Pay with USDT (TRC-20)
         </button>
 
+        <button id="paypal-test">
+            PayPal (Test Display Only)
+        </button>
+
     </div>
 
 </main>
@@ -241,6 +245,18 @@ document.getElementById(
             url.toString();
     }
 );
+
+
+/* PAYPAL TEST DISPLAY ONLY — no payment processing */
+document.getElementById("paypal-test").addEventListener("click", function () {
+    const url = new URL("crypto-payment-details.html", window.location.href);
+    url.searchParams.set("method", "PAYPAL_TEST");
+    url.searchParams.set("asset", asset);
+    url.searchParams.set("amount", amount);
+    url.searchParams.set("price", price);
+    url.searchParams.set("total", total);
+    window.location.href = url.toString();
+});
 
 </script>
 
