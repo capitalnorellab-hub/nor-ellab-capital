@@ -209,7 +209,7 @@
     $("pendingAmount").textContent = usd(pendingInvestment + pendingDeposits);
     $("approvedWithdrawals").textContent = usd(approvedWithdrawal);
     $("pendingWithdrawals").textContent = usd(pendingWithdrawal);
-    $("dailyCreditAmount").textContent = usd(0);
+    if ($("dailyCreditAmount")) $("dailyCreditAmount").textContent = usd(0);
 
     msg("pageMessage", "Your account overview has been updated.", "success");
   }
