@@ -185,6 +185,16 @@
     const transactions = transactionResult.data || [];
 
     const activeInvestment = totalByStatus(investments, "Active");
+    const approvedInvestment = investments.reduce((sum, item) => {
+      const status = String(item.status || "").trim().toLowerCase();
+      return ["active", "completed"].includes(status)
+        ? sum + (Number(item.amount) || 0) : sum;
+    }, 0);
+    const approvedDeposit = deposits.reduce((sum, item) => {
+      const status = String(item.status || "").trim().toLowerCase();
+      return ["verified", "completed"].includes(status)
+        ? sum + (Number(item.amount) || 0) : sum;
+    }, 0);
     const pendingInvestment = totalByStatus(investments, "Pending");
     const pendingDeposits = totalByStatus(deposits, "Pending");
     const pendingWithdrawal = totalByStatus(withdrawals, "Pending");
@@ -205,6 +215,8 @@
 
     $("accountBalance").textContent = usd(accountResult.data?.available_balance || 0);
     $("investmentProfit").textContent = usd(profit);
+    $("approvedInvestments").textContent = usd(approvedInvestment);
+    $("approvedDeposits").textContent = usd(approvedDeposit);
     $("activeInvestmentAmount").textContent = usd(activeInvestment);
     $("pendingAmount").textContent = usd(pendingInvestment + pendingDeposits);
     $("approvedWithdrawals").textContent = usd(approvedWithdrawal);
