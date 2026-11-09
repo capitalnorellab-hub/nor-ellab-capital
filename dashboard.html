@@ -31,7 +31,6 @@
     <a href="dashboard.html">Overview</a>
     <a href="invest-now.html">Invest Now</a>
     <a href="my-investments.html">My Investments</a>
-    <a href="payment-review.html">Payment Review</a>
     <a href="crypto-payment-history.html">Crypto Payment History</a>
     <a href="deposit-history.html">Deposit History</a>
     <a href="transactions.html">Transactions</a>
@@ -46,23 +45,23 @@
       <p>Your Nor Ellab Capital account</p>
     </div>
 
-    <section class="grid">
+    <section class="grid" aria-label="Account overview">
+      <div class="stat"><p>Total Account Balance</p><h3 id="accountBalance">$0.00</h3></div>
+      <div class="stat"><p>Investment Profit</p><h3 id="investmentProfit">$0.00</h3></div>
+      <div class="stat"><p>Active Investment Amount</p><h3 id="activeInvestmentAmount">$0.00</h3></div>
+      <div class="stat"><p>Pending</p><h3 id="pendingAmount">$0.00</h3></div>
+      <div class="stat"><p>Approved Withdrawals</p><h3 id="approvedWithdrawals">$0.00</h3></div>
+      <div class="stat"><p>Pending Withdrawals</p><h3 id="pendingWithdrawals">$0.00</h3></div>
+    </section>
 
-      <div class="stat">
-        <p>Approved Funds</p>
-        <h3 id="approvedInvestmentTotal">$0.00</h3>
+    <section class="section credit-panel">
+      <h2>Company Daily Credit</h2>
+      <p class="muted">Company-funded credit policy: up to $65 per 24-hour cycle for an eligible active investment.</p>
+      <p class="notice">Automatic crediting is not active yet. No credit is added to your balance until the company-funded credit ledger and scheduled processing are enabled.</p>
+      <div class="credit-track" role="img" aria-label="Daily credit progress is not active">
+        <div class="credit-track-fill"></div>
       </div>
-
-      <div class="stat">
-        <p>Investment Requests</p>
-        <h3 id="investmentCount">0</h3>
-      </div>
-
-      <div class="stat">
-        <p>Pending Payment Reviews</p>
-        <h3 id="pendingPaymentReviews">0</h3>
-      </div>
-
+      <p class="muted">Daily target: $65.00 · Current credited amount: <strong id="dailyCreditAmount">$0.00</strong></p>
     </section>
 
     <p id="pageMessage" class="message" aria-live="polite"></p>
