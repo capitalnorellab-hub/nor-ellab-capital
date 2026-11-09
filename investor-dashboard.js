@@ -195,7 +195,7 @@
     // PayPal requests approved by an administrator) must appear in the overview.
     const approvedInvestment = investments.reduce((sum, item) => {
       const status = String(item.status || "").trim().toLowerCase();
-      return status === "active"
+      return ["active", "completed"].includes(status)
         ? sum + (Number(item.amount) || 0) : sum;
     }, 0);
     const activeInvestment = approvedDeposit + approvedInvestment;
