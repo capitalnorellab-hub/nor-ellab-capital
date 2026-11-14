@@ -153,6 +153,49 @@
     return totalByStatus(records, status);
   }
 
+
+  async function loadPrivateInvestorNotices() {
+    const section = $("privateInvestorNoticeSection");
+    const container = $("privateInvestorNotices");
+    if (!section || !container || !user) return;
+
+    section.hidden = true;
+    container.replaceChildren();
+
+    const { data, error } = await C
+      .from("private_investor_notices")
+      .select("id, title, message, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Private dashboard notices could not be loaded:", error.message);
+      return;
+    }
+
+    if (!data || data.length === 0) return;
+
+    data.forEach(notice => {
+      const article = document.createElement("article");
+      article.className = "private-notice-card";
+
+      const heading = document.createElement("h2");
+      heading.textContent = notice.title;
+
+      const body = document.createElement("p");
+      body.textContent = notice.message;
+
+      const footer = document.createElement("div");
+      footer.className = "private-notice-footer";
+      footer.textContent = "Nor Ellab Capital Administration · " + date(notice.created_at);
+
+      article.append(heading, body, footer);
+      container.appendChild(article);
+    });
+
+    section.hidden = false;
+  }
+
   async function loadOverview() {
     msg("pageMessage", "Loading your account information...");
 
@@ -274,6 +317,7 @@
     const page = document.body.dataset.page;
 
     if (page === "overview") {
+      await loadPrivateInvestorNotices();
       await loadOverview();
     }
 
