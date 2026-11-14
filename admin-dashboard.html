@@ -359,6 +359,7 @@
         <select id="profit-investor" required disabled>
           <option value="">Loading investors...</option>
         </select>
+        <button id="profit-retry" class="secondary" type="button">Retry Investor List</button>
         <label for="profit-amount">Verified profit amount (USD)</label>
         <input id="profit-amount" type="number" min="0.01" step="0.01"
           placeholder="e.g. 25.00" required
@@ -387,6 +388,7 @@
             <select id="notice-investor" required disabled>
               <option value="">Loading investors...</option>
             </select>
+            <button id="notice-retry" class="secondary" type="button">Retry Investor List</button>
           </div>
           <div class="notice-field">
             <label for="notice-title">Notice heading</label>
@@ -893,24 +895,54 @@
     }
 
 
+    // Slow-network protection for read-only investor profile requests.
+    // Supabase automatically retries eligible transient GET failures; this adds
+    // a 20-second timeout and a small bounded retry for dropped connections.
+    async function fetchProfilesWithRetry() {
+      let lastError = null;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (!navigator.onLine) {
+          lastError = new Error("Your device appears to be offline. Check your connection.");
+        } else {
+          try {
+            const { data, error } = await client
+              .from("profiles")
+              .select("user_id, full_name, email")
+              .order("full_name", { ascending: true })
+              .abortSignal(AbortSignal.timeout(20000));
+            if (!error) return { data: data || [], error: null };
+            lastError = error;
+            // Permission, SQL, and schema errors will not improve by retrying.
+            if (error.code || (error.status && error.status < 500)) break;
+          } catch (requestError) {
+            lastError = requestError;
+          }
+        }
+        if (attempt < 2) {
+          await new Promise(resolve => setTimeout(resolve, 1200 * (attempt + 1)));
+        }
+      }
+      return { data: null, error: lastError || new Error("Unable to reach investor records.") };
+    }
+
     async function loadProfitInvestors() {
       const select = $("profit-investor");
+      const previousValue = select.value;
       select.disabled = true;
       select.innerHTML = '<option value="">Loading investors...</option>';
+      $("profit-message").textContent = "Connecting to investor records…";
 
-      const { data, error } = await client
-        .from("profiles")
-        .select("user_id, full_name, email")
-        .order("full_name", { ascending: true });
-
-      if (error) {
-        select.innerHTML = '<option value="">Could not load investors</option>';
-        $("profit-message").textContent = "Could not load investors: " + error.message;
+      const result = await fetchProfilesWithRetry();
+      if (result.error) {
+        select.innerHTML = '<option value="">Investor list unavailable — tap Retry</option>';
+        $("profit-message").textContent = "Could not load investors: " + result.error.message;
+        select.disabled = true;
+        $("profit-submit").disabled = true;
         return;
       }
 
       select.innerHTML = '<option value="">Select investor</option>';
-      (data || []).forEach((profile) => {
+      (result.data || []).forEach((profile) => {
         if (!profile.user_id) return;
         const option = document.createElement("option");
         option.value = profile.user_id;
@@ -921,6 +953,10 @@
       });
       select.disabled = !isAuthorized;
       $("profit-submit").disabled = !isAuthorized;
+      if (previousValue) select.value = previousValue;
+      $("profit-message").textContent = (result.data || []).length
+        ? "Investor list loaded."
+        : "No investor profiles were returned. Check administrator profile access.";
     }
 
     $("profit-form").addEventListener("submit", async (event) => {
@@ -997,23 +1033,23 @@
 
     async function loadNoticeInvestors() {
       const select = $("notice-investor");
+      const previousValue = select.value;
       select.disabled = true;
       select.innerHTML = '<option value="">Loading investors...</option>';
+      $("notice-form-message").textContent = "Connecting to investor records…";
 
-      const { data, error } = await client
-        .from("profiles")
-        .select("user_id, full_name, email")
-        .order("full_name", { ascending: true });
-
-      if (error) {
-        select.innerHTML = '<option value="">Could not load investors</option>';
-        $("notice-form-message").textContent = "Could not load investors: " + error.message;
+      const result = await fetchProfilesWithRetry();
+      if (result.error) {
+        select.innerHTML = '<option value="">Investor list unavailable — tap Retry</option>';
+        $("notice-form-message").textContent = "Could not load investors: " + result.error.message;
+        select.disabled = true;
+        $("notice-submit").disabled = true;
         return;
       }
 
       select.innerHTML = '<option value="">Select one investor</option>';
       Object.keys(noticeInvestorProfiles).forEach(key => delete noticeInvestorProfiles[key]);
-      (data || []).forEach((profile) => {
+      (result.data || []).forEach((profile) => {
         if (!profile.user_id) return;
         noticeInvestorProfiles[profile.user_id] = profile;
         const option = document.createElement("option");
@@ -1023,6 +1059,10 @@
       });
       select.disabled = !isAuthorized;
       $("notice-submit").disabled = !isAuthorized;
+      if (previousValue) select.value = previousValue;
+      $("notice-form-message").textContent = (result.data || []).length
+        ? "Investor list loaded."
+        : "No investor profiles were returned. Check administrator profile access.";
     }
 
     function resetPrivateNoticeForm() {
@@ -1178,8 +1218,39 @@
 
     $("notice-cancel-edit").addEventListener("click", resetPrivateNoticeForm);
 
+    $("profit-retry").addEventListener("click", async () => {
+      $("profit-retry").disabled = true;
+      try { await loadProfitInvestors(); }
+      finally { $("profit-retry").disabled = false; }
+    });
+
+    $("notice-retry").addEventListener("click", async () => {
+      $("notice-retry").disabled = true;
+      try { await loadNoticeInvestors(); }
+      finally { $("notice-retry").disabled = false; }
+    });
+
+    window.addEventListener("online", () => {
+      $("data-messages").classList.remove("error");
+      $("data-messages").textContent = "Connection restored. Refreshing admin data…";
+      loadDashboard();
+    });
+
+    window.addEventListener("offline", () => {
+      $("data-messages").classList.add("error");
+      $("data-messages").textContent = "Your device is offline. The dashboard will retry when the connection returns.";
+    });
+
+    let dashboardLoadInProgress = false;
+
     async function loadDashboard() {
+      if (dashboardLoadInProgress) return;
+      dashboardLoadInProgress = true;
       $("refresh-button").disabled = true;
+      $("data-messages").classList.remove("error");
+      $("data-messages").textContent = navigator.onLine
+        ? "Connecting to the database. Slow connections may take a little longer…"
+        : "Your device is offline. Waiting for a connection…";
       $("data-messages").textContent = "Loading dashboard data...";
 
       dataMessages.length = 0;
@@ -1301,6 +1372,7 @@
           "\nPlease check your admin login and Supabase configuration.";
       } finally {
         $("refresh-button").disabled = false;
+        dashboardLoadInProgress = false;
       }
     }
 
