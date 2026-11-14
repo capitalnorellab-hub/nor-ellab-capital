@@ -291,6 +291,19 @@
         font-size: 21px;
       }
     }
+
+    .notice-form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+    .notice-field { margin:0 0 14px; }
+    .notice-field label { display:block; font-weight:bold; margin-bottom:6px; font-size:14px; }
+    .notice-field input, .notice-field select, .notice-field textarea { width:100%; padding:12px; border:1px solid #ccd5ce; border-radius:7px; font:inherit; }
+    .notice-field textarea { min-height:130px; resize:vertical; }
+    .notice-list-item { border:1px solid var(--border); border-radius:9px; padding:14px; margin-top:12px; }
+    .notice-list-item p { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.55; margin:8px 0; }
+    .notice-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .notice-actions button { margin-top:8px; }
+    .danger-button { background:#a52820; }
+    .notice-muted { color:var(--muted); font-size:13px; }
+
   </style>
 </head>
 
@@ -358,6 +371,40 @@
         <button id="profit-submit" type="submit" disabled>Record Profit</button>
         <p id="profit-message" class="notice" role="status" aria-live="polite"></p>
       </form>
+    </section>
+
+
+    <section class="panel" id="private-notice-manager">
+      <h2>Manage Private Investor Notices</h2>
+      <p class="muted">
+        Publish a message directly on one selected investor's dashboard. It is not sent as a push notification or email.
+        Only the selected investor can view it. You can edit or remove it at any time.
+      </p>
+      <form id="private-notice-form">
+        <div class="notice-form-grid">
+          <div class="notice-field">
+            <label for="notice-investor">Select investor</label>
+            <select id="notice-investor" required disabled>
+              <option value="">Loading investors...</option>
+            </select>
+          </div>
+          <div class="notice-field">
+            <label for="notice-title">Notice heading</label>
+            <input id="notice-title" type="text" maxlength="160" placeholder="e.g. Important Account Update" required>
+          </div>
+        </div>
+        <div class="notice-field">
+          <label for="notice-message">Notice message</label>
+          <textarea id="notice-message" maxlength="5000" placeholder="Write the message this investor will see on their dashboard..." required></textarea>
+        </div>
+        <button id="notice-submit" type="submit" disabled>Publish Notice</button>
+        <button id="notice-cancel-edit" class="secondary" type="button" hidden>Cancel Edit</button>
+        <p id="notice-form-message" class="notice" role="status" aria-live="polite"></p>
+      </form>
+      <hr style="border:0;border-top:1px solid var(--border);margin:20px 0;">
+      <h3>Published Notices</h3>
+      <p class="notice-muted">Edit a notice or remove it from the investor's dashboard.</p>
+      <div id="private-notice-list">Loading notices...</div>
     </section>
 
     <section class="stats">
@@ -932,6 +979,8 @@
         $("profit-form").reset();
         await loadDashboard();
         await loadProfitInvestors();
+        await loadNoticeInvestors();
+        await loadPrivateNotices();
       } catch (error) {
         console.error("Profit recording failed:", error);
         $("profit-message").textContent =
@@ -940,6 +989,190 @@
         $("profit-submit").disabled = !isAuthorized;
       }
     });
+
+
+    let editingPrivateNoticeId = null;
+
+    async function loadNoticeInvestors() {
+      const select = $("notice-investor");
+      select.disabled = true;
+      select.innerHTML = '<option value="">Loading investors...</option>';
+
+      const { data, error } = await client
+        .from("profiles")
+        .select("user_id, full_name, email")
+        .order("full_name", { ascending: true });
+
+      if (error) {
+        select.innerHTML = '<option value="">Could not load investors</option>';
+        $("notice-form-message").textContent = "Could not load investors: " + error.message;
+        return;
+      }
+
+      select.innerHTML = '<option value="">Select one investor</option>';
+      (data || []).forEach((profile) => {
+        if (!profile.user_id) return;
+        const option = document.createElement("option");
+        option.value = profile.user_id;
+        option.textContent = (profile.full_name || "Unnamed investor") + " — " + (profile.email || "No email");
+        select.appendChild(option);
+      });
+      select.disabled = !isAuthorized;
+      $("notice-submit").disabled = !isAuthorized;
+    }
+
+    function resetPrivateNoticeForm() {
+      editingPrivateNoticeId = null;
+      $("private-notice-form").reset();
+      $("notice-submit").textContent = "Publish Notice";
+      $("notice-cancel-edit").hidden = true;
+      $("notice-form-message").textContent = "";
+    }
+
+    async function loadPrivateNotices() {
+      const box = $("private-notice-list");
+      box.textContent = "Loading notices...";
+
+      const { data, error } = await client
+        .from("private_investor_notices")
+        .select("id, user_id, title, message, created_at, updated_at, profiles(full_name,email)")
+        .order("created_at", { ascending: false })
+        .limit(200);
+
+      if (error) {
+        box.textContent = "Could not load notices: " + error.message;
+        return;
+      }
+
+      box.replaceChildren();
+      if (!data || data.length === 0) {
+        box.textContent = "No private investor notices have been published.";
+        return;
+      }
+
+      data.forEach((notice) => {
+        const item = document.createElement("article");
+        item.className = "notice-list-item";
+
+        const heading = document.createElement("strong");
+        heading.textContent = notice.title;
+
+        const investor = document.createElement("div");
+        investor.className = "notice-muted";
+        const profile = Array.isArray(notice.profiles) ? notice.profiles[0] : notice.profiles;
+        investor.textContent = "For: " + ((profile && profile.full_name) || "Investor") +
+          " — " + ((profile && profile.email) || notice.user_id);
+
+        const message = document.createElement("p");
+        message.textContent = notice.message;
+
+        const date = document.createElement("div");
+        date.className = "notice-muted";
+        date.textContent = "Published: " + new Date(notice.created_at).toLocaleString();
+
+        const actions = document.createElement("div");
+        actions.className = "notice-actions";
+
+        const edit = document.createElement("button");
+        edit.type = "button";
+        edit.textContent = "Edit";
+        edit.addEventListener("click", () => {
+          editingPrivateNoticeId = notice.id;
+          $("notice-investor").value = notice.user_id;
+          $("notice-title").value = notice.title;
+          $("notice-message").value = notice.message;
+          $("notice-submit").textContent = "Save Changes";
+          $("notice-cancel-edit").hidden = false;
+          $("notice-form-message").textContent = "Editing this notice for the selected investor.";
+          $("private-notice-form").scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "danger-button";
+        remove.textContent = "Remove Notice";
+        remove.addEventListener("click", async () => {
+          if (!window.confirm("Remove this notice from the investor's dashboard?")) return;
+          remove.disabled = true;
+          const { error: deleteError } = await client
+            .from("private_investor_notices")
+            .delete()
+            .eq("id", notice.id);
+          if (deleteError) {
+            alert("Could not remove notice: " + deleteError.message);
+            remove.disabled = false;
+            return;
+          }
+          if (editingPrivateNoticeId === notice.id) resetPrivateNoticeForm();
+          await loadPrivateNotices();
+        });
+
+        actions.append(edit, remove);
+        item.append(heading, investor, message, date, actions);
+        box.appendChild(item);
+      });
+    }
+
+    $("private-notice-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (!isAuthorized || !currentUser) {
+        $("notice-form-message").textContent = "Administrator access is not verified.";
+        return;
+      }
+
+      const userId = $("notice-investor").value;
+      const title = $("notice-title").value.trim();
+      const message = $("notice-message").value.trim();
+
+      if (!userId || !title || !message) {
+        $("notice-form-message").textContent = "Select one investor and complete both notice fields.";
+        return;
+      }
+
+      const confirmed = window.confirm(
+        (editingPrivateNoticeId ? "Save changes to" : "Publish") +
+        " this private notice for " +
+        ($("notice-investor").selectedOptions[0]?.textContent || "the selected investor") + "?"
+      );
+      if (!confirmed) return;
+
+      $("notice-submit").disabled = true;
+      $("notice-form-message").textContent = editingPrivateNoticeId ? "Saving changes..." : "Publishing notice...";
+
+      try {
+        let result;
+        if (editingPrivateNoticeId) {
+          result = await client
+            .from("private_investor_notices")
+            .update({ user_id: userId, title, message, updated_at: new Date().toISOString() })
+            .eq("id", editingPrivateNoticeId)
+            .select("id, user_id")
+            .single();
+        } else {
+          result = await client
+            .from("private_investor_notices")
+            .insert({ user_id: userId, title, message, created_by: currentUser.id })
+            .select("id, user_id")
+            .single();
+        }
+
+        if (result.error) throw result.error;
+        if (!result.data || result.data.user_id !== userId) {
+          throw new Error("The saved notice could not be verified for the selected investor.");
+        }
+
+        $("notice-form-message").textContent = "Private notice saved. It will appear directly on the selected investor's dashboard when they log in.";
+        resetPrivateNoticeForm();
+        await loadPrivateNotices();
+      } catch (error) {
+        $("notice-form-message").textContent = "Could not save notice: " + (error.message || "Unknown error");
+      } finally {
+        $("notice-submit").disabled = !isAuthorized;
+      }
+    });
+
+    $("notice-cancel-edit").addEventListener("click", resetPrivateNoticeForm);
 
     async function loadDashboard() {
       $("refresh-button").disabled = true;
