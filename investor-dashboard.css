@@ -7,3 +7,12 @@
 .credit-numbers span{font-size:12px}
 .align-right{text-align:right}
 @media(max-width:420px){.credit-numbers{align-items:flex-start;flex-direction:column}.align-right{text-align:left}}
+
+.private-investor-notice-section{background:#fffdf5;border:1px solid #e5d18a;border-left:5px solid #d4af37;padding:20px 22px;margin-bottom:22px}
+.private-notice-kicker{font-size:11px;letter-spacing:1.2px;font-weight:700;color:#92720e;margin-bottom:10px}
+.private-notice-card{padding:4px 0 12px}
+.private-notice-card+.private-notice-card{border-top:1px solid #eee2b8;padding-top:18px;margin-top:14px}
+.private-notice-card h2{font-size:20px;color:#10251c;margin:0 0 10px}
+.private-notice-card p{white-space:pre-wrap;overflow-wrap:anywhere;color:#26352c;font-size:14px;line-height:1.7}
+.private-notice-footer{font-size:11px;color:#7a817b;margin-top:12px}
+.private-investor-notice-section[hidden]{display:none}
