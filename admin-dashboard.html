@@ -1198,6 +1198,8 @@
 
         // Populate the verified-profit investor selector after admin access is confirmed.
         await loadProfitInvestors();
+        // Populate the private-notice investor selector when the admin dashboard opens.
+        await loadNoticeInvestors();
 
         const [
           profiles,
