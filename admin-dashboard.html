@@ -618,60 +618,100 @@
       );
     }
 
-    async function checkAdmin() {
-      const { data, error } = await client.auth.getUser();
+    async function runAdminCheckWithRetry(request, label) {
+      let lastError = null;
 
-      if (error || !data.user) {
-        currentUser = null;
-        isAuthorized = false;
-
+      for (let attempt = 1; attempt <= 3; attempt++) {
         setText(
           "admin-status",
-          "You are not signed in. Sign in using the administrator account."
+          label + " (attempt " + attempt + " of 3)…"
         );
 
+        try {
+          const result = await Promise.race([
+            request(),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error("Request timed out after 15 seconds.")), 15000)
+            )
+          ]);
+
+          if (!result.error) return result;
+          lastError = result.error;
+        } catch (error) {
+          lastError = error;
+        }
+
+        if (attempt < 3) {
+          await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
+        }
+      }
+
+      return { data: null, error: lastError || new Error("Request failed.") };
+    }
+
+    async function checkAdmin() {
+      isAuthorized = false;
+      setText("admin-status", "Checking your sign-in session…");
+
+      const authResult = await runAdminCheckWithRetry(
+        () => client.auth.getUser(),
+        "Connecting to verify your sign-in"
+      );
+
+      if (authResult.error) {
+        currentUser = null;
+        setText(
+          "admin-status",
+          "Could not reach Supabase to verify your login: " +
+          authResult.error.message +
+          " Check your internet connection, then select Refresh Dashboard."
+        );
         return false;
       }
 
-      currentUser = data.user;
+      if (!authResult.data || !authResult.data.user) {
+        currentUser = null;
+        setText(
+          "admin-status",
+          "You are not signed in. Please sign in again using the administrator account."
+        );
+        return false;
+      }
 
-      const { data: adminResult, error: adminError } =
-        await client.rpc("is_admin");
+      currentUser = authResult.data.user;
+      setText("admin-status", "Login confirmed. Checking administrator permissions…");
 
-      if (adminError) {
-        isAuthorized = false;
+      const permissionResult = await runAdminCheckWithRetry(
+        () => client.rpc("is_admin"),
+        "Connecting to verify administrator permissions"
+      );
 
+      if (permissionResult.error) {
         setText(
           "admin-status",
           "Could not verify administrator permissions: " +
-          adminError.message
+          permissionResult.error.message +
+          " Check your connection and the is_admin() function, then retry."
         );
-
         return false;
       }
 
-      const allowed =
-        adminResult === true ||
-        adminResult === "true";
+      const adminResult = permissionResult.data;
+      const allowed = adminResult === true || adminResult === "true";
 
       if (!allowed) {
-        isAuthorized = false;
-
         setText(
           "admin-status",
-          "Access denied. This account is not authorized as an administrator."
+          "Access denied. This signed-in account is not authorized as an administrator."
         );
-
         return false;
       }
 
       isAuthorized = true;
-
       setText(
         "admin-status",
         "Administrator access confirmed for " + currentUser.email
       );
-
       return true;
     }
 
