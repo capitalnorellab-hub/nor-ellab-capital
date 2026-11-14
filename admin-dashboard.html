@@ -993,6 +993,8 @@
 
     let editingPrivateNoticeId = null;
 
+    const noticeInvestorProfiles = {};
+
     async function loadNoticeInvestors() {
       const select = $("notice-investor");
       select.disabled = true;
@@ -1010,8 +1012,10 @@
       }
 
       select.innerHTML = '<option value="">Select one investor</option>';
+      Object.keys(noticeInvestorProfiles).forEach(key => delete noticeInvestorProfiles[key]);
       (data || []).forEach((profile) => {
         if (!profile.user_id) return;
+        noticeInvestorProfiles[profile.user_id] = profile;
         const option = document.createElement("option");
         option.value = profile.user_id;
         option.textContent = (profile.full_name || "Unnamed investor") + " — " + (profile.email || "No email");
@@ -1035,7 +1039,7 @@
 
       const { data, error } = await client
         .from("private_investor_notices")
-        .select("id, user_id, title, message, created_at, updated_at, profiles(full_name,email)")
+        .select("id, user_id, title, message, created_at, updated_at")
         .order("created_at", { ascending: false })
         .limit(200);
 
@@ -1059,7 +1063,7 @@
 
         const investor = document.createElement("div");
         investor.className = "notice-muted";
-        const profile = Array.isArray(notice.profiles) ? notice.profiles[0] : notice.profiles;
+        const profile = noticeInvestorProfiles[notice.user_id];
         investor.textContent = "For: " + ((profile && profile.full_name) || "Investor") +
           " — " + ((profile && profile.email) || notice.user_id);
 
